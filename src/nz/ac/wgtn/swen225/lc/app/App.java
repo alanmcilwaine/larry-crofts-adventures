@@ -9,6 +9,7 @@ public class App extends JFrame{
     private JPanel game = new JPanel();
     private JPanel ui = new JPanel(new GridLayout(3, 1, 0, 15));
 
+    // Colours for the UI
     private final Color BACKGROUND = new Color(47, 74, 58);
     private final Color FOREGROUND = new Color(179, 178, 137);
     private final Color FONT = new Color(31, 30, 25);
@@ -25,6 +26,25 @@ public class App extends JFrame{
         super("Larry Croft's Adventures");
         assert SwingUtilities.isEventDispatchThread();
         setupUI();
+        startTick();
+    }
+
+    /**
+     * startTick()
+     * Starts the main update loop for the program. Packages Domain, Renderer and Recorder should be used here.
+     */
+    private void startTick(){
+        Timer tickRate = new Timer(500, (unused) -> tick());
+        tickRate.start();
+    }
+
+    /**
+     * tick()
+     * Code inside tick() is called every 500ms. This is the main update loop for the program.
+     * Future implementations will have tick() take in param Action. But for testing I've made one without it.
+     */
+    public void tick(){
+
     }
 
     /**
