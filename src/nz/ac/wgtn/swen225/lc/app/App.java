@@ -9,6 +9,10 @@ public class App extends JFrame{
     private JPanel game = new JPanel();
     private JPanel ui = new JPanel(new GridLayout(3, 1, 0, 15));
 
+    private final Color BACKGROUND = new Color(47, 74, 58);
+    private final Color FOREGROUND = new Color(179, 178, 137);
+    private final Color FONT = new Color(31, 30, 25);
+
     // Window Dimensions
     public static final int WIDTH = 900;
     public static final int HEIGHT = 600;
@@ -36,9 +40,9 @@ public class App extends JFrame{
 
         // Panel config
         game.setPreferredSize(new Dimension(WIDTH/3*2, HEIGHT)); // 600x600
-        ui.setPreferredSize(new Dimension(WIDTH/3, HEIGHT));     // 200x600
+        ui.setPreferredSize(new Dimension(WIDTH/3, HEIGHT));     // 300x600
         game.setBackground(Color.BLACK);
-        ui.setBackground(Color.GRAY);
+        ui.setBackground(BACKGROUND);
         game.setFocusable(true);                // Without this keyListener won't work
         // game.addKeyListener(keyInvoker);     // TODO: Key inputs
         add(game, BorderLayout.CENTER);
@@ -54,7 +58,7 @@ public class App extends JFrame{
      * Sets up the buttons inside the UI panel.
      */
     private void setupButtons(){
-        JPanel buttons = new JPanel(new GridLayout(2, 3, 10, 20));
+        JPanel buttons = new JPanel(new GridLayout(2, 3, 5, 10));
         JButton pause = new JButton("Pause");   // On press, it should pause and change to "Resume".
         JButton exit = new JButton("Exit");     // On press, it should exit the game, without saving?.
         JButton save = new JButton("Save");     // On press, it should save the game state.
@@ -71,8 +75,10 @@ public class App extends JFrame{
 
         List.of(pause, exit, save, load, help).forEach(i -> {
             i.setFont(new Font("Monospaced", Font.BOLD, 15));
+            i.setForeground(FONT);
             buttons.add(i);
         });
+        buttons.setBackground(FOREGROUND);
         ui.add(buttons);
     }
 
@@ -90,9 +96,11 @@ public class App extends JFrame{
 
         List.of(time, level, keys, keysToCollect).forEach(i -> {
             i.setFont(new Font("Monospaced", Font.BOLD, 18));
+            i.setForeground(FONT);
             elements.add(i);
         });
 
+        elements.setBackground(FOREGROUND);
         ui.add(elements);
     }
 }
