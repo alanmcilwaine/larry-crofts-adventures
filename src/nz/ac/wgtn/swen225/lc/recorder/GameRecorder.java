@@ -8,7 +8,7 @@ import java.util.List;
 
 import nz.ac.wgtn.swen225.lc.app.Command;
 
-public class GameRecorder implements Recorder{
+class GameRecorder implements Recorder{
 
     Playback playback;
     List<Command> commands = new ArrayList<>();
