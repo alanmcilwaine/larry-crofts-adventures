@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
+
 import nz.ac.wgtn.swen225.lc.app.Command;
 
 public class GameRecorder implements Recorder{
