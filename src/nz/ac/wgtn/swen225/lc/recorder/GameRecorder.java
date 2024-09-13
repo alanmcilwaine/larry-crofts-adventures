@@ -1,19 +1,20 @@
 package nz.ac.wgtn.swen225.lc.recorder;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.app.Command;
 
 class GameRecorder implements Recorder{
 
     Playback playback;
+    App app;
     List<Command> commands = new ArrayList<>();
 
-    GameRecorder(){playback = new Playback();}
+    GameRecorder(App app){this.app = app; this.playback = new Playback();}
 
     @Override
     public void saveRecording() {

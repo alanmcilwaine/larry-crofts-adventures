@@ -2,6 +2,8 @@ package nz.ac.wgtn.swen225.lc.recorder;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
+
+import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.app.Command;
 
 /**
@@ -71,7 +73,7 @@ public interface Recorder {
      *
      * @return GameRecorder, which in turn creates a playback
      */
-    static Recorder create(){
-        return new GameRecorder();
+    static Recorder create(App app){
+        return new GameRecorder(app);
     }
 }
