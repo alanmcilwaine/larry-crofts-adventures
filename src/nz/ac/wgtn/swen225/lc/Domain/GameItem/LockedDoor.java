@@ -1,21 +1,20 @@
 package nz.ac.wgtn.swen225.lc.Domain.GameItem;
 
-import nz.ac.wgtn.swen225.lc.Domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.Domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.Domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.Domain.Tile;
 import nz.ac.wgtn.swen225.lc.Domain.Utilities.ItemColor;
 
-public record Key(ItemColor itemColor) implements Item {
-    /**
-     * Key will be pickup by player.
-     * @param actor Actor
-     */
+public record LockedDoor(ItemColor itemColor) implements Item {
+    @Override
+    public boolean isBlock(Actor actor) {
+        // TODO
+        // should check if actor has matched color key.
+        return Item.super.isBlock(actor);
+    }
+
     @Override
     public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {
-        if(actor instanceof Player p){
-            p.addTreasure(this);
-            tile.item = new NoItem();
-        }
+        tile.item = new UnLockedDoor(this.itemColor());
     }
 }

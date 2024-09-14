@@ -6,7 +6,7 @@ import nz.ac.wgtn.swen225.lc.Domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.Domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.Domain.Tile;
 import nz.ac.wgtn.swen225.lc.Domain.Utilities.Direction;
-import nz.ac.wgtn.swen225.lc.Domain.Utilities.KeyColor;
+import nz.ac.wgtn.swen225.lc.Domain.Utilities.ItemColor;
 import nz.ac.wgtn.swen225.lc.Domain.Utilities.Location;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class Player implements Actor {
         //find current player location and the tile the player is on.
         //check if player can move onto the tile.
         // TODO logic
-        Tile<Key> tk = new Tile<>(new Key(KeyColor.BLUE), new Location(1,1)); //target tile
+        Tile<Key> tk = new Tile<>(new Key(ItemColor.BLUE), new Location(1,1)); //target tile
         if(tk.canStepOn(this)){
             doMove(gameBoard);
             tk.onEntry(this);
