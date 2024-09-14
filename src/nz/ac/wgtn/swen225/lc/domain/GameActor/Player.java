@@ -18,6 +18,16 @@ public class Player implements Actor {
 
     private Location location;
 
+    private Direction playerFacing = Direction.DOWN;
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public Direction getPlayerFacing() {
+        return playerFacing;
+    }
+
     public Player(Location location) {
         this.location = location;
     }
@@ -31,6 +41,7 @@ public class Player implements Actor {
     }
 
     public void prepareMove(Direction direction, GameBoard gameBoard) {
+        this.playerFacing = direction;
         //find current player location and the tile the player is on.
         //check if player can move onto the tile.
         // TODO logic
