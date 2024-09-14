@@ -16,14 +16,10 @@ class GameRecorder implements Recorder{
 
     GameRecorder(App app){this.app = app; this.playback = new Playback();}
 
-    @Override
-    public void saveRecording() {
-
-    }
 
     @Override
-    public void loadRecording(String filename) throws FileNotFoundException {
-
+    public void setCommands(List<Command> commands) {
+        this.commands = commands;
     }
 
     @Override
