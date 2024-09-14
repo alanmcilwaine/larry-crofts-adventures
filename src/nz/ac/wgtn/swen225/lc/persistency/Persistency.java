@@ -101,7 +101,7 @@ public class Persistency{
      * @param filename The name of the file to save the GameState to.
      * @return List<Action> Loading list of actions from a file.
      */
-    public static GameState loadRecording(String filename){
+    public static GameState loadRecording(Recorder r, String filename){
         // load the list of actions from a file
         try{
             //Read JSON string from file
@@ -119,7 +119,7 @@ public class Persistency{
             //Convert JSON string to List of Action objects
             ObjectMapper mapper = new ObjectMapper();
             List<Command> actions = mapper.convertJSONtoActions(json);
-            Recorder.setCommands(actions);
+            r.setCommands(actions);
             return loadGameState(filename);
         } catch (IOException e) {
             e.printStackTrace();
