@@ -1,6 +1,6 @@
-package nz.ac.wgtn.swen225.lc.Domain.Interface;
+package nz.ac.wgtn.swen225.lc.domain.Interface;
 
-import nz.ac.wgtn.swen225.lc.Domain.Tile;
+import nz.ac.wgtn.swen225.lc.domain.Tile;
 
 /**
  * Item on top of tile.

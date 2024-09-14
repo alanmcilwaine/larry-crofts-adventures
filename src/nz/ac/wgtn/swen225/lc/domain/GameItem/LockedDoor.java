@@ -1,9 +1,9 @@
-package nz.ac.wgtn.swen225.lc.Domain.GameItem;
+package nz.ac.wgtn.swen225.lc.domain.GameItem;
 
-import nz.ac.wgtn.swen225.lc.Domain.Interface.Actor;
-import nz.ac.wgtn.swen225.lc.Domain.Interface.Item;
-import nz.ac.wgtn.swen225.lc.Domain.Tile;
-import nz.ac.wgtn.swen225.lc.Domain.Utilities.ItemColor;
+import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
+import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
+import nz.ac.wgtn.swen225.lc.domain.Tile;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 
 public record LockedDoor(ItemColor itemColor) implements Item {
     @Override

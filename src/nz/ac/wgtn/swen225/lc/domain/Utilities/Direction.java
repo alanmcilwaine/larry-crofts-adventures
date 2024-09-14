@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.Domain.Utilities;
+package nz.ac.wgtn.swen225.lc.domain.Utilities;
 
 public enum Direction {
     UP,

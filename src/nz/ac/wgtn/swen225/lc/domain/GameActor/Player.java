@@ -1,13 +1,13 @@
-package nz.ac.wgtn.swen225.lc.Domain.GameActor;
+package nz.ac.wgtn.swen225.lc.domain.GameActor;
 
-import nz.ac.wgtn.swen225.lc.Domain.GameBoard;
-import nz.ac.wgtn.swen225.lc.Domain.GameItem.Key;
-import nz.ac.wgtn.swen225.lc.Domain.Interface.Actor;
-import nz.ac.wgtn.swen225.lc.Domain.Interface.Item;
-import nz.ac.wgtn.swen225.lc.Domain.Tile;
-import nz.ac.wgtn.swen225.lc.Domain.Utilities.Direction;
-import nz.ac.wgtn.swen225.lc.Domain.Utilities.ItemColor;
-import nz.ac.wgtn.swen225.lc.Domain.Utilities.Location;
+import nz.ac.wgtn.swen225.lc.domain.GameBoard;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.Key;
+import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
+import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
+import nz.ac.wgtn.swen225.lc.domain.Tile;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
 import java.util.ArrayList;
 import java.util.List;

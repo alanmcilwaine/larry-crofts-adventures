@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.Domain;
+package nz.ac.wgtn.swen225.lc.domain;
 
 import java.util.logging.Logger;
 

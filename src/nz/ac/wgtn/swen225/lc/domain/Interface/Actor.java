@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.Domain.Interface;
+package nz.ac.wgtn.swen225.lc.domain.Interface;
 
 /**
  * Actor in game board such as robot and Larry.

@@ -1,8 +1,8 @@
-package nz.ac.wgtn.swen225.lc.Domain.GameItem;
+package nz.ac.wgtn.swen225.lc.domain.GameItem;
 
-import nz.ac.wgtn.swen225.lc.Domain.Interface.Actor;
-import nz.ac.wgtn.swen225.lc.Domain.Interface.Item;
-import nz.ac.wgtn.swen225.lc.Domain.Tile;
+import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
+import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
+import nz.ac.wgtn.swen225.lc.domain.Tile;
 
 public record Wall() implements Item {
 

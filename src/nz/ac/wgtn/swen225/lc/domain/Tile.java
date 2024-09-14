@@ -1,8 +1,8 @@
-package nz.ac.wgtn.swen225.lc.Domain;
+package nz.ac.wgtn.swen225.lc.domain;
 
-import nz.ac.wgtn.swen225.lc.Domain.Interface.Actor;
-import nz.ac.wgtn.swen225.lc.Domain.Interface.Item;
-import nz.ac.wgtn.swen225.lc.Domain.Utilities.Location;
+import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
+import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
 public class Tile<T extends Item> {
 
