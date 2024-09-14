@@ -36,14 +36,14 @@ public class Player implements Actor {
         // TODO logic
         Tile<Key> tk = new Tile<>(new Key(ItemColor.BLUE), new Location(1,1)); //target tile
         if(tk.canStepOn(this)){
-            doMove(gameBoard);
+            doMove(tk.location);
             tk.onEntry(this);
             tk.onExit(this);
         };
     }
 
-    private void doMove(GameBoard gameBoard) {
+    private void doMove(Location location) {
+        this.location = new Location(location.x(), location.y());
         //updateGameState after move
-        gameBoard.updateGameState();
     }
 }

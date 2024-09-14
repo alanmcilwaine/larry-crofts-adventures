@@ -64,4 +64,8 @@ public class GameBoard {
     public GameState getGameState() {
         return new GameState(board, player, robots, 10, 10);
     }
+
+    public void setGameState(GameState gameState){
+        // required by Alan
+    }
 }
