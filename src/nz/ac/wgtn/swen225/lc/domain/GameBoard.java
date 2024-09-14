@@ -8,7 +8,7 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import java.util.List;
 
 public class GameBoard {
-    public Tile[][] getBoard() {
+    public List<List<Tile<Item>>> getBoard() {
         return board;
     }
 
@@ -28,8 +28,7 @@ public class GameBoard {
         this.robots = robots;
     }
 
-    //private final List<List<Tile<Item>>> board;
-    private final Tile[][] board;
+    private final List<List<Tile<Item>>> board;
 
     private Player player;
 
@@ -41,18 +40,7 @@ public class GameBoard {
 
     public final int height;
 
-//    private GameBoard(List<List<Tile<Item>>> board, Player player, List<Robot> robots, int timeLimit, int width, int height) {
-//        this.board = board;
-//        this.player = player;
-//        this.robots = robots;
-//        TimeLimit = timeLimit;
-//        this.width = width;
-//        this.height = height;
-//    }
-
-
-    // carla's updated ver
-    private GameBoard(Tile[][] board, Player player, List<Robot> robots, int timeLimit, int width, int height) {
+    private GameBoard(List<List<Tile<Item>>> board, Player player, List<Robot> robots, int timeLimit, int width, int height) {
         this.board = board;
         this.player = player;
         this.robots = robots;
@@ -61,14 +49,11 @@ public class GameBoard {
         this.height = height;
     }
 
-//    public static GameBoard of(List<List<Tile<Item>>> board, Player player, List<Robot> robots) {
-//        return new GameBoard(board, player, robots, 10, 0, 0);
-//    }
 
-    // carla's updated ver
-    public static GameBoard of(Tile[][] board, Player player, List<Robot> robots) {
+    public static GameBoard of(List<List<Tile<Item>>> board, Player player, List<Robot> robots) {
         return new GameBoard(board, player, robots, 10, 0, 0);
     }
+
 
     public void playerMove(Direction direction, GameBoard gameBoard) {
         player.prepareMove(direction, gameBoard);
@@ -85,4 +70,5 @@ public class GameBoard {
     public void setGameState(GameState gameState){
         // required by Alan
     }
+
 }

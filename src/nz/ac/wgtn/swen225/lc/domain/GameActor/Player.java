@@ -22,6 +22,8 @@ public class Player implements Actor {
         this.location = location;
     }
 
+    public Location getLocation() { return location; }
+
     public boolean addTreasure(Item item) {
         return treasure.add(item);
     }
@@ -30,12 +32,13 @@ public class Player implements Actor {
         return treasure.remove(item);
     }
 
+
     public void prepareMove(Direction direction, GameBoard gameBoard) {
         //find current player location and the tile the player is on.
         //check if player can move onto the tile.
         // TODO logic
         Location newLoc = direction.act(this.location); // location to move to
-        Tile tile = gameBoard.getBoard()[newLoc.x()][newLoc.y()]; // tile on this location
+        Tile tile = gameBoard.getBoard().get(newLoc.x()).get(newLoc.y()); // tile on this location
 
         if (tile.canStepOn(this)) {
             doMove(newLoc);
