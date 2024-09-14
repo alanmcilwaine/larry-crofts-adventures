@@ -24,6 +24,9 @@ public class Tile<T extends Item> {
 
     public void onEntry(Actor actor) {
         Util.checkNull(actor,"Actor");
+        if(!canStepOn(actor)){
+            throw new IllegalArgumentException("Can't move into tile.");
+        }
         item.onTouch(actor, this);
     }
 
