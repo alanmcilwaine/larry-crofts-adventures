@@ -3,6 +3,9 @@ package nz.ac.wgtn.swen225.lc.domain;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.Util;
+
+import java.util.Objects;
 
 public class Tile<T extends Item> {
 
@@ -15,14 +18,17 @@ public class Tile<T extends Item> {
     }
 
     public boolean canStepOn(Actor actor) {
+        Util.checkNull(actor,"Actor");
         return item.blockActor(actor);
     }
 
     public void onEntry(Actor actor) {
+        Util.checkNull(actor,"Actor");
         item.onTouch(actor, this);
     }
 
     public void onExit(Actor actor) {
-        //probably nothing for most tiles.
+        Util.checkNull(actor,"Actor");
+        item.onExit(actor, this);
     }
 }
