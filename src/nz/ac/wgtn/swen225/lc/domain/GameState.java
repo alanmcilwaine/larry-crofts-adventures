@@ -3,6 +3,7 @@ package nz.ac.wgtn.swen225.lc.domain;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 
 import java.util.List;
 

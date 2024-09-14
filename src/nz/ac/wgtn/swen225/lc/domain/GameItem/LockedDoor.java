@@ -7,10 +7,10 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 
 public record LockedDoor(ItemColor itemColor) implements Item {
     @Override
-    public boolean isBlock(Actor actor) {
+    public boolean blockActor(Actor actor) {
         // TODO
         // should check if actor has matched color key.
-        return Item.super.isBlock(actor);
+        return Item.super.blockActor(actor);
     }
 
     @Override

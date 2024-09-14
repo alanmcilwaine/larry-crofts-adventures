@@ -8,7 +8,6 @@ public enum Direction {
     ;
 
     private Location location;
-
     public Location act(Location loc) { return location.add(loc); }
     Direction(int x, int y ) { location = new Location(x, y); }
 }

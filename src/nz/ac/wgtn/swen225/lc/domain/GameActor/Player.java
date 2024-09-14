@@ -18,11 +18,25 @@ public class Player implements Actor {
 
     private Location location;
 
+    private Direction playerFacing = Direction.DOWN;
+
+    @Override
+    public Location getLocation() {
+        return location;
+    }
+
+    @Override
+    public Direction getActorFacing() {
+        return playerFacing;
+    }
+
+    public List<Item> getTreasure() {
+        return List.copyOf(treasure);
+    }
+
     public Player(Location location) {
         this.location = location;
     }
-
-    public Location getLocation() { return location; }
 
     public boolean addTreasure(Item item) {
         return treasure.add(item);
@@ -33,7 +47,9 @@ public class Player implements Actor {
     }
 
 
+    @Override
     public void prepareMove(Direction direction, GameBoard gameBoard) {
+        this.playerFacing = direction;
         //find current player location and the tile the player is on.
         //check if player can move onto the tile.
         // TODO logic
@@ -46,15 +62,23 @@ public class Player implements Actor {
             tile.onExit(this);
         }
 
-//        Tile<Key> tk = new Tile<>(new Key(ItemColor.BLUE), new Location(1,1)); //target tile
-//        if(tk.canStepOn(this)){
-//            doMove(tk.location);
-//            tk.onEntry(this);
-//            tk.onExit(this);
+        //Tile<Key> tk = new Tile<>(new Key(ItemColor.BLUE), new Location(1,1)); //target tile
+//        if(tile.canStepOn(this)){
+//            doMove(tile.location);
+//            this.location = tile.location;
+//            //TODO check if this location has robot
+//            if(gameBoard.getGameState().robots().stream().anyMatch((x)->x.getLocation().equals(this.location))){
+//                //filter out if it's killer robot?
+//
+//                //need to discuss with app how to decide game is over.
+//            };
+//            tile.onEntry(this);
+//            tile.onExit(this);
 //        };
     }
 
-    private void doMove(Location location) {
+    @Override
+    public void doMove(Location location) {
         this.location = new Location(location.x(), location.y());
         //updateGameState after move
     }

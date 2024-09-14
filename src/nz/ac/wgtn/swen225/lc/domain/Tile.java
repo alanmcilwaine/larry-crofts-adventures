@@ -14,8 +14,12 @@ public class Tile<T extends Item> {
         this.location = location;
     }
 
+    public Tile(Location location) {
+        this.location = location;
+    }
+
     public boolean canStepOn(Actor actor) {
-        return item.isBlock(actor);
+        return item.blockActor(actor) ? false : true;
     }
 
     public void onEntry(Actor actor) {

@@ -13,7 +13,9 @@ public record Location(int x, int y) {
    * @param p other point to add
    * @return returns an updated point with the sum
    */
-  public Location add(Location p) { return new Location(x + p.x(), y + y()); }
+  public Location add(Location p) {
+    return new Location(x() + p.x(),y() + p.y());
+  }
 
   /**
    * returns a new Point with the product of its values and the provided number to times by

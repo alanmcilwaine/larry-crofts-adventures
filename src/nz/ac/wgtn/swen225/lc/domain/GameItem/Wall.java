@@ -7,7 +7,7 @@ import nz.ac.wgtn.swen225.lc.domain.Tile;
 public record Wall() implements Item {
 
     @Override
-    public boolean isBlock(Actor actor) {
+    public boolean blockActor(Actor actor) {
        return true;
     }
 
