@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.List;
 import nz.ac.wgtn.swen225.lc.app.Command;
+import nz.ac.wgtn.swen225.lc.recorder.Recorder;
 
 public class Persistency{
 
@@ -94,13 +95,13 @@ public class Persistency{
     }
 
     /**
-     * Loads a list of actions for recorder
+     * Loads a recording of actions from a file.
      *
      * @author zhoudavi1
      * @param filename The name of the file to save the GameState to.
      * @return List<Action> Loading list of actions from a file.
      */
-    public static List<Command> loadCommands(String filename){
+    public static GameState loadRecording(String filename){
         // load the list of actions from a file
         try{
             //Read JSON string from file
@@ -118,7 +119,8 @@ public class Persistency{
             //Convert JSON string to List of Action objects
             ObjectMapper mapper = new ObjectMapper();
             List<Command> actions = mapper.convertJSONtoActions(json);
-            return actions;
+            Recorder.setCommands(actions);
+            return loadGameState(filename);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
