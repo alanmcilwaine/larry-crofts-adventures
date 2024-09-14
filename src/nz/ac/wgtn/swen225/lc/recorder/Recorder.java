@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.recorder;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
+import java.util.List;
 
 import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.app.Command;
@@ -18,16 +19,10 @@ public interface Recorder {
     /**
      * Save the current recording to a file.
      * The name of the saved file will be chosen internally.
-     */
-    void saveRecording();
-
-    /**
-     * Load a previously saved recording from a file or storage location.
      *
-     * @param filename will load this recording from the file.
-     * @throws FileNotFoundException if the specified file does not exist.
+     * @param commands A list of all commands recorded in that game.
      */
-    void loadRecording(String filename) throws FileNotFoundException;
+    void setCommands(List<Command> commands);
 
     /**
      * Saves all info needed to replay this tick. Should be called every time the player "ticks" and moves.
