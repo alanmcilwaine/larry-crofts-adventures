@@ -15,7 +15,7 @@ public class Tile<T extends Item> {
     }
 
     public boolean canStepOn(Actor actor) {
-        return item.isBlock(actor);
+        return item.blockActor(actor);
     }
 
     public void onEntry(Actor actor) {

@@ -6,7 +6,7 @@ import nz.ac.wgtn.swen225.lc.domain.Tile;
  * Item on top of tile.
  */
 public interface Item {
-    default boolean isBlock(Actor actor){return false;}
+    default boolean blockActor(Actor actor){return false;}
 
     default <T extends Item> void onTouch(Actor actor, Tile<T> tile){};
 }
