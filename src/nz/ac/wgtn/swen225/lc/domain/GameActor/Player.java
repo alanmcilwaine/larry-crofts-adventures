@@ -34,12 +34,21 @@ public class Player implements Actor {
         //find current player location and the tile the player is on.
         //check if player can move onto the tile.
         // TODO logic
-        Tile<Key> tk = new Tile<>(new Key(ItemColor.BLUE), new Location(1,1)); //target tile
-        if(tk.canStepOn(this)){
-            doMove(tk.location);
-            tk.onEntry(this);
-            tk.onExit(this);
-        };
+        Location newLoc = direction.act(this.location); // location to move to
+        Tile tile = gameBoard.getBoard()[newLoc.x()][newLoc.y()]; // tile on this location
+
+        if (tile.canStepOn(this)) {
+            doMove(newLoc);
+            tile.onEntry(this);
+            tile.onExit(this);
+        }
+
+//        Tile<Key> tk = new Tile<>(new Key(ItemColor.BLUE), new Location(1,1)); //target tile
+//        if(tk.canStepOn(this)){
+//            doMove(tk.location);
+//            tk.onEntry(this);
+//            tk.onExit(this);
+//        };
     }
 
     private void doMove(Location location) {
