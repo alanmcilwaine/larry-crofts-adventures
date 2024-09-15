@@ -41,8 +41,6 @@ public class GameBoard {
         return new GameBoard(board, player, robots, 10, 0, width, height);
     }
 
-
-
     private void playerMove(Direction direction, GameBoard gameBoard) {
         player.prepareMove(direction, gameBoard);
     }
