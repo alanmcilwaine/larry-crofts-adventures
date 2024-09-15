@@ -67,10 +67,11 @@ public class GameBoard {
         }
     }
 
+    /**
+     * Get the board
+     * @return Board
+     */
     public List<List<Tile<Item>>> getBoard() { return Collections.unmodifiableList(board); }
-    public void setTile(Tile tile, int x, int y) {
-    }
-
 
     /**
      * Get current game board state.

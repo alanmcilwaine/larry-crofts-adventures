@@ -8,13 +8,17 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
 public abstract class Robot implements Actor {
   private Location location;
-  private Direction robotFacing;
+  private Direction robotFacing = Direction.values()[(int) (Math.random() * 5)];
 
   @Override
   public Location getLocation() { return location; }
 
+  public void setLocation(Location loc) { this.location = loc; }
+
   @Override
   public Direction getActorFacing() { return robotFacing; }
+
+  public void setRobotFacing(Direction dir) { this.robotFacing = dir; }
 
   public void update(GameBoard gameBoard) {
     prepareMove(this.robotFacing, gameBoard);
@@ -33,12 +37,18 @@ public abstract class Robot implements Actor {
       tile.onEntry(this);
       prevTile.onExit(this);
     } else {
-      this.robotFacing = Direction.values()[(int) (Math.random() * 4)];
+        // if the tile to move onto is blocked then re-roll robot's direction
+        this.robotFacing = Direction.values()[(int) (Math.random() * 4)] ;
     }
+
   }
 
   @Override
   public void doMove(Location location) {
     this.location = new Location(location.x(), location.y());
+  }
+
+  Robot(Location location) {
+    this.location = location;
   }
 }
