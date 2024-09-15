@@ -8,6 +8,8 @@ public record Info(String info) implements Item {
 
     @Override
     public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {
-        //action in app package.
+        //this shall bring up a GUI component
+        //TODO
+        //need discussion with app/render.
     }
 }
