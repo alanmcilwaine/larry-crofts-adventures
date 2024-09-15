@@ -2,10 +2,8 @@ package nz.ac.wgtn.swen225.lc.domain;
 
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
-import nz.ac.wgtn.swen225.lc.domain.GameItem.NoItem;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
-import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -70,6 +68,9 @@ public class GameBoard {
     }
 
     public List<List<Tile<Item>>> getBoard() { return Collections.unmodifiableList(board); }
+    public void setTile(Tile tile, int x, int y) {
+    }
+
 
     /**
      * Get current game board state.

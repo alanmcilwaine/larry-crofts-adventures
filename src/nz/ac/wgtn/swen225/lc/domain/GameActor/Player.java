@@ -60,7 +60,7 @@ public class Player implements Actor {
         if (tile.canStepOn(this)) {
             doMove(newLoc);
             tile.onEntry(this);
-            tile.onExit(this);
+            prevTile.onExit(this);
         }
 
         //Tile<Key> tk = new Tile<>(new Key(ItemColor.BLUE), new Location(1,1)); //target tile

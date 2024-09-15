@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
 import nz.ac.wgtn.swen225.lc.domain.GameActor.KillerRobot;
+import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
@@ -27,7 +28,7 @@ public class Tile<T extends Item> {
             throw new IllegalArgumentException("Can't move into tile.");
         }
 
-        if(actor instanceof KillerRobot) { item.onTouch(actor, this); }
+        if(actor instanceof Player) { item.onTouch(actor, this); }
     }
 
     public void onExit(Actor actor) {
