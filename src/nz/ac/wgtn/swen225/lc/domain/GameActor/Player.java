@@ -55,6 +55,7 @@ public class Player implements Actor {
         // TODO logic
         Location newLoc = direction.act(this.location); // location to move to
         Tile tile = gameBoard.getBoard().get(newLoc.x()).get(newLoc.y()); // tile on this location
+        Tile prevTile = gameBoard.getBoard().get(this.location.x()).get(this.location.y());
 
         if (tile.canStepOn(this)) {
             doMove(newLoc);

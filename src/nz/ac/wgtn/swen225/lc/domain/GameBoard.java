@@ -93,6 +93,13 @@ public class GameBoard {
         return new GameState(board, player, robots, timeLeft, level);
     }
 
+    /**
+     * Updates all the tiles on the board
+     */
+    public void update()  {
+
+    }
+
 
     /**
      * Take an action on current board.
