@@ -46,25 +46,35 @@ public class Player implements Actor {
         return treasure.remove(item);
     }
 
+
     @Override
     public void prepareMove(Direction direction, GameBoard gameBoard) {
         this.playerFacing = direction;
         //find current player location and the tile the player is on.
         //check if player can move onto the tile.
         // TODO logic
-        Tile<Key> tk = new Tile<>(new Key(ItemColor.BLUE), new Location(1,1)); //target tile
-        if(tk.canStepOn(this)){
-            doMove(tk.location);
-            this.location = tk.location;
-            //TODO check if this location has robot
-            if(gameBoard.getGameState().robots().stream().anyMatch((x)->x.getLocation().equals(this.location))){
-                //filter out if it's killer robot?
+        Location newLoc = direction.act(this.location); // location to move to
+        Tile tile = gameBoard.getBoard().get(newLoc.x()).get(newLoc.y()); // tile on this location
 
-                //need to discuss with app how to decide game is over.
-            };
-            tk.onEntry(this);
-            tk.onExit(this);
-        };
+        if (tile.canStepOn(this)) {
+            doMove(newLoc);
+            tile.onEntry(this);
+            tile.onExit(this);
+        }
+
+        //Tile<Key> tk = new Tile<>(new Key(ItemColor.BLUE), new Location(1,1)); //target tile
+//        if(tile.canStepOn(this)){
+//            doMove(tile.location);
+//            this.location = tile.location;
+//            //TODO check if this location has robot
+//            if(gameBoard.getGameState().robots().stream().anyMatch((x)->x.getLocation().equals(this.location))){
+//                //filter out if it's killer robot?
+//
+//                //need to discuss with app how to decide game is over.
+//            };
+//            tile.onEntry(this);
+//            tile.onExit(this);
+//        };
     }
 
     @Override
