@@ -11,7 +11,7 @@ import java.util.Objects;
 public class GameBoard {
     private final List<List<Tile<Item>>> board;
 
-    private Player player;
+    private final Player player;
 
     private final List<Robot> robots;
 
@@ -46,10 +46,10 @@ public class GameBoard {
      * @return a game board.
      */
     public static GameBoard of(List<List<Tile<Item>>> board, Player player, List<Robot> robots, int timeLeft, int width, int height, int level) {
-        if (timeLeft <= 0 || width < 2 || height < 2 || level <1) {
+        if (timeLeft <= 0 || width < 2 || height < 2 || level < 1) {
             throw new IllegalArgumentException("Invalid game board");
         }
-        return new GameBoard(board, player, robots, timeLeft, level,width,height);
+        return new GameBoard(board, player, robots, timeLeft, level, width, height);
     }
 
     /**
@@ -68,7 +68,7 @@ public class GameBoard {
      * @param direction the direction player wants to go.
      */
     public void action(Direction direction) {
-        if(Objects.isNull(direction)){
+        if (Objects.isNull(direction)) {
             throw new IllegalArgumentException("Direction null");
         }
         playerMove(direction, this);

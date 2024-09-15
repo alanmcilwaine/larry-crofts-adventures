@@ -4,7 +4,7 @@ import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
-public class KillerRobot extends Robot{
+public class KillerRobot extends Robot {
     @Override
     public Location getLocation() {
         return null;

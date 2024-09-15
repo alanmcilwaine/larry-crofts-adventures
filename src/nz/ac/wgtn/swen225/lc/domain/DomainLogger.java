@@ -8,7 +8,7 @@ public enum DomainLogger {
     private final Logger logger;
 
     DomainLogger() {
-        this.logger = Logger.getLogger("Domain");;
+        this.logger = Logger.getLogger("Domain");
     }
 
     public Logger getLogger() {
