@@ -3,6 +3,7 @@ package nz.ac.wgtn.swen225.lc.domain;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.Util;
 
 public class Tile<T extends Item> {
 
@@ -14,19 +15,30 @@ public class Tile<T extends Item> {
         this.location = location;
     }
 
-    public Tile(Location location) {
-        this.location = location;
-    }
-
     public boolean canStepOn(Actor actor) {
+        Util.checkNull(actor, "Actor");
         return !item.blockActor(actor);
     }
-
+    
     public void onEntry(Actor actor) {
+        Util.checkNull(actor, "Actor");
+        if (!canStepOn(actor)) {
+            throw new IllegalArgumentException("Can't move into tile.");
+        }
         item.onTouch(actor, this);
     }
 
     public void onExit(Actor actor) {
-        //probably nothing for most tiles.
+        Util.checkNull(actor, "Actor");
+        item.onExit(actor, this);
+    }
+
+    /**
+     * Get item name on tile.
+     *
+     * @return run time Item class name.
+     */
+    public String getItemOnTile() {
+        return item.getClass().getSimpleName();
     }
 }

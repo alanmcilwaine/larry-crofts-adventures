@@ -41,8 +41,6 @@ public class GameBoard {
         return new GameBoard(board, player, robots, 10, 0, width, height);
     }
 
-
-
     private void playerMove(Direction direction, GameBoard gameBoard) {
         player.prepareMove(direction, gameBoard);
     }
@@ -58,22 +56,6 @@ public class GameBoard {
     public static GameBoard of(List<List<Tile<Item>>> board, Player player, List<Robot> robots, int timeLeft, int width, int height, int level) {
         checkValid(timeLeft, width, height, level);
         return new GameBoard(board, player, robots, timeLeft, level,width,height);
-    }
-
-    public static GameBoard of(Player player, List<Robot> robots, int timeLeft, int width, int height, int level) {
-        checkValid(timeLeft, width, height, level);
-
-        List<List<Tile<Item>>> tiles = new ArrayList<>();
-        for(int i = 0 ; i < width ; i++) {
-            List<Tile<Item>> yRow = new ArrayList<>();
-
-            for (int j = 0 ; j < height ; j++) {
-                yRow.add(new Tile<>(new NoItem(), new Location(i, j)));
-            }
-
-            tiles.add(yRow);
-        }
-        return new GameBoard(tiles, player, robots, 10, 0, width, height);
     }
 
     private static void checkValid(int timeLeft, int width, int height, int level) {
