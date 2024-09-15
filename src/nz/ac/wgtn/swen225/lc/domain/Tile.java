@@ -5,8 +5,6 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Util;
 
-import java.util.Objects;
-
 public class Tile<T extends Item> {
 
     public Item item;
@@ -18,20 +16,29 @@ public class Tile<T extends Item> {
     }
 
     public boolean canStepOn(Actor actor) {
-        Util.checkNull(actor,"Actor");
+        Util.checkNull(actor, "Actor");
         return item.blockActor(actor);
     }
 
     public void onEntry(Actor actor) {
-        Util.checkNull(actor,"Actor");
-        if(!canStepOn(actor)){
+        Util.checkNull(actor, "Actor");
+        if (!canStepOn(actor)) {
             throw new IllegalArgumentException("Can't move into tile.");
         }
         item.onTouch(actor, this);
     }
 
     public void onExit(Actor actor) {
-        Util.checkNull(actor,"Actor");
+        Util.checkNull(actor, "Actor");
         item.onExit(actor, this);
+    }
+
+    /**
+     * Get item name on tile.
+     *
+     * @return run time Item class name.
+     */
+    public String getItemOnTile() {
+        return item.getClass().getSimpleName();
     }
 }
