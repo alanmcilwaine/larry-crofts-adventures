@@ -26,7 +26,7 @@ public abstract class Robot implements Actor {
 
   @Override
   public void prepareMove(Direction direction, GameBoard gameBoard) {
-
+    // TODO stop robot from going out of bounds and work on gameover event when player and robot on same tile
     Location newLoc = direction.act(this.location); // location to move to
 
     Tile tile = gameBoard.getBoard().get(newLoc.x()).get(newLoc.y()); // tile on this location
