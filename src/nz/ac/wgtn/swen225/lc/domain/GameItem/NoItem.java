@@ -11,5 +11,4 @@ public record NoItem() implements Item {
 
     @Override
     public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {}
-
 }
