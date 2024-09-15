@@ -7,9 +7,6 @@ package nz.ac.wgtn.swen225.lc.domain.Utilities;
  * @param y vertical position
  */
 public record Location(int x, int y) {
-  public Location {
-    assert x >= 0 && y >= 0;
-  }
 
   /**
    * Gets a new point that is the sum of both values.

@@ -72,6 +72,7 @@ public class GameBoard {
      * @return Board
      */
     public List<List<Tile<Item>>> getBoard() { return Collections.unmodifiableList(board); }
+    public Player getPlayer() { return player; }
 
     /**
      * Get current game board state.
@@ -80,6 +81,10 @@ public class GameBoard {
      */
     public GameState getGameState() {
         return new GameState(board, player, robots, timeLeft, level);
+    }
+
+    public void onGameOver() {
+        throw new IllegalArgumentException("Game Over"); // temporary
     }
 
 
