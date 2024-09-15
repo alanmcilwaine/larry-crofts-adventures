@@ -60,22 +60,6 @@ public class GameBoard {
         return new GameBoard(board, player, robots, timeLeft, level,width,height);
     }
 
-    public static GameBoard of(Player player, List<Robot> robots, int timeLeft, int width, int height, int level) {
-        checkValid(timeLeft, width, height, level);
-
-        List<List<Tile<Item>>> tiles = new ArrayList<>();
-        for(int i = 0 ; i < width ; i++) {
-            List<Tile<Item>> yRow = new ArrayList<>();
-
-            for (int j = 0 ; j < height ; j++) {
-                yRow.add(new Tile<>(new NoItem(), new Location(i, j)));
-            }
-
-            tiles.add(yRow);
-        }
-        return new GameBoard(tiles, player, robots, 10, 0, width, height);
-    }
-
     private static void checkValid(int timeLeft, int width, int height, int level) {
         if (timeLeft <= 0 || width < 2 || height < 2 || level < 1) {
             throw new IllegalArgumentException("Invalid game board");
