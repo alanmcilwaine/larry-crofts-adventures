@@ -46,6 +46,11 @@ public class GameBoard {
     }
 
     /**
+     * Moves all the robots in the level
+     */
+    private void robotsMove() { robots.forEach(r -> r.update(this)); }
+
+    /**
      * Generate a game board.
      *
      * @param board  game board.
@@ -75,13 +80,6 @@ public class GameBoard {
         return new GameState(board, player, robots, timeLeft, level);
     }
 
-    /**
-     * Updates all the tiles on the board
-     */
-    public void update()  {
-
-    }
-
 
     /**
      * Take an action on current board.
@@ -92,7 +90,10 @@ public class GameBoard {
         if(Objects.isNull(direction)){
             throw new IllegalArgumentException("Direction null");
         }
+
+        robotsMove();
         playerMove(direction, this);
+
     }
 
 }

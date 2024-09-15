@@ -16,9 +16,12 @@ public abstract class Robot implements Actor {
   @Override
   public Direction getActorFacing() { return robotFacing; }
 
+  public void update(GameBoard gameBoard) {
+    prepareMove(this.robotFacing, gameBoard);
+  }
+
   @Override
   public void prepareMove(Direction direction, GameBoard gameBoard) {
-    this.robotFacing = direction;
 
     Location newLoc = direction.act(this.location); // location to move to
     Tile tile = gameBoard.getBoard().get(newLoc.x()).get(newLoc.y()); // tile on this location
@@ -27,6 +30,8 @@ public abstract class Robot implements Actor {
       doMove(newLoc);
       tile.onEntry(this);
       tile.onExit(this);
+    } else {
+      this.robotFacing = Direction.values()[(int) (Math.random() * 4)];
     }
   }
 
