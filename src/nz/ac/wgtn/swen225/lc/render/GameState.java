@@ -1,4 +1,10 @@
+import java.util.List;
+
 public class GameState {
-    IEntity[][] board;
-    public IEntity[][] getBoard(){return board;}
+
+
+    public List<List<Tile<Item>>> board() {
+        return null;
+    }
+
 }

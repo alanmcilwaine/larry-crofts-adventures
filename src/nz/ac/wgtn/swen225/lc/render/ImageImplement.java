@@ -1,11 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 public class ImageImplement{
     // App's jpanel called game in App
     JPanel jpanel;
-    ImageImplement(JPanel jpanel) {
+    GameState gameState;
+    ImageImplement(JPanel jpanel, GameState gameState) {
         this.jpanel = jpanel;
+        this.gameState = gameState;
 
         // ensure do not create a new jpanel object
         this.jpanel.add(new JComponent() {
@@ -22,22 +26,16 @@ public class ImageImplement{
      * get the Image type for each Img
      */
     public Image getImage(String path){
-        return Img.getImgs().stream()
-                .filter(img -> img.getImageName().equals(path))
-                .findFirst()
-                .map(Img::getImage)
-                .orElseThrow(() -> new Error("no such image"));
+        return Img.INSTANCE.getImgs(path);
     }
 
     /**
      * draw the image in each game board to the jpanel.
      */
     public void drawImages(Graphics g){
-        IEntity[][] gameBoard = new GameState().getBoard();
-        for(int row = 0; row < gameBoard.length; row++){
-            for(int col = 0; col < gameBoard[row].length; col++){
-                g.drawImage(getImage(gameBoard[row][col].getImage()), 0, 0, jpanel);
-            }
-        }
+        List<List<Tile<Item>>> gameBoard = gameState.board();
+        gameBoard.forEach(listTile ->
+                listTile.forEach(tile ->
+                        g.drawImage(getImage(tile.getItemOnTile()), tile.location.x(), tile.location.y(), jpanel)));
     }
 }

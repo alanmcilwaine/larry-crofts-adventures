@@ -2,45 +2,40 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 
 /**
  * store all the images
  */
 enum Img{
-    CHAP("chap"),
-    WALLTILE("wallTile"),
-    FREETILE("freeTile"),
-    KEY("key"),
-    LOCKEDDOOR("lockedDoor"),
-    INFOFIELD("infoField"),
-    TREASURE("treasure"),
-    EXITLOCK("exitLock"),
-    EXIT("exit");
+    INSTANCE;
 
-    private String imagePath;
-    private Image image;
-    private static List<Img> imgs = new ArrayList<>();
-    Img(String imagePath){
-        this.imagePath = imagePath;
-        // construct the Image image in the constructor
-        try{
-            this.image = ImageIO.read(new File(imagePath));
+    List<String> allImages;
+    Map<String, Image> imageToName = new HashMap<>();
 
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
+    Img(){
+        allImages = List.of("chip", "Treasure", "keyRED", "keyBLUE", "freeTile", "wallTile", "exit", "lockedDoor");
+        loadImage();
     }
-    static {
-        // strore all the images in Img in list.
-        Collections.addAll(imgs, Img.values());
+
+    public void loadImage(){
+        allImages.forEach(image -> {
+            try {
+                imageToName.put(image, ImageIO.read(new File(image)));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
-    public Image getImage(){return image;}
-    public String getImageName(){return imagePath;}
-    public static List<Img> getImgs(){return imgs;}
+
+    public Image getImgs(String name){
+        return imageToName.getOrDefault(name, throwError(name));
+    }
+
+    private Image throwError(String imageName) {
+        throw new RuntimeException("No such image");
+    }
 }
 
 
