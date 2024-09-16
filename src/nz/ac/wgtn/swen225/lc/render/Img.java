@@ -11,30 +11,43 @@ import java.util.List;
 enum Img{
     INSTANCE;
 
-    List<String> allImages;
+    // store all the image name with the type Image
     Map<String, Image> imageToName = new HashMap<>();
 
     Img(){
-        allImages = List.of("chip", "Treasure", "keyRED", "keyBLUE", "freeTile", "wallTile", "exit", "lockedDoor");
         loadImage();
     }
 
-    public void loadImage(){
-        allImages.forEach(image -> {
-            try {
-                imageToName.put(image, ImageIO.read(new File(image)));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+    /**
+     * load all the images from a folder and save to the map.
+     */
+    public void loadImage() {
+       File imageFolder = new File("AllImages");
+       File[] imageFiles = imageFolder.listFiles();
+        assert imageFiles != null;
+        for(File file: imageFiles){
+           try{
+               imageToName.put(file.getName(), ImageIO.read(file));
+           }
+           catch (IOException e){
+               System.err.println("Cannot read the file: " + e.getMessage());
+           }
+
+       }
     }
 
+    /**
+     * get all the type Image through the name of the image
+     */
     public Image getImgs(String name){
         return imageToName.getOrDefault(name, throwError(name));
     }
 
-    private Image throwError(String imageName) {
-        throw new RuntimeException("No such image");
+    /**
+     * throw the error if does not find the image in map.
+     */
+    private Image throwError(String name) {
+        throw new RuntimeException("No such image: " + name);
     }
 }
 

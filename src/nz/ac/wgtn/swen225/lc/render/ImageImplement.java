@@ -23,19 +23,16 @@ public class ImageImplement{
     }
 
     /**
-     * get the Image type for each Img
-     */
-    public Image getImage(String path){
-        return Img.INSTANCE.getImgs(path);
-    }
-
-    /**
      * draw the image in each game board to the jpanel.
      */
-    public void drawImages(Graphics g){
+    public void drawImages(Graphics g) {
         List<List<Tile<Item>>> gameBoard = gameState.board();
-        gameBoard.forEach(listTile ->
-                listTile.forEach(tile ->
-                        g.drawImage(getImage(tile.getItemOnTile()), tile.location.x(), tile.location.y(), jpanel)));
+        gameBoard.forEach(listTile -> listTile.forEach(tile -> {
+            try {
+                g.drawImage(Img.INSTANCE.getImgs(tile.getItemOnTile()), tile.location.x(), tile.location.y(), jpanel);
+            } catch (RuntimeException e) {
+                System.err.println(e.getMessage()); // Prints "No such image: <name>"
+            }
+        }));
     }
 }
