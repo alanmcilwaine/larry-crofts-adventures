@@ -15,7 +15,7 @@ import java.util.Objects;
 public class GameBoard {
     private final List<List<Tile<Item>>> board;
 
-    private Player player;
+    private final Player player;
 
     private final List<Robot> robots;
 
@@ -82,7 +82,7 @@ public class GameBoard {
      * @param direction the direction player wants to go.
      */
     public void action(Direction direction) {
-        if(Objects.isNull(direction)){
+        if (Objects.isNull(direction)) {
             throw new IllegalArgumentException("Direction null");
         }
         playerMove(direction, this);
