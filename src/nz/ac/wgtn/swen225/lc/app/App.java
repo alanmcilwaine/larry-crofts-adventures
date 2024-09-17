@@ -3,6 +3,7 @@ package nz.ac.wgtn.swen225.lc.app;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import nz.ac.wgtn.swen225.lc.persistency.*;
 
 public class App extends JFrame{
     // Window is made up of two main panels
@@ -17,6 +18,10 @@ public class App extends JFrame{
     // Window Dimensions
     public static final int WIDTH = 900;
     public static final int HEIGHT = 600;
+
+    // Tick rate
+    public static final int GAME_TICK_RATE = 500;
+    public static final int LOGIC_TICK_RATE = 50;
 
     /**
      * App()
@@ -34,18 +39,62 @@ public class App extends JFrame{
      * Starts the main update loop for the program. Packages Domain, Renderer and Recorder should be used here.
      */
     private void startTick(){
-        Timer tickRate = new Timer(500, (unused) -> tick());
-        tickRate.start();
+        Timer gameTick = new Timer(GAME_TICK_RATE, (unused) -> gameTick());
+        Timer logicTick = new Timer(LOGIC_TICK_RATE, (unused) -> logicTick());
+        gameTick.start();
+        logicTick.start();
     }
 
     /**
-     * tick()
-     * Code inside tick() is called every 500ms. This is the main update loop for the program.
-     * Future implementations will have tick() take in param Action. But for testing I've made one without it.
+     * gameTick()
+     * Code inside gameTick() is called every 500ms. This is the main update loop
+     * for moving enemies in the game and handling things from domain.
      */
-    public void tick(){
+    public void gameTick(){
+    }
+
+    /**
+     * logicTick()
+     * Code inside logicTick() is called every 50ms. This is for updating player movement
+     * at a separate tick rate so movement isn't sluggish.
+     */
+    public void logicTick(){
+    }
+
+    /**
+     * updateGraphics()
+     * Sends an update request to graphics to update the graphics. Used after updating state in domain.
+     */
+    public void updateGraphics(){
+        // renderer.update();
+    }
+
+    /**
+     * giveInput()
+     * Takes in an input, and sends to the domain to update state.
+     * @param input An input in the game, e.g WASD as a command.
+     */
+    public void giveInput(Command input){
 
     }
+
+    /**
+     * initialStateRevert()
+     * Tells domain to revert to the starting state of the game. Like a reset.
+     */
+    public void initialStateRevert(){
+
+    }
+
+    /**
+     * persistency()
+     * Gives the object for keeping track of persistency.
+     * @return
+     */
+    public String persistency(){ // TODO change String to Persistency, unable to import Persistency right now.
+        return "";
+    }
+
 
     /**
      * setupUI()
