@@ -44,7 +44,7 @@ public class Mock {
     }
 
     /**
-     * Get a mock player at position 0,0
+     * Get a new mock player at position 0,0
      *
      * @return a mock player.
      */

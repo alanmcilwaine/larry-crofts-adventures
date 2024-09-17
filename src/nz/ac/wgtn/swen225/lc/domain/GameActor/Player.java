@@ -57,7 +57,7 @@ public class Player implements Actor {
             doMove(tk.location);
             this.location = tk.location;
             //TODO check if this location has robot
-            if (gameBoard.getGameState().robots().stream().anyMatch((x) -> x.getLocation().equals(this.location))) {
+            if (gameBoard.getGameState().robots().stream().anyMatch((x) -> this.location.equals(x.getLocation()))) {
                 //filter out if it's killer robot?
 
                 //need to discuss with app how to decide game is over.
