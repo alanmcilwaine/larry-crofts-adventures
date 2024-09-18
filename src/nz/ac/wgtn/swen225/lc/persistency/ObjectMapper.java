@@ -1,3 +1,5 @@
+package nz.ac.wgtn.swen225.lc.persistency;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
