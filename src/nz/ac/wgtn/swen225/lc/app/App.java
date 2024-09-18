@@ -3,7 +3,7 @@ package nz.ac.wgtn.swen225.lc.app;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import nz.ac.wgtn.swen225.lc.persistency.*;
+import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 
 public class App extends JFrame{
     // Window is made up of two main panels
@@ -20,8 +20,7 @@ public class App extends JFrame{
     public static final int HEIGHT = 600;
 
     // Tick rate
-    public static final int GAME_TICK_RATE = 500;
-    public static final int LOGIC_TICK_RATE = 50;
+    public static final int TICK_RATE = 50;
 
     /**
      * App()
@@ -39,26 +38,19 @@ public class App extends JFrame{
      * Starts the main update loop for the program. Packages Domain, Renderer and Recorder should be used here.
      */
     private void startTick(){
-        Timer gameTick = new Timer(GAME_TICK_RATE, (unused) -> gameTick());
-        Timer logicTick = new Timer(LOGIC_TICK_RATE, (unused) -> logicTick());
-        gameTick.start();
-        logicTick.start();
+        Timer tick = new Timer(TICK_RATE, (unused) -> tick());
+        tick.start();
     }
 
     /**
-     * gameTick()
-     * Code inside gameTick() is called every 500ms. This is the main update loop
-     * for moving enemies in the game and handling things from domain.
-     */
-    public void gameTick(){
-    }
-
-    /**
-     * logicTick()
-     * Code inside logicTick() is called every 50ms. This is for updating player movement
+     * tick()
+     * Code inside tick() is called every 50ms. This is for updating player movement
      * at a separate tick rate so movement isn't sluggish.
      */
-    public void logicTick(){
+    public void tick(){
+        // recorder.tick(Command c) This will be the current command in invoker
+        // executeGameLogic(Command c) Ticks domain, make it public so Recorder can call it.
+        // updateGraphics() Calls renderer to read Domain to update the panel
     }
 
     /**
@@ -81,20 +73,11 @@ public class App extends JFrame{
     /**
      * initialStateRevert()
      * Tells domain to revert to the starting state of the game. Like a reset.
+     * This is used by recorder to go from the start, so it can undo moves.
      */
     public void initialStateRevert(){
 
     }
-
-    /**
-     * persistency()
-     * Gives the object for keeping track of persistency.
-     * @return
-     */
-    public String persistency(){ // TODO change String to Persistency, unable to import Persistency right now.
-        return "";
-    }
-
 
     /**
      * setupUI()
