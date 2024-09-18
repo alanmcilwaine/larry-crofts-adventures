@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import nz.ac.wgtn.swen225.lc.app.App;
+import nz.ac.wgtn.swen225.lc.recorder.App;
 import nz.ac.wgtn.swen225.lc.app.Command;
 
 class GameRecorder implements Recorder{
@@ -26,17 +26,21 @@ class GameRecorder implements Recorder{
         timer = new Timer(App.TICK_RATE,(unused) -> update());
     }
 
-    private void update(){
-        _redo();
+    protected void update(){
+        if(currentTick < commands.size()) _redo();
     }
     @Override
     public void setCommands(List<Command> commands) {
-        this.commands = commands;
+        assert commands != null;
+        assert !commands.isEmpty();
+
+        this.commands = new ArrayList<>(commands);
     }
 
     @Override
     public void tick(Command commandToSave) {
         commands.add(commandToSave);
+        currentTick = commands.size()-1;
     }
 
     @Override
@@ -51,21 +55,36 @@ class GameRecorder implements Recorder{
     public Action takeControl() {return (RecorderAction) (e) -> _takeControl();}
 
 
-    Command nextCommand(){return commands.get(currentTick++);}
+    Command nextCommand(){
+        assert currentTick < commands.size() : "Tried to get a command that is bigger than the commands size: " + currentTick;
 
-    private void _undo(){
+        return commands.get(currentTick++);
+    }
+
+    protected void _undo(){
+        assert currentTick >= 0 : "Should never be less than zero";
+
+        if(currentTick == 0) return;
+
         _pause();
         int current = currentTick;
         currentTick = 0;
         app.initialStateRevert();
-        IntStream.range(0, current-1).forEach(i -> app.giveInput(nextCommand()));
+
+        IntStream.range(0, current-1).forEach(i -> {app.giveInput(nextCommand());});
+
+        app.updateGraphics();
 
         //Should have moved backwards 1 tick
-        assert currentTick == current -1;
+        assert currentTick == current -1 : "expected " + (current -1) +", was " + currentTick;
     }
-    private void _redo(){
+    protected void _redo(){
+        assert currentTick < commands.size()+1 : "Should never be bigger than commands";
+        if(currentTick == commands.size()) return;
+
         _pause();
         app.giveInput(nextCommand());
+        app.updateGraphics();
     }
     private void _play(){
         timer.start();
@@ -73,9 +92,9 @@ class GameRecorder implements Recorder{
     private void _pause(){
         timer.stop();
     }
-    private void _takeControl(){
+    protected void _takeControl(){
         //Delete all actions after this point.
-        commands = commands.stream().limit(currentTick+1).collect(Collectors.toList());
+        commands = commands.stream().limit(currentTick+1).collect(Collectors.toCollection(ArrayList::new));
         _pause();
     }
 }

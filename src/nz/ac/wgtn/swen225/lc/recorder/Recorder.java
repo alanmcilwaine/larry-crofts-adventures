@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-import nz.ac.wgtn.swen225.lc.app.App;
+import nz.ac.wgtn.swen225.lc.recorder.App;
 import nz.ac.wgtn.swen225.lc.app.Command;
 
 /**
