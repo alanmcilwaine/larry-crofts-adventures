@@ -2,7 +2,9 @@ package nz.ac.wgtn.swen225.lc.domain.GameActor;
 
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.Key;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.Treasure;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
+import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
@@ -81,6 +83,7 @@ public class Player implements Actor {
     @Override
     public void doMove(Location location) {
         this.location = new Location(location.x(), location.y());
+
         //updateGameState after move
     }
 }

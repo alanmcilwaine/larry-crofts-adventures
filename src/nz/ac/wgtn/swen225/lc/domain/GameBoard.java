@@ -2,6 +2,11 @@ package nz.ac.wgtn.swen225.lc.domain;
 
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
+
+import nz.ac.wgtn.swen225.lc.domain.GameItem.Exit;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.Treasure;
+import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
+
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 
@@ -11,6 +16,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class GameBoard {
+    private List<GameStateObserver> obs = new ArrayList<>();
     private final List<List<Tile<Item>>> board;
 
     private final Player player;
@@ -25,6 +31,9 @@ public class GameBoard {
 
     public final int height;
 
+    //can have a setter to set total treasure. to discuss.
+    public final static int totalTreasure = 6;
+
     private GameBoard(List<List<Tile<Item>>> board, Player player, List<Robot> robots, int timeLeft, int level, int width, int height) {
         this.board = board;
         this.player = player;
@@ -33,6 +42,7 @@ public class GameBoard {
         this.level = level;
         this.width = width;
         this.height = height;
+        attach(getExitTile());
     }
 
     public static GameBoard of(List<List<Tile<Item>>> board, Player player, List<Robot> robots, int width, int height) {
@@ -41,6 +51,7 @@ public class GameBoard {
 
     private void playerMove(Direction direction, GameBoard gameBoard) {
         player.prepareMove(direction, gameBoard);
+        notifyObservers();
     }
 
     /**
@@ -58,7 +69,7 @@ public class GameBoard {
      */
     public static GameBoard of(List<List<Tile<Item>>> board, Player player, List<Robot> robots, int timeLeft, int width, int height, int level) {
         checkValid(timeLeft, width, height, level);
-        return new GameBoard(board, player, robots, timeLeft, level,width,height);
+        return new GameBoard(board, player, robots, timeLeft, level, width, height);
     }
 
     private static void checkValid(int timeLeft, int width, int height, int level) {
@@ -100,7 +111,30 @@ public class GameBoard {
 
         robotsMove();
         playerMove(direction, this);
-
+        notifyObservers();
     }
 
+    public void attach(GameStateObserver ob) {
+        obs.add(ob);
+    }
+
+    public void detach(GameStateObserver ob) {
+        obs.remove(ob);
+    }
+
+    public void notifyObservers() {
+        for (GameStateObserver observer : obs) {
+            observer.update(player.getTreasure().stream().filter(e -> e instanceof Treasure).toList().size());
+        }
+    }
+
+    private Tile<Item> getExitTile() {
+        return getGameState()
+                .board()
+                .stream()
+                .flatMap(e -> e.stream())
+                .filter(t -> t.item instanceof Exit)
+                .toList()
+                .getFirst();
+    }
 }
