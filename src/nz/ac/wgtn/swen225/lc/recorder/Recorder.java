@@ -64,6 +64,14 @@ public interface Recorder {
     Action pause();
 
     /**
+     * Supplies an action that can be given to a Button.
+     * Deletes all the recorded actions after this point, allowing you to resume play.
+     *
+     * @return an Action which allows you to take control of the recording
+     */
+    Action takeControl();
+
+    /**
      * Supplies a Recorder (GameRecorder)
      *
      * @return GameRecorder, which in turn creates a playback
