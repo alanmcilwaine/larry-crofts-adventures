@@ -17,10 +17,4 @@ public record Location(int x, int y) {
     return new Location(x() + p.x(),y() + p.y());
   }
 
-  /**
-   * returns a new Point with the product of its values and the provided number to times by
-   * @param d number to times it by
-   * @return returns an updated point with the product
-   */
-  public Location multiply(int d) { return new Location(x * d, y * d); }
 }

@@ -1,11 +1,19 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
+
+import nz.ac.wgtn.swen225.lc.domain.GameItem.Exit;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedExit;
+
+import nz.ac.wgtn.swen225.lc.domain.GameActor.KillerRobot;
+import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
+
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
+import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Util;
 
-public class Tile<T extends Item> {
+public class Tile<T extends Item> implements GameStateObserver {
 
     public Item item;
     public final Location location;
@@ -25,7 +33,8 @@ public class Tile<T extends Item> {
         if (!canStepOn(actor)) {
             throw new IllegalArgumentException("Can't move into tile.");
         }
-        item.onTouch(actor, this);
+
+        if(actor instanceof Player) { item.onTouch(actor, this); }
     }
 
     public void onExit(Actor actor) {
@@ -45,5 +54,12 @@ public class Tile<T extends Item> {
         } catch (Exception ignored) {
         }
         return item.getClass().getSimpleName() + attribute;
+    }
+
+    @Override
+    public void update(int treasureNumber) {
+        if (treasureNumber == GameBoard.totalTreasure && item instanceof LockedExit) {
+            item = new Exit();
+        }
     }
 }
