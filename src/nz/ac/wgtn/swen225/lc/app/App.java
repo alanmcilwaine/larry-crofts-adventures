@@ -5,7 +5,7 @@ import java.awt.*;
 import java.util.List;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 
-public class App extends JFrame{
+public class App extends JFrame implements AppInterface{
     // Window is made up of two main panels
     private JPanel game = new JPanel();
     private JPanel ui = new JPanel(new GridLayout(3, 1, 0, 15));
@@ -57,6 +57,7 @@ public class App extends JFrame{
      * updateGraphics()
      * Sends an update request to graphics to update the graphics. Used after updating state in domain.
      */
+    @Override
     public void updateGraphics(){
         // renderer.update();
     }
@@ -66,6 +67,7 @@ public class App extends JFrame{
      * Takes in an input, and sends to the domain to update state.
      * @param input An input in the game, e.g WASD as a command.
      */
+    @Override
     public void giveInput(Command input){
 
     }
@@ -75,8 +77,19 @@ public class App extends JFrame{
      * Tells domain to revert to the starting state of the game. Like a reset.
      * This is used by recorder to go from the start, so it can undo moves.
      */
+    @Override
     public void initialStateRevert(){
 
+    }
+
+
+    /**
+     * openFile()
+     * @return Filename of the save file that has been opened
+     */
+    @Override
+    public String openFile() {
+        return "";
     }
 
     /**
