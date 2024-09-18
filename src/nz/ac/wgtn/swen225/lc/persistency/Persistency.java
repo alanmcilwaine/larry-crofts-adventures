@@ -1,7 +1,10 @@
+package nz.ac.wgtn.swen225.lc.persistency;
+
 import java.io.*;
 import java.util.List;
 import nz.ac.wgtn.swen225.lc.app.Command;
 import nz.ac.wgtn.swen225.lc.recorder.Recorder;
+
 
 public class Persistency{
 
