@@ -24,7 +24,7 @@ public abstract class Robot implements Actor {
 
   @Override
   public void prepareMove(Direction direction, GameBoard gameBoard) {
-    // TODO stop robot from going out of bounds and work on gameover event when player and robot on same tile
+    // TODO check if we can overlap robots
     Location newLoc = direction.act(this.location); // location to move to
 
     Tile tile = gameBoard.getBoard().get(newLoc.x()).get(newLoc.y()); // tile on this location
@@ -40,11 +40,6 @@ public abstract class Robot implements Actor {
         this.robotFacing = Direction.values()[(int) (Math.random() * 4)] ;
         switchDirCount = 0;
     }
-
-    // game over from contact, would we still need two checks ?
-//    if (this.location.equals(gameBoard.getPlayer().getLocation())) {
-//      gameBoard.onGameOver();
-//    }
 
   }
 

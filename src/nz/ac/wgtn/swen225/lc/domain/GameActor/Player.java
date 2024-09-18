@@ -52,9 +52,6 @@ public class Player implements Actor {
         this.playerFacing = direction;
         //find current player location and the tile the player is on.
         //check if player can move onto the tile.
-
-        // TODO stop player from going out of bounds
-
         Location newLoc = direction.act(this.location); // location to move to
 
         // if place is out of bounds do nothing
