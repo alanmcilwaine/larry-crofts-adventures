@@ -42,6 +42,11 @@ public class Tile<T extends Item> {
      * @return run time Item class name.
      */
     public String getItemOnTile() {
-        return item.getClass().getSimpleName();
+        String attribute = "";
+        try {
+            attribute += item.getClass().getMethod("itemColor").invoke(item);
+        } catch (Exception ignored) {
+        }
+        return item.getClass().getSimpleName() + attribute;
     }
 }
