@@ -83,6 +83,7 @@ public class Player implements Actor {
     @Override
     public void doMove(Location location) {
         this.location = new Location(location.x(), location.y());
+
         //updateGameState after move
     }
 }

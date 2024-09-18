@@ -111,6 +111,7 @@ public class GameBoard {
 
         robotsMove();
         playerMove(direction, this);
+        notifyObservers();
 
     }
 

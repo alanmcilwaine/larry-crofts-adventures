@@ -132,4 +132,25 @@ public class GameItemTest {
 
         assertTrue(tile.canStepOn(player));
     }
+
+    /* LockedExit item test */
+    public void lockedExitBecomesUnlockedUponFullTreasure() {
+    }
+
+    /* Exit item test */
+    public void gameMovesToNextLevelOnEntry() {
+    }
+
+    public void exitIsAvailableUponFullTreasure(){
+
+    }
+
+    /* Info item test */
+    public void infoDisplayOnEntry(){
+
+    }
+
+    public void infoDisappearOnExit(){
+
+    }
 }
