@@ -5,7 +5,8 @@ public enum Command{
     Left("Left"),
     Right("Right"),
     Up("Up"),
-    Down("Down");
+    Down("Down"),
+    None("");
 
     private final String direction;
 
