@@ -2,10 +2,8 @@ package nz.ac.wgtn.swen225.lc.domain;
 
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
-import nz.ac.wgtn.swen225.lc.domain.GameItem.NoItem;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
-import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,6 +44,11 @@ public class GameBoard {
     }
 
     /**
+     * Moves all the robots in the level
+     */
+    private void robotsMove() { robots.forEach(r -> r.update(this)); }
+
+    /**
      * Generate a game board.
      *
      * @param board  game board.
@@ -64,7 +67,12 @@ public class GameBoard {
         }
     }
 
+    /**
+     * Get the board
+     * @return Board
+     */
     public List<List<Tile<Item>>> getBoard() { return Collections.unmodifiableList(board); }
+    public Player getPlayer() { return player; }
 
     /**
      * Get current game board state.
@@ -73,6 +81,10 @@ public class GameBoard {
      */
     public GameState getGameState() {
         return new GameState(board, player, robots, timeLeft, level);
+    }
+
+    public void onGameOver() {
+        throw new IllegalArgumentException("Game Over"); // temporary
     }
 
 
@@ -85,7 +97,10 @@ public class GameBoard {
         if (Objects.isNull(direction)) {
             throw new IllegalArgumentException("Direction null");
         }
+
+        robotsMove();
         playerMove(direction, this);
+
     }
 
 }
