@@ -1,12 +1,9 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
 
+import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.Exit;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedExit;
-
-import nz.ac.wgtn.swen225.lc.domain.GameActor.KillerRobot;
-import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
-
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
@@ -27,14 +24,16 @@ public class Tile<T extends Item> implements GameStateObserver {
         Util.checkNull(actor, "Actor");
         return !item.blockActor(actor);
     }
-    
+
     public void onEntry(Actor actor) {
         Util.checkNull(actor, "Actor");
         if (!canStepOn(actor)) {
             throw new IllegalArgumentException("Can't move into tile.");
         }
 
-        if(actor instanceof Player) { item.onTouch(actor, this); }
+        if (actor instanceof Player) {
+            item.onTouch(actor, this);
+        }
     }
 
     public void onExit(Actor actor) {

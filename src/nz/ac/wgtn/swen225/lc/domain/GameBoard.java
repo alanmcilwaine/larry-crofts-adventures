@@ -112,7 +112,6 @@ public class GameBoard {
         robotsMove();
         playerMove(direction, this);
         notifyObservers();
-
     }
 
     public void attach(GameStateObserver ob) {
