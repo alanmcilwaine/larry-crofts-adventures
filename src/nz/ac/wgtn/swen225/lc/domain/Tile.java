@@ -55,6 +55,11 @@ public class Tile<T extends Item> implements GameStateObserver {
         return item.getClass().getSimpleName() + attribute;
     }
 
+    /**
+     * The LockedExit item will observe game state and receive
+     * an update when it should turn into an Exit item.
+     * @param treasureNumber total treasure number required to unlock exit.
+     */
     @Override
     public void update(int treasureNumber) {
         if (treasureNumber == GameBoard.totalTreasure && item instanceof LockedExit) {
