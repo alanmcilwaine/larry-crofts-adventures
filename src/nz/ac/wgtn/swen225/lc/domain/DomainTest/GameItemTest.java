@@ -181,13 +181,14 @@ public class GameItemTest {
 
     }
     @Test
-    public void exitIsAvailableUponFullTreasure(){
+    public void exitIsFreeToPass(){
         var exit = new Exit();
         var tile = new Tile<>(exit, testLocation);
         var player = Mock.getPlayer();
 
         assertTrue(tile.canStepOn(player));
         tile.onEntry(player);
+        assertTrue(player.isNextLevel());
     }
 
     /* Info item test */
