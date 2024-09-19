@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import nz.ac.wgtn.swen225.lc.recorder.App;
+import nz.ac.wgtn.swen225.lc.app.AppInterface;
 import nz.ac.wgtn.swen225.lc.app.Command;
 
 class GameRecorder implements Recorder{
 
-    App app; Timer timer;
+    AppInterface app; Timer timer;
     /**
      * A list of all the actions the player did and were recorded every frame
      */
@@ -26,9 +26,9 @@ class GameRecorder implements Recorder{
      * Create a timer that will call _redo every App.TICK_RATE
      * @param app save the app provided to a field
      */
-    public GameRecorder(App app){
+    public GameRecorder(AppInterface app){
         this.app = app;
-        timer = new Timer(App.TICK_RATE,(unused) -> _redo());
+        timer = new PlaybackTimer(this::_redo);
     }
 
 

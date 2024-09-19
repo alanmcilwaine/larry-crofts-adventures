@@ -1,10 +1,9 @@
 package nz.ac.wgtn.swen225.lc.recorder;
 
 import nz.ac.wgtn.swen225.lc.app.Command;
-import nz.ac.wgtn.swen225.lc.recorder.App;
+import nz.ac.wgtn.swen225.lc.app.AppInterface;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -188,7 +187,7 @@ public class RecorderTests {
     /**
      * A totally fake App, that gives us all the functionality we need for testing.
      */
-    static class MockApp implements App{
+    static class MockApp implements AppInterface{
         MockApp(int x, int y, String[][] in){
             init = in;
             state = deepclone(in);
@@ -221,6 +220,12 @@ public class RecorderTests {
             state = deepclone(init);
             System.out.println("\n===REVERT\n");
         }
+
+        @Override
+        public String openFile() {
+            return null;
+        }
+
         public void movePlayer(int x, int y){
             System.out.println("\nx " + x + ", y " + y + "\n" + toPrint(state) + "\n");
             if(yp+y < 0 || yp+y >= state.length || xp+x < 0 || xp+x >= state[0].length){
@@ -236,11 +241,12 @@ public class RecorderTests {
     /**
      * Returns a modified Recorder that allows us to easier test.
      */
-    static GameRecorder mockRecorder(App app){
-        return new GameRecorder(app){
+    static GameRecorder mockRecorder(AppInterface app1){
+
+        return new GameRecorder(app1){
             public Action undo(){System.out.println("UNDO");_undo(); return null;}
             public Action redo(){System.out.println("REDO");_redo(); return null;}
-            public void tick(Command commandToSave){super.tick(commandToSave); app.giveInput(commandToSave);}
+            public void tick(Command commandToSave){super.tick(commandToSave); app1.giveInput(commandToSave);}
             public Action takeControl(){System.out.println("TAKE CONTROL");_takeControl(); return null;}
         };
     }
