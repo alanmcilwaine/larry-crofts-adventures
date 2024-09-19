@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 
 /**
- * Implements all but 1 of Action's methods, so I can use a lambda to creat actions
+ * Implements all but 1 of Action's methods, so I can use a lambda to create actions
  */
 public interface RecorderAction extends Action {
 
