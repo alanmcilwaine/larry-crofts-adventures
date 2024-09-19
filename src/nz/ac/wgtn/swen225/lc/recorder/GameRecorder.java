@@ -18,8 +18,9 @@ class GameRecorder implements Recorder{
     List<Command> commands = new ArrayList<>();
     /**
      * When replaying shows where we are currently looking
+     * -1 -> means no commands have been executed. 0 -> commands.get(0) has been executed
      */
-    int currentTick = 0;
+    int currentTick = -1;
 
     public GameRecorder(App app){
         this.app = app;
@@ -27,7 +28,7 @@ class GameRecorder implements Recorder{
     }
 
     protected void update(){
-        if(currentTick < commands.size()) _redo();
+        _redo();
     }
     @Override
     public void setCommands(List<Command> commands) {
@@ -57,21 +58,21 @@ class GameRecorder implements Recorder{
 
     Command nextCommand(){
         assert currentTick < commands.size() : "Tried to get a command that is bigger than the commands size: " + currentTick;
-
-        return commands.get(currentTick++);
+        //Increment the current tick, then get the command
+        return commands.get(++currentTick);
     }
 
     protected void _undo(){
-        assert currentTick >= 0 : "Should never be less than zero";
+        assert currentTick >= -1 : "Should never be less than zero";
 
-        if(currentTick == 0) return;
+        if(currentTick == -1) return;
 
         _pause();
         int current = currentTick;
-        currentTick = 0;
+        currentTick = -1;
         app.initialStateRevert();
 
-        IntStream.range(0, current-1).forEach(i -> {app.giveInput(nextCommand());});
+        IntStream.range(0, current).forEach(i -> {app.giveInput(nextCommand());});
 
         app.updateGraphics();
 
@@ -79,8 +80,9 @@ class GameRecorder implements Recorder{
         assert currentTick == current -1 : "expected " + (current -1) +", was " + currentTick;
     }
     protected void _redo(){
-        assert currentTick < commands.size()+1 : "Should never be bigger than commands";
-        if(currentTick == commands.size()) return;
+        assert currentTick < commands.size() : "Should never be bigger than commands";
+
+        if(currentTick == commands.size()-1) return;//We have already redo'd as much as possible
 
         _pause();
         app.giveInput(nextCommand());

@@ -23,49 +23,89 @@ public class RecorderTests {
             throw new Error("Assertions disabled");
         }catch(AssertionError ignored){}
 
+        simpleTest();
         testManual();
-        fuzzActions();
         IntStream.range(0,1000).forEach( i -> cornerCaseRedoZeroCommands());
+        fuzzActions();
+    }
+    static void simpleTest(){
+        System.out.println("_______________SIMPLE__________");
+        MockApp app = mockApp();
+        GameRecorder recorder = mockRecorder(app);
+        int com = 1;
+        recorder.setCommands(List.of(Command.Up));
+
+        String[][] s1 = deepclone(app.state);
+
+        recorder.redo();
+        recorder.undo();
+
+        assertArrays(app.state, s1);
     }
     static void cornerCaseRedoZeroCommands(){
-
+        System.out.println("_______________ZERO COMMAND__________");
         MockApp app = mockApp();
         GameRecorder recorder = mockRecorder(app);
         int com = 50;
         recorder.setCommands(randomCommands(com));
-
-
-        assert recorder.currentTick == 0 : "Expected 0, was " + recorder.currentTick;
+        System.out.println(recorder.commands+"\n");
+        //-1 since has not moved yet
+        assert recorder.currentTick == -1 : "Expected -1, was " + recorder.currentTick;
 
         recorder.takeControl();
 
-        assert recorder.commands.size() == 1 : "Instead of 1, had : " + recorder.commands.size();
+        assert recorder.commands.size() == 0 : "Instead of 0, had : " + recorder.commands.size();
 
+        //Should do nothing and not throw errors
         recorder.undo();
         recorder.redo();
+
+        //==============
 
         //Now test for recording new stuff!
-        recorder.tick(randomCommands(1).get(0));
-        recorder.tick(randomCommands(1).get(0));
-        recorder.tick(randomCommands(1).get(0));
 
-        String[][] save = deepclone(app.state);
-        assert recorder.currentTick == 3;
-        assert recorder.commands.size() == 4;
+        String[][] s1 = deepclone(app.state);
+        System.out.println("S1:\n" + toPrint(app.state));
+
+        recorder.tick(randomCommands(1).get(0));
+        String[][] s2 = deepclone(app.state);
+        assert recorder.currentTick == 0;
+        System.out.println("S2:" + recorder.commands.get(recorder.currentTick) + "\n" + toPrint(app.state));
+
+        recorder.tick(randomCommands(1).get(0));
+        String[][] s3 = deepclone(app.state);
+        assert recorder.currentTick == 1;
+        System.out.println("S3:" + recorder.commands.get(recorder.currentTick) + "\n" + toPrint(app.state));
+
+        recorder.tick(randomCommands(1).get(0));
+        String[][] s4 = deepclone(app.state);
+        assert recorder.currentTick == 2;
+        System.out.println("S4:" + recorder.commands.get(recorder.currentTick) + "\n" + toPrint(app.state));
+
+        assert recorder.commands.size() == 3;
+
+        //SEE IF IT BEHAVES AS EXPECTED WHILE UNDOING AND REDOING
+        recorder.undo();
+        assert recorder.currentTick == 1; assertArrays(app.state,s3);
 
         recorder.undo();
+        assert recorder.currentTick == 0; assertArrays(app.state,s2);
+
         recorder.undo();
-        recorder.undo();
+        assert recorder.currentTick == -1; assertArrays(app.state,s1);
+        //======
+        recorder.redo();
+        assert recorder.currentTick == 0; assertArrays(app.state,s2);
 
         recorder.redo();
-        recorder.redo();
-        recorder.redo();
+        assert recorder.currentTick == 1; assertArrays(app.state,s3);
 
-        assertArrays(app.state,save);
-        assert recorder.currentTick == 5;
-        assert recorder.commands.size() == 4;
+        recorder.redo();
+        assert recorder.currentTick == 2; assertArrays(app.state,s4);
+
     }
     static void fuzzActions(){
+        System.out.println("_______________FUZZ__________");
         for(int trys = 0; trys < 1000; trys++) {
             MockApp app = mockApp();
             GameRecorder recorder = mockRecorder(app);
@@ -93,30 +133,30 @@ public class RecorderTests {
         recorder.setCommands(List.of(Command.Up,Command.Down,Command.Up,Command.Left,Command.None,Command.Up));
 
         recorder.update();
-        assert recorder.currentTick == 6 : "Tick was " + recorder.currentTick;
-        assertArrays(app.state,new String[][]{
-                {"P", "_", "_"},
-                {"_", "_", "_"},
-                {"_", "_", "_"}});
-
-        recorder.undo();
-
-        assertArrays(app.state,new String[][]{
-                {"_", "_", "_"},
-                {"P", "_", "_"},
-                {"_", "_", "_"}});
-
-        recorder.undo();
-        recorder.redo();
-
-        assertArrays(app.state,new String[][]{
-                {"_", "_", "_"},
-                {"P", "_", "_"},
-                {"_", "_", "_"}});
-
-        recorder.undo();
-        recorder.redo();
         assert recorder.currentTick == 5 : "Tick was " + recorder.currentTick;
+        assertArrays(app.state,new String[][]{
+                {"P", "_", "_"},
+                {"_", "_", "_"},
+                {"_", "_", "_"}});
+
+        recorder.undo();
+
+        assertArrays(app.state,new String[][]{
+                {"_", "_", "_"},
+                {"P", "_", "_"},
+                {"_", "_", "_"}});
+
+        recorder.undo();
+        recorder.redo();
+
+        assertArrays(app.state,new String[][]{
+                {"_", "_", "_"},
+                {"P", "_", "_"},
+                {"_", "_", "_"}});
+
+        recorder.undo();
+        recorder.redo();
+        assert recorder.currentTick == 4 : "Tick was " + recorder.currentTick;
         assertArrays(app.state,new String[][]{
                 {"_", "_", "_"},
                 {"P", "_", "_"},
@@ -174,10 +214,14 @@ public class RecorderTests {
         public void initialStateRevert() {
             xp = xpo; yp = ypo;
             state = deepclone(init);
+            System.out.println("\n===REVERT\n");
         }
         public void movePlayer(int x, int y){
-            if(yp+y < 0 || yp+y >= state.length || xp+x < 0 || xp+x >= state[0].length) return;
-
+            System.out.println("\nx " + x + ", y " + y + "\n" + toPrint(state) + "\n");
+            if(yp+y < 0 || yp+y >= state.length || xp+x < 0 || xp+x >= state[0].length){
+                System.out.println("OUT OF BOUNDS\n");
+                return;
+            }
             state[yp][xp] = "_";
             xp+=x; yp+=y;
             state[yp][xp] = "P";
@@ -187,13 +231,14 @@ public class RecorderTests {
     static GameRecorder mockRecorder(App app){
         return new GameRecorder(app){
             protected void update(){
-                if(currentTick < commands.size()) {
+                if(currentTick < commands.size()-1) {
                     _redo(); update();
                 }
             }
-            public Action undo(){_undo(); return null;}
-            public Action redo(){_redo(); return null;}
-            public Action takeControl(){_takeControl(); return null;}
+            public Action undo(){System.out.println("UNDO");_undo(); return null;}
+            public Action redo(){System.out.println("REDO");_redo(); return null;}
+            public void tick(Command commandToSave){super.tick(commandToSave); app.giveInput(commandToSave);}
+            public Action takeControl(){System.out.println("TAKE CONTROL");_takeControl(); return null;}
         };
     }
     /**
