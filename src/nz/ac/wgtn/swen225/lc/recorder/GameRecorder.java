@@ -22,14 +22,16 @@ class GameRecorder implements Recorder{
      */
     int currentTick = -1;
 
+    /**
+     * Create a timer that will call _redo every App.TICK_RATE
+     * @param app save the app provided to a field
+     */
     public GameRecorder(App app){
         this.app = app;
-        timer = new Timer(App.TICK_RATE,(unused) -> update());
+        timer = new Timer(App.TICK_RATE,(unused) -> _redo());
     }
 
-    protected void update(){
-        _redo();
-    }
+
     @Override
     public void setCommands(List<Command> commands) {
         assert commands != null;
@@ -56,12 +58,22 @@ class GameRecorder implements Recorder{
     public Action takeControl() {return (RecorderAction) (e) -> _takeControl();}
 
 
+    /**
+     * Increments currents ticks then returns that command
+     * (If currentTick == 0, commands.get(1) will play, as command 0 was already used)
+     * @return The next command. Throws assertion error if it is out of bounds.
+     */
     Command nextCommand(){
         assert currentTick < commands.size() : "Tried to get a command that is bigger than the commands size: " + currentTick;
         //Increment the current tick, then get the command
         return commands.get(++currentTick);
     }
 
+    /**
+     * Resets the game state back to initial game state by calling app.initialStateRevert()
+     * Then calls app.giveInput() until we are 1 move before the previous move.
+     * Finally redraws the graphics
+     */
     protected void _undo(){
         assert currentTick >= -1 : "Should never be less than zero";
 
@@ -79,6 +91,10 @@ class GameRecorder implements Recorder{
         //Should have moved backwards 1 tick
         assert currentTick == current -1 : "expected " + (current -1) +", was " + currentTick;
     }
+
+    /**
+     * Plays the next move. (If currentTick == 0, commands.get(1) will play, as command 0 was already used)
+     */
     protected void _redo(){
         assert currentTick < commands.size() : "Should never be bigger than commands";
 
@@ -88,12 +104,25 @@ class GameRecorder implements Recorder{
         app.giveInput(nextCommand());
         app.updateGraphics();
     }
+
+    /**
+     * Start the timer that every tick calls _redo()
+     */
     private void _play(){
         timer.start();
     }
+
+    /**
+     * Stop the timer
+     */
     private void _pause(){
         timer.stop();
     }
+
+    /**
+     * Discards all commands after the current tick.
+     * Then allows the player to move around again, recording further commands
+     */
     protected void _takeControl(){
         //Delete all actions after this point.
         commands = commands.stream().limit(currentTick+1).collect(Collectors.toCollection(ArrayList::new));

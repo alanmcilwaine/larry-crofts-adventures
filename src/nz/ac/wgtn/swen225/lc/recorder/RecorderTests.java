@@ -131,8 +131,9 @@ public class RecorderTests {
         MockApp app = mockApp();
         GameRecorder recorder = mockRecorder(app);
         recorder.setCommands(List.of(Command.Up,Command.Down,Command.Up,Command.Left,Command.None,Command.Up));
+        //Go to the last command
+        IntStream.range(0,6).forEach(i ->recorder.redo());
 
-        recorder.update();
         assert recorder.currentTick == 5 : "Tick was " + recorder.currentTick;
         assertArrays(app.state,new String[][]{
                 {"P", "_", "_"},
@@ -183,6 +184,10 @@ public class RecorderTests {
                                           {"_","_","_"},
                                           {"_","P","_"}});
     }
+
+    /**
+     * A totally fake App, that gives us all the functionality we need for testing.
+     */
     static class MockApp implements App{
         MockApp(int x, int y, String[][] in){
             init = in;
@@ -228,13 +233,11 @@ public class RecorderTests {
         }
     }
 
+    /**
+     * Returns a modified Recorder that allows us to easier test.
+     */
     static GameRecorder mockRecorder(App app){
         return new GameRecorder(app){
-            protected void update(){
-                if(currentTick < commands.size()-1) {
-                    _redo(); update();
-                }
-            }
             public Action undo(){System.out.println("UNDO");_undo(); return null;}
             public Action redo(){System.out.println("REDO");_redo(); return null;}
             public void tick(Command commandToSave){super.tick(commandToSave); app.giveInput(commandToSave);}
@@ -250,10 +253,17 @@ public class RecorderTests {
                 .collect(Collectors.joining("\n"));
     }
 
+    /**
+     * Verify that two arrays are identical
+     */
     static void assertArrays(String[][] a,String[][] shouldBe){
         assert Arrays.deepEquals(a,shouldBe)
                 : "Was: \n" + toPrint(a) +"\nInstead of: \n" + toPrint(shouldBe);
     }
+
+    /**
+     * Handy function to completely clone an array of Strings
+     */
     static String[][] deepclone(String[][] array){
         String[][] nw = new String[array.length][array[0].length];
 
