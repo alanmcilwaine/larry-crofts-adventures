@@ -19,11 +19,11 @@ public abstract class Robot implements Actor {
   public void setRobotFacing(Direction dir) { this.robotFacing = dir; }
 
   public void update(GameBoard gameBoard) {
-    prepareMove(this.robotFacing, gameBoard);
+    doMove(this.robotFacing, gameBoard);
   }
 
   @Override
-  public void prepareMove(Direction direction, GameBoard gameBoard) {
+  public void doMove(Direction direction, GameBoard gameBoard) {
     // TODO check if we can overlap robots
     Location newLoc = direction.act(this.location); // location to move to
 
@@ -31,7 +31,7 @@ public abstract class Robot implements Actor {
     Tile prevTile = gameBoard.getBoard().get(this.location.x()).get(this.location.y());
 
     if (tile.canStepOn(this) && switchDirCount <= 20) {
-      doMove(newLoc);
+      updateActorLocation(newLoc);
       tile.onEntry(this);
       prevTile.onExit(this);
       switchDirCount++; // don't know how often should switch direction
@@ -44,7 +44,7 @@ public abstract class Robot implements Actor {
   }
 
   @Override
-  public void doMove(Location location) {
+  public void updateActorLocation(Location location) {
     this.location = new Location(location.x(), location.y());
   }
 

@@ -134,22 +134,27 @@ public class GameItemTest {
     }
 
     /* LockedExit item test */
+    @Test
     public void lockedExitBecomesUnlockedUponFullTreasure() {
+
     }
 
     /* Exit item test */
+    @Test
     public void gameMovesToNextLevelOnEntry() {
     }
-
+    @Test
     public void exitIsAvailableUponFullTreasure(){
 
     }
 
     /* Info item test */
+    @Test
     public void infoDisplayOnEntry(){
 
     }
 
+    @Test
     public void infoDisappearOnExit(){
 
     }

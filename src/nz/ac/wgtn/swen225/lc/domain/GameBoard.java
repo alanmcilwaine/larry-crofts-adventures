@@ -9,14 +9,12 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.Util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class GameBoard {
-    private List<GameStateObserver> obs = new ArrayList<>();
+    private final List<GameStateObserver> obs = new ArrayList<>();
     private final List<List<Tile<Item>>> board;
 
     private final Player player;
@@ -45,20 +43,6 @@ public class GameBoard {
         attach(getExitTile());
     }
 
-    public static GameBoard of(List<List<Tile<Item>>> board, Player player, List<Robot> robots, int width, int height) {
-        return new GameBoard(board, player, robots, 10, 0, width, height);
-    }
-
-    private void playerMove(Direction direction, GameBoard gameBoard) {
-        player.prepareMove(direction, gameBoard);
-        notifyObservers();
-    }
-
-    /**
-     * Moves all the robots in the level
-     */
-    private void robotsMove() { robots.forEach(r -> r.update(this)); }
-
     /**
      * Generate a game board.
      *
@@ -72,6 +56,38 @@ public class GameBoard {
         return new GameBoard(board, player, robots, timeLeft, level, width, height);
     }
 
+    /**
+     * Take an action on current board.
+     *
+     * @param direction the direction player wants to go.
+     */
+    public void action(Direction direction) {
+        Util.checkNull(direction, "Direction is null");
+
+        // robot is not controlled by player, they need their own tick.
+        //robotsMove();
+        playerMove(direction, this);
+        notifyObservers();
+    }
+
+
+    private void playerMove(Direction direction, GameBoard gameBoard) {
+        player.doMove(direction, gameBoard);
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    /**
+     * Moves all the robots in the level
+     */
+    private void robotsMove() { robots.forEach(r -> r.update(this)); }
+
     private static void checkValid(int timeLeft, int width, int height, int level) {
         if (timeLeft <= 0 || width < 2 || height < 2 || level < 1) {
             throw new IllegalArgumentException("Invalid game board");
@@ -83,7 +99,6 @@ public class GameBoard {
      * @return Board
      */
     public List<List<Tile<Item>>> getBoard() { return Collections.unmodifiableList(board); }
-    public Player getPlayer() { return player; }
 
     /**
      * Get current game board state.
@@ -96,22 +111,6 @@ public class GameBoard {
 
     public void onGameOver() {
         throw new IllegalArgumentException("Game Over"); // temporary
-    }
-
-
-    /**
-     * Take an action on current board.
-     *
-     * @param direction the direction player wants to go.
-     */
-    public void action(Direction direction) {
-        if (Objects.isNull(direction)) {
-            throw new IllegalArgumentException("Direction null");
-        }
-
-        robotsMove();
-        playerMove(direction, this);
-        notifyObservers();
     }
 
     public void attach(GameStateObserver ob) {
@@ -128,13 +127,20 @@ public class GameBoard {
         }
     }
 
+
+    /**
+     * Get the tile hosting the exit item.
+     * @return tile with exit.
+     */
     private Tile<Item> getExitTile() {
         return getGameState()
                 .board()
                 .stream()
-                .flatMap(e -> e.stream())
+                .flatMap(Collection::stream)
                 .filter(t -> t.item instanceof Exit)
                 .toList()
                 .getFirst();
     }
 }
+
+

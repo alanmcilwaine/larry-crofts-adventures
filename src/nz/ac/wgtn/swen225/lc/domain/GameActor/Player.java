@@ -1,17 +1,14 @@
 package nz.ac.wgtn.swen225.lc.domain.GameActor;
 
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
-import nz.ac.wgtn.swen225.lc.domain.GameItem.Key;
-import nz.ac.wgtn.swen225.lc.domain.GameItem.Treasure;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
-import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
-import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Player implements Actor {
@@ -21,6 +18,8 @@ public class Player implements Actor {
     private Location location;
 
     private Direction playerFacing = Direction.DOWN;
+
+    private boolean isDead = false;
 
     @Override
     public Location getLocation() {
@@ -34,6 +33,10 @@ public class Player implements Actor {
 
     public List<Item> getTreasure() {
         return List.copyOf(treasure);
+    }
+
+    public boolean isDead() {
+        return isDead;
     }
 
     public Player(Location location) {
@@ -50,40 +53,43 @@ public class Player implements Actor {
 
 
     @Override
-    public void prepareMove(Direction direction, GameBoard gameBoard) {
+    public void doMove(Direction direction, GameBoard gameBoard) {
         this.playerFacing = direction;
-        //find current player location and the tile the player is on.
-        //check if player can move onto the tile.
-        Location newLoc = direction.act(this.location); // location to move to
+        var currentTile = findTileInSpecificLocation(gameBoard, location);
+        Location nextLocation = location.add(direction.act(this.location));
 
-        // if place is out of bounds do nothing
-        if (newLoc.x() < 0 || newLoc.y() < 0) { return ; }
+        if(locationIsValid(nextLocation, gameBoard)) {
 
-        Tile tile = gameBoard.getBoard().get(newLoc.x()).get(newLoc.y()); // tile on this location
-        Tile prevTile = gameBoard.getBoard().get(this.location.x()).get(this.location.y()); // tile actor was on
+            Tile<Item> nextTile = findTileInSpecificLocation(gameBoard, nextLocation);
 
-        if (tile.canStepOn(this)) {
-            doMove(newLoc);
-            tile.onEntry(this);
-            prevTile.onExit(this);
+            if (nextTile.canStepOn(this)) {
+                currentTile.onExit(this);
+                nextTile.onEntry(this);
+                updateActorLocation(nextLocation);
+            }
+            if(gameBoard.getGameState().robots().stream().anyMatch((x)->x.getLocation().equals(this.location))){
+                isDead = true;
+                gameBoard.onGameOver();
+            }
         }
-
-        if(gameBoard.getGameState().robots().stream().anyMatch((x)->x.getLocation().equals(this.location))){
-            gameBoard.onGameOver();
-        }
-
-//            //TODO check if this location has robot
-//            if(gameBoard.getGameState().robots().stream().anyMatch((x)->x.getLocation().equals(this.location))){
-//                //filter out if it's killer robot?
-//
-//                //need to discuss with app how to decide game is over.
-
     }
 
     @Override
-    public void doMove(Location location) {
+    public void updateActorLocation(Location location) {
         this.location = new Location(location.x(), location.y());
+    }
 
-        //updateGameState after move
+    private boolean locationIsValid(Location location, GameBoard gameBoard) {
+        return location.x() >= 0 && location.x() <= gameBoard.getWidth() &&
+               location.y() >= 0 && location.y() <= gameBoard.getHeight();
+    }
+
+
+    private Tile<Item> findTileInSpecificLocation(GameBoard gameBoard, Location targetLocation) {
+        return gameBoard.getGameState().board().stream()
+                .flatMap(Collection::stream)
+                .filter(x->x.location.equals(targetLocation))
+                .toList()
+                .getFirst();
     }
 }
