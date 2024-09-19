@@ -178,7 +178,12 @@ public class GameItemTest {
     /* Exit item test */
     @Test
     public void gameMovesToNextLevelOnEntry() {
+        var exit = new Exit();
+        var tile = new Tile<>(exit, testLocation);
+        var player = Mock.getPlayer();
 
+        tile.onEntry(player);
+        assertTrue(player.isNextLevel());
     }
     @Test
     public void exitIsFreeToPass(){
@@ -187,8 +192,6 @@ public class GameItemTest {
         var player = Mock.getPlayer();
 
         assertTrue(tile.canStepOn(player));
-        tile.onEntry(player);
-        assertTrue(player.isNextLevel());
     }
 
     /* Info item test */
