@@ -4,6 +4,7 @@ package nz.ac.wgtn.swen225.lc.domain;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.Exit;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedExit;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.Treasure;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
@@ -56,13 +57,15 @@ public class Tile<T extends Item> implements GameStateObserver {
     }
 
     /**
-     * The LockedExit item will observe game state and receive
-     * an update when it should turn into an Exit item.
-     * @param treasureNumber total treasure number required to unlock exit.
+     * Certain tile with item will observe game state and receive
+     * an update and change accordingly.
+     * @param gameState game state.
      */
     @Override
-    public void update(int treasureNumber) {
-        if (treasureNumber == GameBoard.totalTreasure && item instanceof LockedExit) {
+    public void update(GameState gameState) {
+        var playerTreasure = gameState.player().getTreasure()
+                .stream().filter(e -> e instanceof Treasure).toList().size();
+        if (playerTreasure == GameBoard.totalTreasure && item instanceof LockedExit) {
             item = new Exit();
         }
     }

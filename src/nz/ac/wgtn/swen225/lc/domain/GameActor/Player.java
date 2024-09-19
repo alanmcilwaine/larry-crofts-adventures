@@ -21,6 +21,10 @@ public class Player implements Actor {
 
     private boolean isDead = false;
 
+    private boolean showPlayerInfo = false;
+
+    private boolean nextLevel = false;
+
     @Override
     public Location getLocation() {
         return location;
@@ -91,5 +95,21 @@ public class Player implements Actor {
                 .filter(x->x.location.equals(targetLocation))
                 .toList()
                 .getFirst();
+    }
+
+    public boolean isShowPlayerInfo() {
+        return showPlayerInfo;
+    }
+
+    public void setShowPlayerInfo(boolean showPlayerInfo) {
+        this.showPlayerInfo = showPlayerInfo;
+    }
+
+    public boolean isNextLevel() {
+        return nextLevel;
+    }
+
+    public void setNextLevel(boolean nextLevel) {
+        this.nextLevel = nextLevel;
     }
 }

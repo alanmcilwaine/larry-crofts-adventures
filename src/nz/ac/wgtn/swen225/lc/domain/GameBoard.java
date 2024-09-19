@@ -4,6 +4,7 @@ import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 
 import nz.ac.wgtn.swen225.lc.domain.GameItem.Exit;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedExit;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.Treasure;
 import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 
@@ -29,8 +30,7 @@ public class GameBoard {
 
     public final int height;
 
-    //can have a setter to set total treasure. to discuss.
-    public final static int totalTreasure = 6;
+    public static int totalTreasure = 6;
 
     private GameBoard(List<List<Tile<Item>>> board, Player player, List<Robot> robots, int timeLeft, int level, int width, int height) {
         this.board = board;
@@ -83,6 +83,10 @@ public class GameBoard {
         return height;
     }
 
+    public static void setTotalTreasure(int totalTreasure) {
+        GameBoard.totalTreasure = totalTreasure;
+    }
+
     /**
      * Moves all the robots in the level
      */
@@ -113,17 +117,25 @@ public class GameBoard {
         throw new IllegalArgumentException("Game Over"); // temporary
     }
 
-    public void attach(GameStateObserver ob) {
+    private void attach(GameStateObserver ob) {
         obs.add(ob);
     }
 
-    public void detach(GameStateObserver ob) {
+    private void detach(GameStateObserver ob) {
         obs.remove(ob);
+    }
+
+    public <T extends GameStateObserver> void subscribeGameState(T observer) {
+        attach(observer);
+    }
+
+    public <T extends GameStateObserver> void unsubscribeGameState(T observer) {
+        detach(observer);
     }
 
     public void notifyObservers() {
         for (GameStateObserver observer : obs) {
-            observer.update(player.getTreasure().stream().filter(e -> e instanceof Treasure).toList().size());
+            observer.update(getGameState());
         }
     }
 
@@ -133,13 +145,18 @@ public class GameBoard {
      * @return tile with exit.
      */
     private Tile<Item> getExitTile() {
-        return getGameState()
-                .board()
-                .stream()
-                .flatMap(Collection::stream)
-                .filter(t -> t.item instanceof Exit)
-                .toList()
-                .getFirst();
+        try{
+            return getGameState()
+                    .board()
+                    .stream()
+                    .flatMap(Collection::stream)
+                    .filter(t -> t.item instanceof LockedExit)
+                    .toList()
+                    .getFirst();
+        }
+       catch (NoSuchElementException e) {
+            throw new IllegalArgumentException("Map must have a locked exit." + e.getMessage());
+       }
     }
 }
 
