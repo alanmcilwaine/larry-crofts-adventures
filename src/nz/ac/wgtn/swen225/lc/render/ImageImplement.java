@@ -2,6 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import nz.ac.wgtn.swen225.lc.domain.GameState;
+import nz.ac.wgtn.swen225.lc.domain.Tile;
+import nz.ac.wgtn.swen225.lc.domain.Item;
+import nz.ac.wgtn.swen225.lc.domain.Location;
 
 public class ImageImplement{
     // App's jpanel called game in App
