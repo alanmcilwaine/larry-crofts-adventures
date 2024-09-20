@@ -13,7 +13,7 @@ public interface Actor {
 
     Direction getActorFacing();
 
-    void prepareMove(Direction direction, GameBoard gameBoard);
+    void doMove(Direction direction, GameBoard gameBoard);
 
-    void doMove(Location location);
+    void updateActorLocation(Location location);
 }

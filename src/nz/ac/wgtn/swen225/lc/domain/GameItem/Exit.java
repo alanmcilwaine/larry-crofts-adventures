@@ -17,6 +17,15 @@ public record Exit() implements Item {
 
     @Override
     public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {
-        // should finish the level by app?
+        if(actor instanceof Player p) {
+            p.setNextLevel(true);
+        }
+    }
+
+    @Override
+    public <T extends Item> void onExit(Actor actor, Tile<T> tile) {
+        if(actor instanceof Player p) {
+            p.setNextLevel(false);
+        }
     }
 }

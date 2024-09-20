@@ -1,10 +1,15 @@
 package nz.ac.wgtn.swen225.lc.domain.DomainTest;
 
+import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
+import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -134,23 +139,75 @@ public class GameItemTest {
     }
 
     /* LockedExit item test */
+    @Test
+    public void lockedExitBlocksPlayer() {
+        var lockedExit = new LockedExit();
+        var tile = new Tile<>(lockedExit, testLocation);
+        var player = Mock.getPlayer();
+
+        assertFalse(tile.canStepOn(player));
+    }
+    @Test
     public void lockedExitBecomesUnlockedUponFullTreasure() {
+        GameBoard gameBoard = Mock.getGameBoard();
+        GameBoard.setTotalTreasure(0);
+        assertInstanceOf(LockedExit.class, gameBoard.getBoard().getFirst().get(3).item);
+
+        gameBoard.notifyObservers();
+
+        assertInstanceOf(Exit.class, gameBoard.getBoard().getFirst().get(3).item);
+    }
+
+    @Test
+    public void lockedExitBecomesUnlockedUponFullTreasure3() {
+        GameBoard gameBoard = Mock.getGameBoard();
+        GameBoard.setTotalTreasure(3);
+        Player player = gameBoard.getGameState().player();
+
+        assertInstanceOf(LockedExit.class, gameBoard.getBoard().getFirst().get(3).item);
+
+        var ls = List.of(new Treasure(), new Treasure(), new Treasure());
+        ls.forEach(player::addTreasure);
+        assertEquals(ls.size(), 3);
+
+        gameBoard.notifyObservers();
+
+        assertInstanceOf(Exit.class, gameBoard.getBoard().getFirst().get(3).item);
     }
 
     /* Exit item test */
+    @Test
     public void gameMovesToNextLevelOnEntry() {
+        var exit = new Exit();
+        var tile = new Tile<>(exit, testLocation);
+        var player = Mock.getPlayer();
+
+        tile.onEntry(player);
+        assertTrue(player.isNextLevel());
     }
+    @Test
+    public void exitIsFreeToPass(){
+        var exit = new Exit();
+        var tile = new Tile<>(exit, testLocation);
+        var player = Mock.getPlayer();
 
-    public void exitIsAvailableUponFullTreasure(){
-
+        assertTrue(tile.canStepOn(player));
     }
 
     /* Info item test */
-    public void infoDisplayOnEntry(){
+    @Test
+    public void infoToggleOnEntryExit(){
+        var info = new Info("info");
+        var tile = new Tile<>(info,testLocation);
+        var player = Mock.getPlayer();
 
-    }
+        assertFalse(player.isShowPlayerInfo());
 
-    public void infoDisappearOnExit(){
-
+        tile.onEntry(player);
+        assertTrue(player.isShowPlayerInfo());
+        tile.onExit(player);
+        assertFalse(player.isShowPlayerInfo());
+        tile.onEntry(player);
+        assertTrue(player.isShowPlayerInfo());
     }
 }
