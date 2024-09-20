@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import nz.ac.wgtn.swen225.lc.app.Command;
+import nz.ac.wgtn.swen225.lc.domain.GameState;
+
 public class ObjectMapper {
     /**
      * Saves the given GameState object as a JSON format to a file.

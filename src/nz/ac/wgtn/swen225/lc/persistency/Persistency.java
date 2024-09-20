@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.List;
 import nz.ac.wgtn.swen225.lc.app.Command;
 import nz.ac.wgtn.swen225.lc.recorder.Recorder;
+import nz.ac.wgtn.swen225.lc.domain.GameState;
 
 
 public class Persistency{
