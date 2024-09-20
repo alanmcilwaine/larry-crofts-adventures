@@ -3,8 +3,9 @@ package nz.ac.wgtn.swen225.lc.app;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 
-public class App extends JFrame{
+public class App extends JFrame implements AppInterface{
     // Window is made up of two main panels
     private JPanel game = new JPanel();
     private JPanel ui = new JPanel(new GridLayout(3, 1, 0, 15));
@@ -17,6 +18,9 @@ public class App extends JFrame{
     // Window Dimensions
     public static final int WIDTH = 900;
     public static final int HEIGHT = 600;
+
+    // Tick rate
+    public static final int TICK_RATE = 50;
 
     /**
      * App()
@@ -34,17 +38,58 @@ public class App extends JFrame{
      * Starts the main update loop for the program. Packages Domain, Renderer and Recorder should be used here.
      */
     private void startTick(){
-        Timer tickRate = new Timer(500, (unused) -> tick());
-        tickRate.start();
+        Timer tick = new Timer(TICK_RATE, (unused) -> tick());
+        tick.start();
     }
 
     /**
      * tick()
-     * Code inside tick() is called every 500ms. This is the main update loop for the program.
-     * Future implementations will have tick() take in param Action. But for testing I've made one without it.
+     * Code inside tick() is called every 50ms. This is for updating player movement
+     * at a separate tick rate so movement isn't sluggish.
      */
     public void tick(){
+        // recorder.tick(Command c) This will be the current command in invoker
+        // executeGameLogic(Command c) Ticks domain, make it public so Recorder can call it.
+        // updateGraphics() Calls renderer to read Domain to update the panel
+    }
 
+    /**
+     * updateGraphics()
+     * Sends an update request to graphics to update the graphics. Used after updating state in domain.
+     */
+    @Override
+    public void updateGraphics(){
+        // renderer.update();
+    }
+
+    /**
+     * giveInput()
+     * Takes in an input, and sends to the domain to update state.
+     * @param input An input in the game, e.g WASD as a command.
+     */
+    @Override
+    public void giveInput(Command input){
+
+    }
+
+    /**
+     * initialStateRevert()
+     * Tells domain to revert to the starting state of the game. Like a reset.
+     * This is used by recorder to go from the start, so it can undo moves.
+     */
+    @Override
+    public void initialStateRevert(){
+
+    }
+
+
+    /**
+     * openFile()
+     * @return Filename of the save file that has been opened
+     */
+    @Override
+    public String openFile() {
+        return "";
     }
 
     /**
