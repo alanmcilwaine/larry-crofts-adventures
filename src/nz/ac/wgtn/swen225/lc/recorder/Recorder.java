@@ -1,10 +1,9 @@
 package nz.ac.wgtn.swen225.lc.recorder;
 
 import javax.swing.*;
-import java.io.FileNotFoundException;
 import java.util.List;
 
-import nz.ac.wgtn.swen225.lc.app.App;
+import nz.ac.wgtn.swen225.lc.app.AppInterface;
 import nz.ac.wgtn.swen225.lc.app.Command;
 
 /**
@@ -23,6 +22,13 @@ public interface Recorder {
      * @param commands A list of all commands recorded in that game.
      */
     void setCommands(List<Command> commands);
+
+    /**
+     * Get the current commands, so that we can pass them to persistence for saving
+     *
+     * @return all current commands, unmodifiable list
+     */
+    List<Command> getCommands();
 
     /**
      * Saves all info needed to replay this tick. Should be called every time the player "ticks" and moves.
@@ -64,11 +70,19 @@ public interface Recorder {
     Action pause();
 
     /**
+     * Supplies an action that can be given to a Button.
+     * Deletes all the recorded actions after this point, allowing you to resume play.
+     *
+     * @return an Action which allows you to take control of the recording
+     */
+    Action takeControl();
+
+    /**
      * Supplies a Recorder (GameRecorder)
      *
      * @return GameRecorder, which in turn creates a playback
      */
-    static Recorder create(App app){
+    static Recorder create(AppInterface app){
         return new GameRecorder(app);
     }
 }
