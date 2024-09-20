@@ -62,7 +62,7 @@ public class Mock {
         Player p = getPlayer(new Location(4, 4));
 
         List<Robot> robots = new ArrayList<>();
-        robots.add(new KillerRobot(new Location(0, 0)));
+        //robots.add(new KillerRobot(new Location(0, 0)));
 
         List<List<Tile<Item>>> tiles = constructTiles();
         addItemToTile(tiles);
@@ -75,7 +75,7 @@ public class Mock {
         for (int i = 0; i < 5; i++) {
             ArrayList<Tile<Item>> row = new ArrayList<>();
             for (int j = 0; j < 5; j++) {
-                row.add(new Tile<>(new NoItem(), new Location(i, j)));
+                row.add(new Tile<>(new NoItem(), new Location(j, i)));
             }
             t.add(row);
         }
@@ -92,7 +92,7 @@ public class Mock {
 
         l.get(2).get(3).item = new Treasure();
 
-        l.get(3).get(3).item = new UnLockedDoor(ItemColor.RED);
+        l.get(3).get(1).item = new UnLockedDoor(ItemColor.RED);
         l.get(3).get(3).item = new LockedDoor(ItemColor.RED);
 
         l.get(4).get(2).item = new Wall();

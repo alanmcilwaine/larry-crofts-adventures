@@ -10,6 +10,7 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
 
 public class Player implements Actor {
 
@@ -47,20 +48,23 @@ public class Player implements Actor {
         this.location = location;
     }
 
-    public boolean addTreasure(Item item) {
-        return treasure.add(item);
+    public void addTreasure(Item item) {
+        treasure.add(item);
+        GameBoard.domainLogger.log(Level.INFO, String.format("Player has %s treasure", treasure.size()));
     }
 
-    public boolean removeTreasure(Item item) {
-        return treasure.remove(item);
+    public void removeTreasure(Item item) {
+        treasure.remove(item);
+        GameBoard.domainLogger.log(Level.INFO, String.format("Player has %s treasure", treasure.size()));
     }
 
 
     @Override
     public void doMove(Direction direction, GameBoard gameBoard) {
         this.playerFacing = direction;
+        GameBoard.domainLogger.log(Level.INFO, "Player is facing:" + playerFacing + " should try to move " + playerFacing);
         var currentTile = findTileInSpecificLocation(gameBoard, location);
-        Location nextLocation = location.add(direction.act(this.location));
+        Location nextLocation = direction.act(this.location);
 
         if(locationIsValid(nextLocation, gameBoard)) {
 
@@ -70,11 +74,14 @@ public class Player implements Actor {
                 currentTile.onExit(this);
                 nextTile.onEntry(this);
                 updateActorLocation(nextLocation);
+                GameBoard.domainLogger.log(Level.INFO, "Player is at:" + location + " after moving " + direction);
             }
             if(gameBoard.getGameState().robots().stream().anyMatch((x)->x.getLocation().equals(this.location))){
                 isDead = true;
                 gameBoard.onGameOver();
             }
+        } else {
+            GameBoard.domainLogger.log(Level.INFO, "Player tried to move to:" + location.toString());
         }
     }
 
