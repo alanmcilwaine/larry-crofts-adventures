@@ -24,6 +24,13 @@ public interface Recorder {
     void setCommands(List<Command> commands);
 
     /**
+     * Get the current commands, so that we can pass them to persistence for saving
+     *
+     * @return all current commands, unmodifiable list
+     */
+    List<Command> getCommands();
+
+    /**
      * Saves all info needed to replay this tick. Should be called every time the player "ticks" and moves.
      *
      * @param commandToSave Will be stored, then saved to a file, so the game can be replayed later.

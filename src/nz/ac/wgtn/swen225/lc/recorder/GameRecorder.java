@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.recorder;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -38,6 +39,11 @@ class GameRecorder implements Recorder{
         assert !commands.isEmpty();
 
         this.commands = new ArrayList<>(commands);
+    }
+
+    @Override
+    public List<Command> getCommands() {
+        return Collections.unmodifiableList(commands);
     }
 
     @Override
