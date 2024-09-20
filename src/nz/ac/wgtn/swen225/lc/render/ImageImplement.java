@@ -4,8 +4,8 @@ import java.util.*;
 import java.util.List;
 import nz.ac.wgtn.swen225.lc.domain.GameState;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
-import nz.ac.wgtn.swen225.lc.domain.Item;
-import nz.ac.wgtn.swen225.lc.domain.Location;
+import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
 public class ImageImplement{
     // App's jpanel called game in App
