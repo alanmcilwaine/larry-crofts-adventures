@@ -9,6 +9,7 @@ import nz.ac.wgtn.swen225.lc.domain.GameState;
 public class ObjectMapper {
     /**
      * Saves the given GameState object as a JSON format to a file.
+     * @author zhoudavi1 300652444
      * @param level
      * @return String The JSON string to be saved.
      * @throws IOException
@@ -27,6 +28,7 @@ public class ObjectMapper {
 
     /**
      * Saves the given list of actions as a JSON format to a file.
+     * @author zhoudavi1 300652444
      * @param actions
      * @return String The JSON string to be saved.
      * @throws IOException
@@ -52,7 +54,7 @@ public class ObjectMapper {
     /**
      * Read the given GameState object as a JSON format to a file.
      *
-     * @author zhoudavi1
+     * @author zhoudavi1 300652444
      * @param json The string to be converted to a GameState object.
      * @return GameState The GameState object to be loaded.
      */
@@ -66,7 +68,7 @@ public class ObjectMapper {
     /**
      * Read the given list of actions as a JSON format from a file.
      *
-     * @author zhoudavi1
+     * @author zhoudavi1 300652444
      * @param json The string to be converted to a list of actions.
      * @return List<Action> The list of actions to be loaded.
      */

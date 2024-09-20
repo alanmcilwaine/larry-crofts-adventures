@@ -14,7 +14,7 @@ public class Persistency{
     /**
      * Saves the given GameState object as a JSON format to a file.
      *
-     * @author zhoudavi1
+     * @author zhoudavi1 300652444
      * @param filename The name of the file to save the GameState to.
      * @param level The GameState object to be saved.
      */
@@ -41,7 +41,7 @@ public class Persistency{
     /**
      * Saves the given list of actions as a JSON format to a file.
      *
-     * @author zhoudavi1
+     * @author zhoudavi1 300652444
      * @param level The level of the actions to be saved.
      * @param actions Saving the list of actions to a file.
      */
@@ -69,7 +69,7 @@ public class Persistency{
     /**
      * Loads a GameState object from a file.
      *
-     * @author zhoudavi1
+     * @author zhoudavi1 300652444
      * @param filename The name of the file to save the GameState to.
      * @return GameState Loading GameState from a file.
      */
@@ -101,7 +101,7 @@ public class Persistency{
     /**
      * Loads a recording of actions from a file.
      *
-     * @author zhoudavi1
+     * @author zhoudavi1 300652444
      * @param filename The name of the file to save the GameState to.
      * @return List<Action> Loading list of actions from a file.
      */
