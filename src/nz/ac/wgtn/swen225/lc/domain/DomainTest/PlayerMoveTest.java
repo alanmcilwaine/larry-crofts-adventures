@@ -33,6 +33,7 @@ public class PlayerMoveTest {
 
         assertEquals(player.getLocation(), new Location(4,4));
 
+        gameboard.action(Direction.UP);
         //can't step on wall
         gameboard.action(Direction.LEFT);
         assertEquals(player.getLocation(), new Location(4,4));

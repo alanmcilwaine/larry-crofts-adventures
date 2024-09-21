@@ -83,7 +83,7 @@ public class Player implements Actor {
                 gameBoard.onGameOver();
             }
         } else {
-            GameBoard.domainLogger.log(Level.INFO, "Player tried to move to invalid location:" + location.toString());
+            GameBoard.domainLogger.log(Level.INFO, "Player tried to move to invalid location:" + nextLocation);
         }
     }
 
@@ -93,8 +93,8 @@ public class Player implements Actor {
     }
 
     private boolean locationIsValid(Location location, GameBoard gameBoard) {
-        return location.x() >= 0 && location.x() <= gameBoard.getWidth() &&
-               location.y() >= 0 && location.y() <= gameBoard.getHeight();
+        return location.x() >= 0 && location.x() < gameBoard.getWidth() &&
+               location.y() >= 0 && location.y() < gameBoard.getHeight();
     }
 
 
