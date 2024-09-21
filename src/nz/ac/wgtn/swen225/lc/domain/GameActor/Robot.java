@@ -6,6 +6,8 @@ import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
+import java.util.logging.Level;
+
 public abstract class Robot implements Actor {
   private Location location;
   private Direction robotFacing = Direction.values()[(int) (Math.random() * 5)];
@@ -27,11 +29,15 @@ public abstract class Robot implements Actor {
     // TODO check if we can overlap robots
     Location newLoc = direction.act(this.location); // location to move to
 
+    GameBoard.domainLogger.log(Level.INFO, "Robot is facing: " + robotFacing);
+
     Tile tile = gameBoard.getBoard().get(newLoc.x()).get(newLoc.y()); // tile on this location
     Tile prevTile = gameBoard.getBoard().get(this.location.x()).get(this.location.y());
 
     if (tile.canStepOn(this) && switchDirCount <= 20) {
       updateActorLocation(newLoc);
+
+
       tile.onEntry(this);
       prevTile.onExit(this);
       switchDirCount++; // don't know how often should switch direction
