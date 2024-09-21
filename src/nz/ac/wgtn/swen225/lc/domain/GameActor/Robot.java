@@ -48,7 +48,5 @@ public abstract class Robot implements Actor {
     this.location = new Location(location.x(), location.y());
   }
 
-  Robot(Location location) {
-    this.location = location;
-  }
+  Robot(int x, int y) { this.location = new Location(x, y); }
 }

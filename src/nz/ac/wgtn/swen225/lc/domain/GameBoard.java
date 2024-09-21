@@ -1,5 +1,6 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
+import nz.ac.wgtn.swen225.lc.domain.GameActor.KillerRobot;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 
@@ -72,7 +73,6 @@ public class GameBoard {
         notifyObservers();
     }
 
-
     private void playerMove(Direction direction, GameBoard gameBoard) {
         player.doMove(direction, gameBoard);
     }
@@ -88,6 +88,8 @@ public class GameBoard {
     public static void setTotalTreasure(int totalTreasure) {
         GameBoard.totalTreasure = totalTreasure;
     }
+
+    public void addRobotAtLocation(int x, int y) { robots.add(new KillerRobot(x, y)); }
 
     /**
      * Moves all the robots in the level
