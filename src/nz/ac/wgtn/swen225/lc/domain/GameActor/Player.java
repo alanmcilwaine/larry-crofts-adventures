@@ -92,7 +92,6 @@ public class Player implements Actor {
         this.location = new Location(location.x(), location.y());
     }
 
-
     public boolean isShowPlayerInfo() {
         return showPlayerInfo;
     }
