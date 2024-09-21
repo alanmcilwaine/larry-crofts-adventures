@@ -7,6 +7,7 @@ import nz.ac.wgtn.swen225.lc.recorder.Recorder;
 import nz.ac.wgtn.swen225.lc.domain.GameState;
 
 
+
 public class Persistency{
 
     private static String json;
@@ -27,7 +28,7 @@ public class Persistency{
             e.printStackTrace();
         }
         //Write JSON string to file
-        filename = "levels/level" + level.getName() + ".json";
+        filename = "levels/level" + level.level() + ".json";
         File file = new File(filename);
         try {
             FileWriter fileWriter = new FileWriter(file);
