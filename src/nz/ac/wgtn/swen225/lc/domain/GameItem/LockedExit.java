@@ -17,10 +17,6 @@ public record LockedExit() implements Item, GameStateObserver {
         return true;
     }
 
-    @Override
-    public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {
-    }
-
     /**
      * LockedExit item will observe game state and receive
      * an update and change accordingly.
