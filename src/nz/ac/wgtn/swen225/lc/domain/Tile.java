@@ -45,7 +45,7 @@ public class Tile<T extends Item> implements GameStateObserver {
     /**
      * Get item name on tile.
      *
-     * @return run time Item class name.
+     * @return run time Item class name plus color.
      */
     public String getItemOnTile() {
         String attribute = "";
