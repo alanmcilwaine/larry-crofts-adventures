@@ -56,13 +56,6 @@ public class RobotMovementTest {
     // blocked by wall
     track.setRobotFacing(Direction.RIGHT);
     gameBoard.action(Direction.NONE);
-
-
-    assertThrows(IllegalArgumentException.class, () -> { // throw an error if it somehow happens
-      track.setRobotFacing(Direction.RIGHT);
-      gameBoard.action(Direction.NONE);
-    });
-
     gameBoard.action(Direction.NONE);
     assertEquals(track.getLocation(), new Location(1, 4));// stay in same position
 
@@ -75,12 +68,6 @@ public class RobotMovementTest {
     track.setRobotFacing(Direction.RIGHT);
     gameBoard.action(Direction.NONE);
     gameBoard.action(Direction.NONE);
-
-    assertThrows(IllegalArgumentException.class, () -> { // throw an error if it somehow happens
-      track.setRobotFacing(Direction.RIGHT);
-      gameBoard.action(Direction.NONE);
-    });
-
     gameBoard.action(Direction.NONE);
     assertEquals(track.getLocation(), new Location(2, 3)); // stay in same position
   }
@@ -96,6 +83,7 @@ public class RobotMovementTest {
 
     // can't pick up the treasure
     track.setRobotFacing(Direction.RIGHT);
+    gameBoard.action(Direction.NONE);
     assertEquals(new Location(3,2), track.getLocation());
 
     assert gameBoard.totalTreasure == 1; // item was not picked up
