@@ -146,19 +146,15 @@ public class GameBoard {
      * @return tile with exit.
      */
     private LockedExit getLockedExit() {
-        try{
-            return (LockedExit) getGameState()
-                    .board()
-                    .stream()
-                    .flatMap(Collection::stream)
-                    .filter(t -> t.item instanceof LockedExit)
-                    .map(e->e.item)
-                    .toList()
-                    .getFirst();
-        }
-       catch (NoSuchElementException e) {
-            throw new IllegalArgumentException("Map must have a locked exit." + e.getMessage());
-       }
+        return getGameState()
+                .board()
+                .stream()
+                .flatMap(Collection::stream)
+                .map(tile -> tile.item)
+                .filter(item -> item instanceof LockedExit)
+                .map(item -> (LockedExit) item)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Map must have a locked exit."));
     }
 }
 
