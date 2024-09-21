@@ -76,7 +76,7 @@ public class Player implements Actor {
                 updateActorLocation(nextLocation);
                 GameBoard.domainLogger.log(Level.INFO, "Player is at:" + location + " after moving " + direction);
             } else {
-                GameBoard.domainLogger.log(Level.INFO, "Player tried to move to but blocked:" + location.toString());
+                GameBoard.domainLogger.log(Level.INFO, "Player tried to move to but blocked:" + nextLocation);
             }
             if(gameBoard.getGameState().robots().stream().anyMatch((x)->x.getLocation().equals(this.location))){
                 isDead = true;
