@@ -2,11 +2,13 @@ package nz.ac.wgtn.swen225.lc.domain.GameItem;
 
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
+import nz.ac.wgtn.swen225.lc.domain.GameState;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
+import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 
-public record Exit() implements Item {
+public record Exit() implements Item{
     @Override
     public boolean blockActor(Actor actor) {
         if(actor instanceof Player p) {
