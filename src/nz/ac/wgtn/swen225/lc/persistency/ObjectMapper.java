@@ -197,8 +197,6 @@ public class ObjectMapper {
         }
         infoString = infoString.substring(0, infoEnd); // Get the content before the closing brace
 
-        System.out.println("Info String: " + infoString); // Debug print
-
         String infoText = extractValue(infoString, "\"info\": \"");
         int x = Integer.parseInt(extractValue(infoString, "\"x\": \""));
         int y = Integer.parseInt(extractValue(infoString, "\"y\": \""));
@@ -222,7 +220,7 @@ public class ObjectMapper {
         return jsonString.substring(keyStart, valueEnd);
     }  
     
-    /**
+    /**f
      * Read the given list of actions as a JSON format from a file.
      *
      * @author zhoudavi1 300652444
