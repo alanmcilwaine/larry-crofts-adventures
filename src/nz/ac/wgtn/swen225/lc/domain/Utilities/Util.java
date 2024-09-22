@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen225.lc.domain.Utilities;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class Util {
@@ -22,9 +23,9 @@ public class Util {
         }
     }
 
-    public static void checkNegative(List<Integer> ls) {
-        for(var e: ls) {
-            checkNegative(e.toString(), e);
+    public static void checkNegative(Map<String, Integer> ls) {
+        for(var e: ls.entrySet()) {
+            checkNegative(String.format("%s is valid,", e.getKey()), e.getValue());
         }
     }
 }

@@ -7,6 +7,7 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 
 import java.util.List;
+import java.util.Map;
 
 public class GameBoardBuilder {
     private List<List<Tile<Item>>> board;
@@ -15,24 +16,28 @@ public class GameBoardBuilder {
 
     private List<Robot> robots;
 
-    private int timeLeft;
+    private int timeLeft = -1;
 
-    private int level;
+    private int level = -1;
 
-    private int width;
+    private int width = -1;
 
-    private int height;
+    private int height = -1;
 
-    private int totalTreasure;
+    private int totalTreasure = -1;
 
     public GameBoard build() {
-        Util.checkNegative(List.of(timeLeft, level, width, height, totalTreasure));
+        Util.checkNegative(Map.of("timeLeft",timeLeft,
+                "level",level,
+                 "width",width,
+                "height",height,
+                "totalTreasure",totalTreasure));
         Util.checkNull(List.of(board, player));
         return new GameBoard(this);
     }
 
     public GameBoardBuilder addBoard(List<List<Tile<Item>>> board) {
-        Util.checkNull(board, String.format("%s is null.", "board" ));
+        Util.checkNull(board, String.format("%s is null.", "board"));
         this.board = board;
         return this;
     }
