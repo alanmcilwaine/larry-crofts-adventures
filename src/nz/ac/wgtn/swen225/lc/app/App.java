@@ -143,9 +143,9 @@ public class App extends JFrame implements AppInterface{
         JButton redo = new JButton("Redo");     // On press, it should open a window to load a saved file.
         JButton pause = new JButton("Pause");   // On press, it should pause and change to "Resume".
         JButton help = new JButton("Help");     // On press, it should display a help screen.
-        undo.addActionListener((unused) -> recorder.undo());
-        redo.addActionListener((unused) -> recorder.redo());
-        pause.addActionListener((unused) -> recorder.pause());
+        undo.addActionListener(recorder.undo());
+        redo.addActionListener(recorder.redo());
+        pause.addActionListener(recorder.pause());
         //help.addActionListener((unused) -> render.help());
         List.of(undo, redo, pause, help).forEach(i -> {
             i.setFont(new Font("Monospaced", Font.BOLD, 15));

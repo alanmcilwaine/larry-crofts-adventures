@@ -26,8 +26,18 @@ public class Menu extends JMenuBar {
         JMenuItem load = new JMenuItem("Load");
         JMenuItem save = new JMenuItem("Save");
         JMenuItem exit = new JMenuItem("Exit");
-        load.addActionListener((unused) -> Persistency.loadGameState(a.openFile()));
-        save.addActionListener((unused) -> Persistency.saveGameState(a.saveFile(), a.domain.getGameState()));
+        load.addActionListener((unused) -> {
+            String filename = a.openFile();
+            if (!filename.isEmpty()){
+                Persistency.loadGameState(a.openFile());
+            }
+        });
+        save.addActionListener((unused) -> {
+           String filename = a.saveFile();
+           if (!filename.isEmpty()){
+               Persistency.saveGameState(a.saveFile(), a.domain.getGameState());
+           }
+        });
         exit.addActionListener((unused) -> System.exit(1));
         List.of(load, save, exit).forEach(file::add);
     }
@@ -40,7 +50,12 @@ public class Menu extends JMenuBar {
         JMenuItem saveInputs = new JMenuItem("Save Inputs");
         JMenuItem loadInputs = new JMenuItem("Load Inputs");
         saveInputs.addActionListener((unused) -> Persistency.saveCommands(a.recorder.getCommands(), a.domain.getGameState().level()));
-        loadInputs.addActionListener((unused) -> Persistency.loadRecording(a.recorder, a.openFile()));
+        loadInputs.addActionListener((unused) -> {
+            String filename = a.saveFile();
+            if (!filename.isEmpty()){
+                Persistency.loadRecording(a.recorder, a.openFile());
+            }
+        });
         List.of(saveInputs, loadInputs).forEach(input::add);
     }
 }
