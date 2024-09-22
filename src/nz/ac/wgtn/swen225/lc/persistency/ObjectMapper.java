@@ -37,7 +37,7 @@ public class ObjectMapper {
         gameItems.put("LockedExit", "LX");
         gameItems.put("NoItem", "F");
         gameItems.put("Treasure", "T");
-        gameItems.put("UnlockedDoor", "UD");
+        gameItems.put("UnLockedDoor", "UD");
         gameItems.put("Wall", "W");
     }
 
@@ -148,7 +148,7 @@ public class ObjectMapper {
         if (boardStart == -1) {
             throw new IllegalArgumentException("Board not found in JSON");
         }
-        String boardString = json.substring(boardStart + 10, json.indexOf("],\n  \"level\""));
+        String boardString = json.substring(boardStart + 10, json.indexOf("\"level\""));
     
         // Ensure we are correctly capturing the board rows
         String[] rowStrings = boardString.split("\\],\\s*\\[");
