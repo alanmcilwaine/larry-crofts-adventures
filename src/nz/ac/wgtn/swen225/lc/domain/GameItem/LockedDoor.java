@@ -33,4 +33,7 @@ public record LockedDoor(ItemColor itemColor) implements Item {
                 .stream()
                 .filter(e -> e instanceof Key k && k.itemColor().equals(this.itemColor())).findFirst();
     }
+
+    @Override
+    public String toString() { return "LockedDoor" + itemColor.toString(); }
 }

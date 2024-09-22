@@ -19,4 +19,7 @@ public record Key(ItemColor itemColor) implements Item {
             tile.item = new NoItem();
         }
     }
+
+    @Override
+    public String toString() { return "Key" + itemColor.toString(); }
 }

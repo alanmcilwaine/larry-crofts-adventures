@@ -10,6 +10,6 @@ public record Wall() implements Item {
     }
 
     @Override
-    public String toString() { return "W"; }
+    public String toString() { return "Wall"; }
 
 }
