@@ -1,6 +1,5 @@
 package nz.ac.wgtn.swen225.lc.domain.DomainTest;
 
-import nz.ac.wgtn.swen225.lc.domain.GameActor.KillerRobot;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
@@ -68,7 +67,7 @@ public class Mock {
         addItemToTile(tiles);
 
         return new GameBoardBuilder().addBoard(tiles).addBoardSize(width,height).addTimeLeft(timeLeft)
-                .addTreasure(1).setLevel(level).addPlayer(p).addRobots(robots).build();
+                .addTreasure(1).addLevel(level).addPlayer(p).addRobots(robots).build();
     }
 
     private static List<List<Tile<Item>>> constructTiles() {
