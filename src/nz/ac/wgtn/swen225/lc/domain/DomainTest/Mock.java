@@ -7,6 +7,7 @@ import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
@@ -67,7 +68,8 @@ public class Mock {
         List<List<Tile<Item>>> tiles = constructTiles();
         addItemToTile(tiles);
 
-        return GameBoard.of(tiles, p, robots, timeLeft, width, height, level);
+        return new GameBoardBuilder().addBoard(tiles).addBoardSize(width,height).addTimeLeft(timeLeft)
+                .addTreasure(1).setLevel(level).addPlayer(p).addRobots(robots).build();
     }
 
     private static List<List<Tile<Item>>> constructTiles() {

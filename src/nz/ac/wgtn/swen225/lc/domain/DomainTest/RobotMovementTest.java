@@ -16,7 +16,7 @@ public class RobotMovementTest {
   @Test
   public void robotBasicMovement() {
     GameBoard gameBoard = Mock.getGameBoard();
-    gameBoard.setTotalTreasure(1);
+
     Player player = gameBoard.getGameState().player();
     gameBoard.addRobotAtLocation(0,0);
     List<Robot> robots = gameBoard.getGameState().robots();
@@ -47,7 +47,7 @@ public class RobotMovementTest {
   @Test
   public void robotObstacleInteraction() {
     GameBoard gameBoard = Mock.getGameBoard();
-    gameBoard.setTotalTreasure(1);
+
     Player player = gameBoard.getGameState().player();
     gameBoard.addRobotAtLocation(0,4);
     List<Robot> robots = gameBoard.getGameState().robots();
@@ -75,7 +75,7 @@ public class RobotMovementTest {
   @Test
   public void robotCantPickItems() {
     GameBoard gameBoard = Mock.getGameBoard();
-    gameBoard.setTotalTreasure(1);
+
     Player player = gameBoard.getGameState().player();
     gameBoard.addRobotAtLocation(2,2);
     List<Robot> robots = gameBoard.getGameState().robots();
@@ -86,14 +86,13 @@ public class RobotMovementTest {
     gameBoard.action(Direction.NONE);
     assertEquals(new Location(3,2), track.getLocation());
 
-    assert gameBoard.totalTreasure == 1; // item was not picked up
+    assert gameBoard.getGameState().totalTreasure() == 1; // item was not picked up
 
   }
 
   @Test
   public void robotKillPlayer() {
     GameBoard gameBoard = Mock.getGameBoard();
-    gameBoard.setTotalTreasure(1);
     Player player = gameBoard.getGameState().player();
     gameBoard.addRobotAtLocation(4,3);
     List<Robot> robots = gameBoard.getGameState().robots();
@@ -107,7 +106,7 @@ public class RobotMovementTest {
   @Test
   public void robotKillPlayer2() {
     GameBoard gameBoard = Mock.getGameBoard();
-    gameBoard.setTotalTreasure(1);
+
     Player player = gameBoard.getGameState().player();
     gameBoard.addRobotAtLocation(4,3);
     List<Robot> robots = gameBoard.getGameState().robots();
