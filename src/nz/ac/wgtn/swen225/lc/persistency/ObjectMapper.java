@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.HashMap;
 import nz.ac.wgtn.swen225.lc.app.Command;
+import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.GameState;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.*;
@@ -142,7 +143,7 @@ public class ObjectMapper {
      * @param json The string to be converted to a GameState object.
      * @return GameState The GameState object to be loaded.
      */
-    public GameState convertJSONtoGameState(String json) {
+    public GameBoard convertJSONtoGameBoard(String json) {
         // Parse board
         List<List<Tile<Item>>> board = new ArrayList<>();
         Player player = null;
@@ -203,8 +204,11 @@ public class ObjectMapper {
         int y = Integer.parseInt(extractValue(infoString, "\"y\": "));
     
         board.get(y).get(x).item = new Info(infoText);
+
+        int width = board.get(0).size();
+        int height = board.size();
     
-        return new GameState(board, player, robots, timeLimit, levelNumber);
+        return GameBoard.of(board, player, robots, timeLimit, levelNumber, width, height);
     }
     
 
