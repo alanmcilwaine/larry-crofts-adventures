@@ -13,4 +13,6 @@ public record Treasure() implements Item {
             tile.item = new NoItem();
         }
     }
+
+
 }
