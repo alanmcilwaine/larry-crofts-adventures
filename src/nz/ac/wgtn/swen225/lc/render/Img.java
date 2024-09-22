@@ -5,7 +5,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.List;
 
 /**
  * store all the images
@@ -24,7 +23,7 @@ enum Img{
      * load all the images from a folder and save to the map.
      */
     public void loadImage() {
-       File imageFolder = new File("AllImages");
+       File imageFolder = new File("src/nz/ac/wgtn/swen225/lc/render/AllItemsImages");
        File[] imageFiles = imageFolder.listFiles();
         assert imageFiles != null;
         for(File file: imageFiles){
@@ -32,7 +31,7 @@ enum Img{
                imageToName.put(file.getName(), ImageIO.read(file));
            }
            catch (IOException e){
-               System.err.println("Cannot read the file: " + e.getMessage());
+               throw new Error("Failed to load image: " + file.getName());
            }
 
        }
@@ -49,7 +48,7 @@ enum Img{
      * throw the error if does not find the image in map.
      */
     private Image throwError(String name) {
-        throw new RuntimeException("No such image: " + name);
+        throw new RuntimeException("Image not found: " + name);
     }
 }
 
