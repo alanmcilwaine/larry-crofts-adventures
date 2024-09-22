@@ -1,20 +1,21 @@
 package nz.ac.wgtn.swen225.lc.app;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 
 public enum Command{
     // FIXME pass in Direction instead of strings. Strings are a placeholder.
-    Left("Left"),
-    Right("Right"),
-    Up("Up"),
-    Down("Down"),
-    None("");
+    Left(Direction.LEFT),
+    Right(Direction.RIGHT),
+    Up(Direction.UP),
+    Down(Direction.DOWN),
+    None(Direction.NONE);
 
-    private final String direction;
+    private final Direction direction;
 
     /**
      * Constructor for the enum constants where each Command has a Direction it stores.
      * @param direction Direction that the player will move in.
      */
-    Command(String direction){ // FIXME change String direction to Direction
+    Command(Direction direction){
         this.direction = direction;
     }
 

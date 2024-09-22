@@ -22,6 +22,7 @@ public class App extends JFrame implements AppInterface{
     // Tick rate
     public static final int TICK_RATE = 50;
 
+
     /**
      * App()
      * Loads the default UI and starts the game loop.
