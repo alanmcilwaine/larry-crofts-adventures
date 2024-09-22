@@ -1,22 +1,26 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
+import nz.ac.wgtn.swen225.lc.domain.GameActor.KillerRobot;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
-
-import nz.ac.wgtn.swen225.lc.domain.GameItem.Exit;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedExit;
-import nz.ac.wgtn.swen225.lc.domain.GameItem.Treasure;
 import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
-
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Util;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 public class GameBoard {
-    private final List<GameStateObserver> obs = new ArrayList<>();
+    public static final Logger domainLogger = DomainLogger.LOGGER.getLogger();
+
+    private static final List<GameStateObserver> obs = new CopyOnWriteArrayList<>();
+
     private final List<List<Tile<Item>>> board;
 
     private final Player player;
@@ -27,36 +31,22 @@ public class GameBoard {
 
     private final int level;
 
-    public static final Logger domainLogger = DomainLogger.LOGGER.getLogger();
+    private final int width;
 
-    public final int width;
+    private final int height;
 
-    public final int height;
+    private final int totalTreasure;
 
-    public static int totalTreasure = 6;
-
-    private GameBoard(List<List<Tile<Item>>> board, Player player, List<Robot> robots, int timeLeft, int level, int width, int height) {
-        this.board = board;
-        this.player = player;
-        this.robots = robots;
-        this.timeLeft = timeLeft;
-        this.level = level;
-        this.width = width;
-        this.height = height;
-        subscribeGameState(getExitTile());
-    }
-
-    /**
-     * Generate a game board.
-     *
-     * @param board  game board.
-     * @param player player on the board.
-     * @param robots robots on the board.
-     * @return a game board.
-     */
-    public static GameBoard of(List<List<Tile<Item>>> board, Player player, List<Robot> robots, int timeLeft, int width, int height, int level) {
-        checkValid(timeLeft, width, height, level);
-        return new GameBoard(board, player, robots, timeLeft, level, width, height);
+    public GameBoard(GameBoardBuilder builder) {
+        this.board = builder.getBoard();
+        this.player = builder.getPlayer();
+        this.robots = builder.getRobots();
+        this.timeLeft = builder.getTimeLeft();
+        this.level = builder.getLevel();
+        this.width = builder.getWidth();
+        this.height = builder.getHeight();
+        this.totalTreasure = builder.getTotalTreasure();
+        subscribeGameState(getLockedExit());
     }
 
     /**
@@ -72,7 +62,6 @@ public class GameBoard {
         notifyObservers();
     }
 
-
     private void playerMove(Direction direction, GameBoard gameBoard) {
         player.doMove(direction, gameBoard);
     }
@@ -85,26 +74,29 @@ public class GameBoard {
         return height;
     }
 
-    public static void setTotalTreasure(int totalTreasure) {
-        GameBoard.totalTreasure = totalTreasure;
+    //TODO this is for testing?
+    public void addRobotAtLocation(int x, int y) {
+        robots.add(new KillerRobot(x, y));
     }
 
     /**
      * Moves all the robots in the level
      */
-    private void robotsMove() { robots.forEach(r -> r.update(this)); }
-
-    private static void checkValid(int timeLeft, int width, int height, int level) {
-        if (timeLeft <= 0 || width < 2 || height < 2 || level < 1) {
-            throw new IllegalArgumentException("Invalid game board");
+    private void robotsMove() {
+        if (robots.isEmpty()) {
+            return;
         }
+        robots.forEach(r -> r.update(this));
     }
 
     /**
      * Get the board
+     *
      * @return Board
      */
-    public List<List<Tile<Item>>> getBoard() { return Collections.unmodifiableList(board); }
+    public List<List<Tile<Item>>> getBoard() {
+        return Collections.unmodifiableList(board);
+    }
 
     /**
      * Get current game board state.
@@ -112,29 +104,31 @@ public class GameBoard {
      * @return GameState
      */
     public GameState getGameState() {
-        return new GameState(board, player, robots, timeLeft, level);
+        return new GameState(board, player, robots, timeLeft, level, width, height, totalTreasure);
     }
 
+    //TODO
     public void onGameOver() {
         throw new IllegalArgumentException("Game Over"); // temporary
     }
 
-    private void attach(GameStateObserver ob) {
+    private static void attach(GameStateObserver ob) {
         obs.add(ob);
     }
 
-    private void detach(GameStateObserver ob) {
+    private static void detach(GameStateObserver ob) {
         obs.remove(ob);
     }
 
-    public <T extends GameStateObserver> void subscribeGameState(T observer) {
+    public static <T extends GameStateObserver> void subscribeGameState(T observer) {
         attach(observer);
     }
 
-    public <T extends GameStateObserver> void unsubscribeGameState(T observer) {
+    public static <T extends GameStateObserver> void unsubscribeGameState(T observer) {
         detach(observer);
     }
 
+    //TODO
     public void notifyObservers() {
         for (GameStateObserver observer : obs) {
             observer.update(getGameState());
@@ -144,21 +138,19 @@ public class GameBoard {
 
     /**
      * Get the tile hosting the exit item.
+     *
      * @return tile with exit.
      */
-    private Tile<Item> getExitTile() {
-        try{
-            return getGameState()
-                    .board()
-                    .stream()
-                    .flatMap(Collection::stream)
-                    .filter(t -> t.item instanceof LockedExit)
-                    .toList()
-                    .getFirst();
-        }
-       catch (NoSuchElementException e) {
-            throw new IllegalArgumentException("Map must have a locked exit." + e.getMessage());
-       }
+    private LockedExit getLockedExit() {
+        return getGameState()
+                .board()
+                .stream()
+                .flatMap(Collection::stream)
+                .map(tile -> tile.item)
+                .filter(item -> item instanceof LockedExit)
+                .map(item -> (LockedExit) item)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Map must have a locked exit."));
     }
 }
 

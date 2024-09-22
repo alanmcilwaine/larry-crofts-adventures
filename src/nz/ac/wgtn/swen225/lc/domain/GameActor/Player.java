@@ -92,20 +92,6 @@ public class Player implements Actor {
         this.location = new Location(location.x(), location.y());
     }
 
-    private boolean locationIsValid(Location location, GameBoard gameBoard) {
-        return location.x() >= 0 && location.x() < gameBoard.getWidth() &&
-               location.y() >= 0 && location.y() < gameBoard.getHeight();
-    }
-
-
-    private Tile<Item> findTileInSpecificLocation(GameBoard gameBoard, Location targetLocation) {
-        return gameBoard.getGameState().board().stream()
-                .flatMap(Collection::stream)
-                .filter(x->x.location.equals(targetLocation))
-                .toList()
-                .getFirst();
-    }
-
     public boolean isShowPlayerInfo() {
         return showPlayerInfo;
     }

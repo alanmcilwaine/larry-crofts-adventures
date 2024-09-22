@@ -150,9 +150,10 @@ public class GameItemTest {
     @Test
     public void lockedExitBecomesUnlockedUponFullTreasure() {
         GameBoard gameBoard = Mock.getGameBoard();
-        GameBoard.setTotalTreasure(0);
+
         assertInstanceOf(LockedExit.class, gameBoard.getBoard().getFirst().get(3).item);
 
+        gameBoard.getGameState().player().addTreasure(new Treasure());
         gameBoard.notifyObservers();
 
         assertInstanceOf(Exit.class, gameBoard.getBoard().getFirst().get(3).item);
@@ -161,7 +162,7 @@ public class GameItemTest {
     @Test
     public void lockedExitBecomesUnlockedUponFullTreasure3() {
         GameBoard gameBoard = Mock.getGameBoard();
-        GameBoard.setTotalTreasure(3);
+
         Player player = gameBoard.getGameState().player();
 
         assertInstanceOf(LockedExit.class, gameBoard.getBoard().getFirst().get(3).item);

@@ -16,7 +16,7 @@ public class PlayerMoveTest {
     public void playerMoveTestsSet01() {
         //setup test
         var gameboard = Mock.getGameBoard();
-        GameBoard.setTotalTreasure(1);
+
         var player = gameboard.getGameState().player();
         var playerStartLocation = gameboard.getGameState().player().getLocation();
 

@@ -5,7 +5,6 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
 public class KillerRobot extends Robot{
-    public KillerRobot(Location location) {
-        super(location);
-    }
+    public KillerRobot(int x, int y) { super(x, y); }
+
 }

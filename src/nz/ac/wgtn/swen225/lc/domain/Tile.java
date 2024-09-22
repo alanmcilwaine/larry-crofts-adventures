@@ -11,7 +11,7 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Util;
 
-public class Tile<T extends Item> implements GameStateObserver {
+public class Tile<T extends Item> {
 
     public Item item;
     public final Location location;
@@ -54,19 +54,5 @@ public class Tile<T extends Item> implements GameStateObserver {
         } catch (Exception ignored) {
         }
         return item.getClass().getSimpleName() + attribute;
-    }
-
-    /**
-     * Certain tile with item will observe game state and receive
-     * an update and change accordingly.
-     * @param gameState game state.
-     */
-    @Override
-    public void update(GameState gameState) {
-        var playerTreasure = gameState.player().getTreasure()
-                .stream().filter(e -> e instanceof Treasure).toList().size();
-        if (playerTreasure == GameBoard.totalTreasure && item instanceof LockedExit) {
-            item = new Exit();
-        }
     }
 }

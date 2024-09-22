@@ -7,6 +7,7 @@ import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
@@ -26,7 +27,7 @@ public class Mock {
      * <br>
      * "f rk f bk f"
      * <br>
-     * "robot bcd f le i";
+     * "f bcd f le i";
      * <br>
      * w is wall, p is player, rod is red opened door,
      * rcd is red closed door, rk is red key, bk is blue key,
@@ -62,12 +63,12 @@ public class Mock {
         Player p = getPlayer(new Location(4, 4));
 
         List<Robot> robots = new ArrayList<>();
-        //robots.add(new KillerRobot(new Location(0, 0)));
 
         List<List<Tile<Item>>> tiles = constructTiles();
         addItemToTile(tiles);
 
-        return GameBoard.of(tiles, p, robots, timeLeft, width, height, level);
+        return new GameBoardBuilder().addBoard(tiles).addBoardSize(width,height).addTimeLeft(timeLeft)
+                .addTreasure(1).setLevel(level).addPlayer(p).addRobots(robots).build();
     }
 
     private static List<List<Tile<Item>>> constructTiles() {
@@ -98,4 +99,6 @@ public class Mock {
         l.get(4).get(2).item = new Wall();
         l.get(4).get(3).item = new Wall();
     }
+
+
 }
