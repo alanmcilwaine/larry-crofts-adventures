@@ -19,7 +19,7 @@ class Controller extends Keys{
             Action.LEFT,KeyEvent.VK_A,
             Action.RIGHT,KeyEvent.VK_D
     ));
-    Controller(){
+    public Controller(){
         setAction(bindings.get(Action.UP), () -> currentCommand = Command.Up, () -> currentCommand = Command.None);
         setAction(bindings.get(Action.DOWN), () -> currentCommand = Command.Down, () -> currentCommand = Command.None);
         setAction(bindings.get(Action.LEFT), () -> currentCommand = Command.Left, () -> currentCommand = Command.None);
