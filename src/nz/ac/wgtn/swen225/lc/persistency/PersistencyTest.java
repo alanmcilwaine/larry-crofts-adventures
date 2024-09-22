@@ -12,8 +12,8 @@ import java.util.List;
 
 public class PersistencyTest {
     public static void main(String[] args) throws IOException {
-        testReadJSON();
-        testLoadGameState();
+        GameState gameState = testReadJSON();
+        testLoadGameState(gameState);
     }
 
     private static GameState createSampleGameState() {
@@ -39,7 +39,7 @@ public class PersistencyTest {
         return new GameState(board, player, robots, 180, 1);
     }
 
-    private static void testReadJSON() throws IOException{
+    private static GameState testReadJSON() throws IOException{
         // Create a sample GameState
         System.out.println("Reading JSON:");
 
@@ -77,13 +77,33 @@ public class PersistencyTest {
 
         //Save the converted GameState to a file
         Persistency.saveGameState("src/nz/ac/wgtn/swen225/lc/persistency/levels/level1.json", convertedState);
+        return convertedState;
     }
 
     //Test loading a GameState from a file
-    private static void testLoadGameState() throws IOException{
-        System.out.println("Loading GameState from file:");
+    private static void testLoadGameState(GameState original) throws IOException{
+        System.out.println("Loading GameState from file:--------------------------------------");
         GameState loadedState = Persistency.loadGameState("src/nz/ac/wgtn/swen225/lc/persistency/levels/level1.json");
-        System.out.println("Loaded GameState:\n" + loadedState);
+        //Check if the loaded GameState is the same as the original GameState
+        System.out.println("Level number matches: " + (original.level() == loadedState.level()));
+        System.out.println("Time left matches: " + (original.timeLeft() == loadedState.timeLeft()));
+        System.out.println("Player location matches: " + original.player().getLocation().equals(loadedState.player().getLocation()));
+        System.out.println("Number of robots matches: " + (original.robots().size() == loadedState.robots().size()));
+        System.out.println("Robot location matches: " + original.robots().get(0).getLocation().equals(loadedState.robots().get(0).getLocation()));
+
+        // Compare board
+        boolean boardMatches = true;
+        for (int y = 0; y < original.board().size(); y++) {
+            for (int x = 0; x < original.board().get(y).size(); x++) {
+                Item originalItem = original.board().get(y).get(x).item;
+                Item loadedItem = loadedState.board().get(y).get(x).item;
+                if (!originalItem.getClass().equals(loadedItem.getClass())) {
+                    boardMatches = false;
+                    break;
+                }
+            }
+        }
+        System.out.println("Board matches: " + boardMatches);
     }
 
 }
