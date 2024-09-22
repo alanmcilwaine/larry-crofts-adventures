@@ -2,11 +2,13 @@ package nz.ac.wgtn.swen225.lc.app;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.List;
 import java.util.Objects;
 
 import nz.ac.wgtn.swen225.lc.domain.DomainTest.Mock;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
+import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 import nz.ac.wgtn.swen225.lc.recorder.Recorder;
 import nz.ac.wgtn.swen225.lc.render.ImageImplement;
 
@@ -56,7 +58,6 @@ public class App extends JFrame implements AppInterface{
         recorder = Recorder.create(this);
         Objects.requireNonNull(recorder);
         controller = new Controller(); // Clears the current action;
-
         Timer tick = new Timer(TICK_RATE, (unused) -> tick());
         tick.start();
     }
@@ -72,43 +73,37 @@ public class App extends JFrame implements AppInterface{
         updateGraphics();
     }
 
-    /**
-     * updateGraphics()
-     * Sends an update request to graphics to update the graphics. Used after updating state in domain.
-     */
     @Override
     public void updateGraphics(){
         render.drawImages(domain.getGameState());
     }
 
-    /**
-     * giveInput()
-     * Takes in an input, and sends to the domain to update state.
-     * @param input An input in the game, e.g WASD as a command.
-     */
     @Override
     public void giveInput(Command input){
         domain.action(input.direction());
 
     }
 
-    /**
-     * initialStateRevert()
-     * Tells domain to revert to the starting state of the game. Like a reset.
-     * This is used by recorder to go from the start, so it can undo moves.
-     */
     @Override
     public void initialStateRevert(){
         domain = Mock.getGameBoard();
     }
 
-
-    /**
-     * openFile()
-     * @return Filename of the save file that has been opened
-     */
     @Override
     public String openFile() {
+        JFileChooser loader = new JFileChooser(new File(System.getProperty("user.dir")));
+        if (loader.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            return loader.getSelectedFile().getName();
+        }
+        return "";
+    }
+
+    @Override
+    public String saveFile() {
+        JFileChooser saver = new JFileChooser(new File(System.getProperty("user.dir")));
+        if (saver.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            return saver.getSelectedFile().getName();
+        }
         return "";
     }
 
@@ -144,21 +139,15 @@ public class App extends JFrame implements AppInterface{
      */
     private void setupButtons(){
         JPanel buttons = new JPanel(new GridLayout(2, 3, 5, 10));
+        JButton undo = new JButton("Undo");     // On press, it should save the game state.
+        JButton redo = new JButton("Redo");     // On press, it should open a window to load a saved file.
         JButton pause = new JButton("Pause");   // On press, it should pause and change to "Resume".
-        JButton exit = new JButton("Exit");     // On press, it should exit the game, without saving?.
-        JButton save = new JButton("Save");     // On press, it should save the game state.
-        JButton load = new JButton("Load");     // On press, it should open a window to load a saved file.
         JButton help = new JButton("Help");     // On press, it should display a help screen.
-
-        /* Uncomment for testing
-        pause.addActionListener(() -> );
-        exit.addActionListener(() -> );
-        save.addActionListener(() -> );
-        load.addActionListener(() -> );
-        help.addActionListener(() -> );
-         */
-
-        List.of(pause, exit, save, load, help).forEach(i -> {
+        undo.addActionListener((unused) -> recorder.undo());
+        redo.addActionListener((unused) -> recorder.redo());
+        pause.addActionListener((unused) -> recorder.pause());
+        //help.addActionListener((unused) -> render.help());
+        List.of(undo, redo, pause, help).forEach(i -> {
             i.setFont(new Font("Monospaced", Font.BOLD, 15));
             i.setForeground(FONT);
             buttons.add(i);
@@ -187,5 +176,8 @@ public class App extends JFrame implements AppInterface{
 
         elements.setBackground(FOREGROUND);
         ui.add(elements);
+
+        Menu menu = new Menu(this);
+        setJMenuBar(menu);
     }
 }

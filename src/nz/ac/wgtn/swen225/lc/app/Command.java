@@ -2,7 +2,6 @@ package nz.ac.wgtn.swen225.lc.app;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 
 public enum Command{
-    // FIXME pass in Direction instead of strings. Strings are a placeholder.
     Left(Direction.LEFT),
     Right(Direction.RIGHT),
     Up(Direction.UP),
@@ -49,6 +48,7 @@ public enum Command{
             case "Right" -> Command.Right;
             case "Up" -> Command.Up;
             case "Down" -> Command.Down;
+            case "None" -> Command.None;
             default -> throw new IllegalStateException("Unexpected value: " + command);
         };
     }

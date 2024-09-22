@@ -7,7 +7,6 @@ import nz.ac.wgtn.swen225.lc.app.Keys;
 
 class Controller extends Keys{
     //Default keys
-
     enum Action{
         UP(KeyEvent.VK_W),
         DOWN(KeyEvent.VK_S),

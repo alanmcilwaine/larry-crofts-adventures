@@ -25,7 +25,16 @@ public interface AppInterface {
 
     /**
      * openFile()
-     * @return Filename of the save file that has been opened
+     * Opens a file at the given location.
+     * @return File name.
      */
     String openFile();
+
+
+    /**
+     * saveFile()
+     * Saves a file at the given location.
+     * @return File name.
+     */
+    String saveFile();
 }
