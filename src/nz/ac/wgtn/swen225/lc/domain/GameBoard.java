@@ -13,6 +13,7 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Util;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 public class GameBoard {
     private final List<GameStateObserver> obs = new ArrayList<>();
@@ -25,6 +26,8 @@ public class GameBoard {
     private final int timeLeft;
 
     private final int level;
+
+    public static final Logger domainLogger = DomainLogger.LOGGER.getLogger();
 
     public final int width;
 
@@ -40,7 +43,7 @@ public class GameBoard {
         this.level = level;
         this.width = width;
         this.height = height;
-        attach(getExitTile());
+        subscribeGameState(getExitTile());
     }
 
     /**
@@ -64,8 +67,7 @@ public class GameBoard {
     public void action(Direction direction) {
         Util.checkNull(direction, "Direction is null");
 
-        // robot is not controlled by player, they need their own tick.
-        //robotsMove();
+        robotsMove();
         playerMove(direction, this);
         notifyObservers();
     }
