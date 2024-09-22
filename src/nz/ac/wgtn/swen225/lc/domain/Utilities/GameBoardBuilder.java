@@ -32,19 +32,19 @@ public class GameBoardBuilder {
     }
 
     public GameBoardBuilder addBoard(List<List<Tile<Item>>> board) {
-        Util.checkNull(board, String.format("%s is null.", board.toString()));
+        Util.checkNull(board, String.format("%s is null.", "board" ));
         this.board = board;
         return this;
     }
 
     public GameBoardBuilder addPlayer(Player player) {
-        Util.checkNull(player, String.format("%s is null.", player.toString()));
+        Util.checkNull(player, String.format("%s is null.", "player"));
         this.player = player;
         return this;
     }
 
     public GameBoardBuilder addRobots(List<Robot> robots) {
-        Util.checkNull(robots, String.format("%s is null.", robots.toString()));
+        Util.checkNull(robots, String.format("%s is null.", "robots"));
         this.robots = robots;
         return this;
     }
