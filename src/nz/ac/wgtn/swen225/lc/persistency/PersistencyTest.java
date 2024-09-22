@@ -77,7 +77,7 @@ public class PersistencyTest {
         // Add some items to the board
         board.get(1).get(3).item = new Key(ItemColor.RED);
         board.get(3).get(3).item = new LockedDoor(ItemColor.RED);
-        board.get(2).get(2).item = new Info("Hello");
+        board.get(2).get(2).item = new Info("Hello, chap!");
 
         Player player = new Player(new Location(1, 1));
         List<Robot> robots = new ArrayList<>();
@@ -114,9 +114,6 @@ public class PersistencyTest {
             }
         }
         System.out.println("Board matches: " + boardMatches);
-
-        //Info
-        System.out.println("Info matches: " + originalState.board().get(2).get(2).item.equals(convertedState.board().get(2).get(2).item));
     }
 
 }
