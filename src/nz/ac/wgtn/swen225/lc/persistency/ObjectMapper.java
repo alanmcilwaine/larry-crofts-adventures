@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.HashMap;
 import nz.ac.wgtn.swen225.lc.app.Command;
 import nz.ac.wgtn.swen225.lc.domain.GameState;
@@ -12,11 +13,23 @@ import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.*;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
 public class ObjectMapper {
     static Map<String, String> gameItems = new HashMap<String, String>();
-    static{
+    private static final Map<String, Function<ItemColor, Item>> itemConstructors = new HashMap<>(); 
+
+    static {
+        itemConstructors.put("X", color -> new Exit());
+        itemConstructors.put("K", Key::new);
+        itemConstructors.put("LD", LockedDoor::new);
+        itemConstructors.put("LX", color -> new LockedExit());
+        itemConstructors.put("F", color -> new NoItem());
+        itemConstructors.put("T", color -> new Treasure());
+        itemConstructors.put("UD", UnLockedDoor::new);
+        itemConstructors.put("W", color -> new Wall());
+
         gameItems.put("Exit", "X");
         gameItems.put("Info", "I");
         gameItems.put("Key", "K");
@@ -38,7 +51,7 @@ public class ObjectMapper {
     public String saveLeveltoFile(GameState level) throws IOException {
         StringBuilder json = new StringBuilder();
         json.append("{\n");
-
+    
         // Board
         List<List<String>> stringBoard = convertBoardToStrings(level);
         json.append("  \"board\": [\n");
@@ -53,38 +66,21 @@ public class ObjectMapper {
                 }
             }
             json.append("]");
-            json.append("\n");
-        }
-        json.append("  ],\n");
-
-        // Level
-        json.append("  \"level\": {\n");
-        json.append("    \"number\": \"").append(level.level()).append("\",\n");
-        json.append("    \"Time Limit\": ").append(level.timeLeft()).append(",\n");
-
-        // Player
-        json.append("    \"player\": {\n");
-        json.append("      \"x\": ").append(level.player().getLocation().x()).append(",\n");
-        json.append("      \"y\": ").append(level.player().getLocation().y()).append("\n");
-        json.append("    },\n");
-
-        // Robots
-        json.append("    \"robots\": [\n");
-        for (int i = 0; i < level.robots().size(); i++) {
-            Robot robot = level.robots().get(i);
-            json.append("      {\n");
-            json.append("        \"x\": ").append(robot.getLocation().x()).append(",\n");
-            json.append("        \"y\": ").append(robot.getLocation().y()).append("\n");
-            json.append("      }");
-            if (i < level.robots().size() - 1) {
-                json.append(",");
+            if (i < stringBoard.size() - 1) {
+                json.append(","); // Add a comma between rows
             }
             json.append("\n");
         }
-        json.append("    ]\n");
-        json.append("  }\n");
-        json.append("}");
-
+        json.append("  ],\n");
+    
+        // Level
+        json.append("  \"level\": {\n");
+        json.append("    \"number\": \"").append(level.level()).append("\",\n");
+        json.append("    \"Time Limit\": ").append(level.timeLeft()).append("\n");
+        json.append("  }\n"); // Closing the level object
+    
+        json.append("}\n"); // Closing the entire JSON object
+    
         return json.toString();
     }
 
@@ -121,48 +117,60 @@ public class ObjectMapper {
      * @return GameState The GameState object to be loaded.
      */
     public GameState convertJSONtoGameState(String json) {
+        // Debug: Print the JSON string
+        System.out.println("Parsed JSON: " + json);
+    
         // Parse board
         List<List<Tile<Item>>> board = new ArrayList<>();
-        String boardString = json.substring(json.indexOf("\"board\": [") + 10, json.indexOf("],\n  \"level\""));
+        Player player = null;
+        List<Robot> robots = new ArrayList<>();
+    
+        // Find the board section
+        int boardStart = json.indexOf("\"board\": [");
+        if (boardStart == -1) {
+            throw new IllegalArgumentException("Board not found in JSON");
+        }
+        String boardString = json.substring(boardStart + 10, json.indexOf("],\n  \"level\""));
+    
+        // Ensure we are correctly capturing the board rows
         String[] rowStrings = boardString.split("\\],\\s*\\[");
-        for (String rowString : rowStrings) {
+        for (int y = 0; y < rowStrings.length; y++) {
             List<Tile<Item>> row = new ArrayList<>();
-            String[] cellStrings = rowString.replace("[", "").replace("]", "").split(",\\s*");
+            String[] cellStrings = rowStrings[y].replace("[", "").replace("]", "").split(",\\s*");
+            
             for (int x = 0; x < cellStrings.length; x++) {
-                String cellCode = cellStrings[x].replace("\"", "");
-                String[] parts = cellCode.split("-");
-                Item item = createItemFromCode(parts[0]);
-                row.add(new Tile<>(item, new Location(x, row.size())));
+                String cellCode = cellStrings[x].replace("\"", "").trim(); // Trim whitespace
+                String[] parts = cellCode.split("-"); // Find the dash to indicate entity
+                Item item = createItemFromCode(parts[0]); // Create item from the first part of the code
+                
+                // Check if the cell contains the player (-P)
+                if (parts.length > 1 && parts[1].equals("P")) {
+                    player = new Player(new Location(x, y));
+                }
+                
+                // Check if the cell contains a robot (-R)
+                if (parts.length > 1 && parts[1].equals("R")) {
+                    robots.add(new KillerRobot(new Location(x, y)));
+                }
+    
+                row.add(new Tile<>(item, new Location(x, y))); // Add the item to the board row
             }
             board.add(row);
         }
-
+    
         // Parse level info
-        String levelString = json.substring(json.indexOf("\"level\": {") + 10);
-        int levelNumber = Integer.parseInt(levelString.substring(levelString.indexOf("\"number\": \"") + 11, levelString.indexOf("\",\n")));
-        int timeLimit = Integer.parseInt(levelString.substring(levelString.indexOf("\"Time Limit\": ") + 13, levelString.indexOf(",\n")));
-
-        // Parse player
-        String playerString = levelString.substring(levelString.indexOf("\"player\": {"));
-        int playerX = Integer.parseInt(playerString.substring(playerString.indexOf("\"x\": ") + 5, playerString.indexOf(",\n")));
-        int playerY = Integer.parseInt(playerString.substring(playerString.indexOf("\"y\": ") + 5, playerString.indexOf("\n    }")));
-        Player player = new Player(new Location(playerX, playerY));
-
-        // Parse robots
-        List<Robot> robots = new ArrayList<>();
-        String robotsString = levelString.substring(levelString.indexOf("\"robots\": [") + 11);
-        String[] robotStrings = robotsString.split("\\{");
-        for (String robotString : robotStrings) {
-            if (robotString.contains("\"x\":")) {
-                int robotX = Integer.parseInt(robotString.substring(robotString.indexOf("\"x\": ") + 5, robotString.indexOf(",")));
-                int robotY = Integer.parseInt(robotString.substring(robotString.indexOf("\"y\": ") + 5, robotString.indexOf("\n      }")));
-                robots.add(new KillerRobot(new Location(robotX, robotY)));
-            }
+        int levelStart = json.indexOf("\"level\": {");
+        if (levelStart == -1) {
+            throw new IllegalArgumentException("Level info not found in JSON");
         }
-
+        String levelString = json.substring(levelStart + 10);
+        int levelNumber = Integer.parseInt(levelString.substring(levelString.indexOf("\"number\": \"") + 11, levelString.indexOf("\",\n")));
+        int timeLimit = Integer.parseInt(levelString.substring(levelString.indexOf("\"Time Limit\": ") + 14, levelString.indexOf("\n  }")));
+    
         return new GameState(board, player, robots, timeLimit, levelNumber);
     }
-
+    
+    
     /**
      * Read the given list of actions as a JSON format from a file.
      *
@@ -184,24 +192,69 @@ public class ObjectMapper {
         return actions;
     }
 
-    //gameItem Checker
-    public String gameItemCode(String item) {
-        return gameItems.get(item);
+    public String gameItemCode(Item item) {
+        // Get the base code from the item class name
+        String itemClassName = item.getClass().getSimpleName();
+        String baseCode = gameItems.get(itemClassName);
+    
+        if (baseCode == null) {
+            throw new IllegalArgumentException("Unknown item: " + itemClassName);
+        }
+    
+        // Add color code if the item has a color
+        String colorCode = "";
+        if (item instanceof Key key) {
+            colorCode = getColorCode(key.itemColor());
+        } else if (item instanceof LockedDoor lockedDoor) {
+            colorCode = getColorCode(lockedDoor.itemColor());
+        } else if (item instanceof UnLockedDoor unlockedDoor) {
+            colorCode = getColorCode(unlockedDoor.itemColor());
+        }
+    
+        return baseCode + colorCode;
     }
+    
+    private String getColorCode(ItemColor color) {
+        // Map the ItemColor to the appropriate code
+        return switch (color) {
+            case BLUE -> "#B";
+            case RED -> "#R";
+            default -> ""; // No color, return an empty string
+        };
+    }
+    
 
     private Item createItemFromCode(String code) {
-        switch (code) {
-            case "X": return new Exit();
-            case "I": return new Info();
-            case "K": return new Key();
-            case "LD": return new LockedDoor();
-            case "LX": return new LockedExit();
-            case "NI": return new NoItem();
-            case "T": return new Treasure();
-            case "UD": return new UnlockedDoor();
-            case "W": return new Wall();
-            default: throw new IllegalArgumentException("Unknown item code: " + code);
+        // Split the code into the main item and the optional color code
+        String[] parts = code.split("#");
+        String itemCode = parts[0];  // First part is the item code
+        ItemColor color = null;      // Initialize color as null
+
+        //Special case for Info
+        if (itemCode.equals("I")) {
+            return createInfo();
         }
+
+        // If there's a second part, interpret it as the color
+        if (parts.length > 1) {
+            switch (parts[1]) {
+                case "B": color = ItemColor.BLUE; break;
+                case "R": color = ItemColor.RED; break;
+                default: throw new IllegalArgumentException("Unknown color code: " + parts[1]);
+            }
+        }
+
+        // Get the constructor for the item
+        Function<ItemColor, Item> constructor = itemConstructors.get(itemCode);
+        if (constructor == null) {
+            throw new IllegalArgumentException("Unknown item code: " + itemCode);
+        }
+
+        return constructor.apply(color);
+    }
+
+    private Item createInfo() {
+        return new Info("Info");
     }
 
     /**
@@ -215,7 +268,7 @@ public class ObjectMapper {
         //Convert the board of Tile<Item> to List<List<String>>
         List<List<String>> stringBoard = level.board().stream()
             .map((List<Tile<Item>> row) -> row.stream()
-                .map((Tile<Item> tile) -> gameItemCode(tile.getItemOnTile())) // Convert each Tile<Item> to the item's string code
+                .map((Tile<Item> tile) -> gameItemCode(tile.item)) // Convert each Tile<Item> to the item's string code
                 .collect(Collectors.toList())
             )
             .collect(Collectors.toList());
