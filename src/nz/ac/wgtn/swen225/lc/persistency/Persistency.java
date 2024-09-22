@@ -56,7 +56,7 @@ public class Persistency{
             e.printStackTrace();
         }
         //Write JSON string to file
-        String filename = "levels/level" + level + ".json";
+        String filename = "levels/level" + level + "_commands.json";
         File file = new File(filename);
         try {
             FileWriter fileWriter = new FileWriter(file);
