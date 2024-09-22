@@ -28,7 +28,8 @@ public class Persistency{
             e.printStackTrace();
         }
         //Write JSON string to file
-        filename = "levels/level" + level.level() + ".json";
+        
+        filename = "src\\nz\\ac\\wgtn\\swen225\\lc\\persistency\\levels\\level" + level.level() + ".json";        
         File file = new File(filename);
         try {
             FileWriter fileWriter = new FileWriter(file);
@@ -78,7 +79,7 @@ public class Persistency{
         // load the level GameState from a file
         try{
             //Read JSON string from file
-            filename = "levels/" + filename;
+            filename = filename;
             File file = new File(filename);
             FileReader fileReader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(fileReader);

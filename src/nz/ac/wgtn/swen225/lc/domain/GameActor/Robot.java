@@ -6,6 +6,8 @@ import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
+import java.util.logging.Level;
+
 public abstract class Robot implements Actor {
   private Location location;
   private Direction robotFacing = Direction.values()[(int) (Math.random() * 5)];
@@ -27,18 +29,28 @@ public abstract class Robot implements Actor {
     // TODO check if we can overlap robots
     Location newLoc = direction.act(this.location); // location to move to
 
-    Tile tile = gameBoard.getBoard().get(newLoc.x()).get(newLoc.y()); // tile on this location
-    Tile prevTile = gameBoard.getBoard().get(this.location.x()).get(this.location.y());
+    GameBoard.domainLogger.log(Level.INFO, "Robot is facing: " + robotFacing);
 
-    if (tile.canStepOn(this) && switchDirCount <= 20) {
-      updateActorLocation(newLoc);
-      tile.onEntry(this);
-      prevTile.onExit(this);
+    Tile currentTile = findTileInSpecificLocation(gameBoard, location); // current tile
+    Tile nextTile = findTileInSpecificLocation(gameBoard, newLoc); // tile to move to
+
+
+    if (locationIsValid(newLoc, gameBoard)) {
+      if (nextTile.canStepOn(this) && switchDirCount <= 20) {
+        currentTile.onExit(this);
+        currentTile.onEntry(this);
+        updateActorLocation(newLoc);
+
+        GameBoard.domainLogger.log(Level.INFO, "Robot is now at:" + location);
+      } else {
+
+        GameBoard.domainLogger.log(Level.INFO, "Robot did not move still at: " + location);
+        this.robotFacing = Direction.values()[(int) (Math.random() * 4)];
+        switchDirCount = 0;
+      }
       switchDirCount++; // don't know how often should switch direction
     } else {
-        // if the tile to move onto is blocked then re-roll robot's direction
-        this.robotFacing = Direction.values()[(int) (Math.random() * 4)] ;
-        switchDirCount = 0;
+      GameBoard.domainLogger.log(Level.INFO, "Robot tried to move to invalid, still at: " + location);
     }
 
   }
@@ -48,7 +60,5 @@ public abstract class Robot implements Actor {
     this.location = new Location(location.x(), location.y());
   }
 
-  Robot(Location location) {
-    this.location = location;
-  }
+  Robot(int x, int y) { this.location = new Location(x, y); }
 }

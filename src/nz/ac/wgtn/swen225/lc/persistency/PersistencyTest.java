@@ -12,58 +12,11 @@ import java.util.List;
 
 public class PersistencyTest {
     public static void main(String[] args) throws IOException {
-        // Create a sample GameState
-        GameState sampleGameState = createSampleGameState();
-
-        // Create an ObjectMapper instance
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try {
-            // Convert GameState to JSON string
-            String jsonGameState = objectMapper.saveLeveltoFile(sampleGameState);
-            System.out.println("GameState JSON:");
-            System.out.println(jsonGameState);
-
-        } catch (IOException e) {
-            System.err.println("Error occurred while saving to JSON: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        // Test reading JSON to GameState
-        testReadJSON();
+        GameState gameState = testReadJSON();
+        testLoadGameState(gameState);
     }
 
     private static GameState createSampleGameState() {
-        // Create a simple 3x3 board
-        List<List<Tile<Item>>> board = new ArrayList<>();
-        for (int y = 0; y < 3; y++) {
-            List<Tile<Item>> row = new ArrayList<>();
-            for (int x = 0; x < 3; x++) {
-                row.add(new Tile<>(new NoItem(), new Location(x, y)));
-            }
-            board.add(row);
-        }
-
-        // Add some items to the board
-        board.get(0).get(1).item = new LockedDoor(ItemColor.RED);
-        board.get(1).get(0).item = new Wall();
-        board.get(1).get(1).item = new Info("Hi");
-
-        // Create player
-        Player player = new Player(new Location(0, 0));
-
-        // Create a robot
-        List<Robot> robots = new ArrayList<>();
-        robots.add(new KillerRobot(new Location(2, 2)));
-        robots.add(new KillerRobot(new Location(1, 2)));
-
-        // Create GameState
-        return new GameState(board, player, robots, 60, 1);
-    }
-
-    private static void testReadJSON() throws IOException{
-        // Create a sample GameState
-        System.out.println("Reading JSON:");
         List<List<Tile<Item>>> board = new ArrayList<>();
         for (int y = 0; y < 5; y++) {
             List<Tile<Item>> row = new ArrayList<>();
@@ -81,9 +34,16 @@ public class PersistencyTest {
 
         Player player = new Player(new Location(1, 1));
         List<Robot> robots = new ArrayList<>();
-        robots.add(new KillerRobot(new Location(3, 3)));
+        robots.add(new KillerRobot(new Location(2, 3)));
         
-        GameState originalState = new GameState(board, player, robots, 60, 1);
+        return new GameState(board, player, robots, 180, 1);
+    }
+
+    private static GameState testReadJSON() throws IOException{
+        // Create a sample GameState
+        System.out.println("Reading JSON:");
+
+        GameState originalState = createSampleGameState();
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -108,6 +68,36 @@ public class PersistencyTest {
                 Item originalItem = originalState.board().get(y).get(x).item;
                 Item convertedItem = convertedState.board().get(y).get(x).item;
                 if (!originalItem.getClass().equals(convertedItem.getClass())) {
+                    boardMatches = false;
+                    break;
+                }
+            }
+        }
+        System.out.println("Board matches: " + boardMatches);
+
+        //Save the converted GameState to a file
+        Persistency.saveGameState("src/nz/ac/wgtn/swen225/lc/persistency/levels/level1.json", convertedState);
+        return convertedState;
+    }
+
+    //Test loading a GameState from a file
+    private static void testLoadGameState(GameState original) throws IOException{
+        System.out.println("Loading GameState from file:--------------------------------------");
+        GameState loadedState = Persistency.loadGameState("src/nz/ac/wgtn/swen225/lc/persistency/levels/level1.json");
+        //Check if the loaded GameState is the same as the original GameState
+        System.out.println("Level number matches: " + (original.level() == loadedState.level()));
+        System.out.println("Time left matches: " + (original.timeLeft() == loadedState.timeLeft()));
+        System.out.println("Player location matches: " + original.player().getLocation().equals(loadedState.player().getLocation()));
+        System.out.println("Number of robots matches: " + (original.robots().size() == loadedState.robots().size()));
+        System.out.println("Robot location matches: " + original.robots().get(0).getLocation().equals(loadedState.robots().get(0).getLocation()));
+
+        // Compare board
+        boolean boardMatches = true;
+        for (int y = 0; y < original.board().size(); y++) {
+            for (int x = 0; x < original.board().get(y).size(); x++) {
+                Item originalItem = original.board().get(y).get(x).item;
+                Item loadedItem = loadedState.board().get(y).get(x).item;
+                if (!originalItem.getClass().equals(loadedItem.getClass())) {
                     boardMatches = false;
                     break;
                 }
