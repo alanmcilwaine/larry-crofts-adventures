@@ -3,16 +3,16 @@ package nz.ac.wgtn.swen225.lc.domain;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.KillerRobot;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
-
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedExit;
 import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
-
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Util;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
@@ -74,22 +74,29 @@ public class GameBoard {
         return height;
     }
 
-    public void addRobotAtLocation(int x, int y) { robots.add(new KillerRobot(x, y)); }
+    //TODO this is for testing?
+    public void addRobotAtLocation(int x, int y) {
+        robots.add(new KillerRobot(x, y));
+    }
 
     /**
      * Moves all the robots in the level
      */
     private void robotsMove() {
-        if(robots.isEmpty()) {
+        if (robots.isEmpty()) {
             return;
         }
-        robots.forEach(r -> r.update(this)); }
+        robots.forEach(r -> r.update(this));
+    }
 
     /**
      * Get the board
+     *
      * @return Board
      */
-    public List<List<Tile<Item>>> getBoard() { return Collections.unmodifiableList(board); }
+    public List<List<Tile<Item>>> getBoard() {
+        return Collections.unmodifiableList(board);
+    }
 
     /**
      * Get current game board state.
@@ -97,9 +104,10 @@ public class GameBoard {
      * @return GameState
      */
     public GameState getGameState() {
-        return new GameState(board, player, robots, timeLeft, level, width,height,totalTreasure);
+        return new GameState(board, player, robots, timeLeft, level, width, height, totalTreasure);
     }
 
+    //TODO
     public void onGameOver() {
         throw new IllegalArgumentException("Game Over"); // temporary
     }
@@ -120,6 +128,7 @@ public class GameBoard {
         detach(observer);
     }
 
+    //TODO
     public void notifyObservers() {
         for (GameStateObserver observer : obs) {
             observer.update(getGameState());
@@ -129,6 +138,7 @@ public class GameBoard {
 
     /**
      * Get the tile hosting the exit item.
+     *
      * @return tile with exit.
      */
     private LockedExit getLockedExit() {

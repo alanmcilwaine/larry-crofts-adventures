@@ -27,7 +27,7 @@ public class Mock {
      * <br>
      * "f rk f bk f"
      * <br>
-     * "robot bcd f le i";
+     * "f bcd f le i";
      * <br>
      * w is wall, p is player, rod is red opened door,
      * rcd is red closed door, rk is red key, bk is blue key,
@@ -63,7 +63,6 @@ public class Mock {
         Player p = getPlayer(new Location(4, 4));
 
         List<Robot> robots = new ArrayList<>();
-        //robots.add(new KillerRobot(new Location(0, 0)));
 
         List<List<Tile<Item>>> tiles = constructTiles();
         addItemToTile(tiles);

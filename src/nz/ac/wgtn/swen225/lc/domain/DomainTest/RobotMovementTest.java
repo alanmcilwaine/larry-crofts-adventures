@@ -69,6 +69,7 @@ public class RobotMovementTest {
     gameBoard.action(Direction.NONE);
     gameBoard.action(Direction.NONE);
     gameBoard.action(Direction.NONE);
+    //TODO, not pass everytime.
     assertEquals(track.getLocation(), new Location(2, 3)); // stay in same position
   }
 
