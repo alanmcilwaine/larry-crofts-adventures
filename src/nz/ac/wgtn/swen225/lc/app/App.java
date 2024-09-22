@@ -3,7 +3,12 @@ package nz.ac.wgtn.swen225.lc.app;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import nz.ac.wgtn.swen225.lc.persistency.Persistency;
+import java.util.Objects;
+
+import nz.ac.wgtn.swen225.lc.domain.DomainTest.Mock;
+import nz.ac.wgtn.swen225.lc.domain.GameBoard;
+import nz.ac.wgtn.swen225.lc.recorder.Recorder;
+import nz.ac.wgtn.swen225.lc.render.ImageImplement;
 
 public class App extends JFrame implements AppInterface{
     // Window is made up of two main panels
@@ -22,6 +27,11 @@ public class App extends JFrame implements AppInterface{
     // Tick rate
     public static final int TICK_RATE = 50;
 
+    // Game Information
+    public Controller controller = new Controller(); // Create controller before others for menu screen
+    public GameBoard domain;
+    public ImageImplement render;
+    public Recorder recorder;
 
     /**
      * App()
@@ -39,6 +49,14 @@ public class App extends JFrame implements AppInterface{
      * Starts the main update loop for the program. Packages Domain, Renderer and Recorder should be used here.
      */
     private void startTick(){
+        domain = Mock.getGameBoard();
+        Objects.requireNonNull(domain);
+        render = new ImageImplement(game);
+        Objects.requireNonNull(render);
+        recorder = Recorder.create(this);
+        Objects.requireNonNull(recorder);
+        controller = new Controller(); // Clears the current action;
+
         Timer tick = new Timer(TICK_RATE, (unused) -> tick());
         tick.start();
     }
@@ -49,9 +67,9 @@ public class App extends JFrame implements AppInterface{
      * at a separate tick rate so movement isn't sluggish.
      */
     public void tick(){
-        // recorder.tick(Command c) This will be the current command in invoker
-        // executeGameLogic(Command c) Ticks domain, make it public so Recorder can call it.
-        // updateGraphics() Calls renderer to read Domain to update the panel
+        recorder.tick(controller.currentCommand);
+        giveInput(controller.currentCommand);
+        updateGraphics();
     }
 
     /**
@@ -60,7 +78,7 @@ public class App extends JFrame implements AppInterface{
      */
     @Override
     public void updateGraphics(){
-        // renderer.update();
+        render.drawImages(domain.getGameState());
     }
 
     /**
@@ -70,6 +88,7 @@ public class App extends JFrame implements AppInterface{
      */
     @Override
     public void giveInput(Command input){
+        domain.action(input.direction());
 
     }
 
@@ -80,7 +99,7 @@ public class App extends JFrame implements AppInterface{
      */
     @Override
     public void initialStateRevert(){
-
+        domain = Mock.getGameBoard();
     }
 
 
@@ -110,7 +129,7 @@ public class App extends JFrame implements AppInterface{
         game.setBackground(Color.BLACK);
         ui.setBackground(BACKGROUND);
         game.setFocusable(true);                // Without this keyListener won't work
-        // game.addKeyListener(keyInvoker);     // TODO: Key inputs
+        game.addKeyListener(controller);
         add(game, BorderLayout.CENTER);
         add(ui, BorderLayout.EAST);
 

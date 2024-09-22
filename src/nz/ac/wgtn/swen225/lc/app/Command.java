@@ -29,6 +29,15 @@ public enum Command{
     }
 
     /**
+     * direction()
+     * Getter for the direction of the Command.
+     * @return The Direction of the Command.
+     */
+    public Direction direction(){
+        return direction;
+    }
+
+    /**
      * generate()
      *
      * @param command Command in the form of a string, read from a file, as recorder cannot create Command
