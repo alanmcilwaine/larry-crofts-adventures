@@ -39,11 +39,11 @@ public class PersistencyTest {
         return new GameState(board, player, robots, 180, 1);
     }
 
-    private static GameState testReadJSON() throws IOException{
+    private static GameBoard testReadJSON() throws IOException{
         // Create a sample GameState
         System.out.println("Reading JSON:");
 
-        GameState originalState = createSampleGameState();
+        GameBoard originalState = createSampleGameState();
 
         ObjectMapper mapper = new ObjectMapper();
 

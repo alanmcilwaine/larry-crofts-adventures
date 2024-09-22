@@ -9,7 +9,6 @@ import java.util.function.Function;
 import java.util.HashMap;
 import nz.ac.wgtn.swen225.lc.app.Command;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
-import nz.ac.wgtn.swen225.lc.domain.GameState;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.*;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
@@ -49,7 +48,7 @@ public class ObjectMapper {
      * @return String The JSON string to be saved.
      * @throws IOException
      */
-    public String saveLeveltoFile(GameState level) throws IOException {
+    public String saveLeveltoFile(GameBoard level) throws IOException {
         StringBuilder json = new StringBuilder();
         json.append("{\n");
         
@@ -76,19 +75,19 @@ public class ObjectMapper {
         
         // Level
         json.append("  \"level\": {\n");
-        json.append("    \"number\": ").append(level.level()).append(",\n");
-        json.append("    \"Time Limit\": ").append(level.timeLeft()).append("\n");
+        json.append("    \"number\": ").append(level.getGameState().level()).append(",\n");
+        json.append("    \"Time Limit\": ").append(level.getGameState().timeLeft()).append("\n");
         json.append("  },\n"); // Closing the level object
     
         // Info
         Info info = new Info("Null");
         int x = 0, y = 0;
-        for (List<Tile<Item>> row : level.board()) {
+        for (List<Tile<Item>> row : level.getGameState().board()) {
             for (Tile<Item> tile : row) {
                 if (tile.item instanceof Info) {
                     info = (Info) tile.item;
                     x = row.indexOf(tile);
-                    y = level.board().indexOf(row);
+                    y = level.getBoard().indexOf(row);
                 }
             }
         }
@@ -340,9 +339,9 @@ public class ObjectMapper {
      * @param level The level to be converted.
      * @return List<List<String>> The converted level.
      */
-    public List<List<String>> convertBoardToStrings(GameState level) {
+    public List<List<String>> convertBoardToStrings(GameBoard level) {
         //Convert the board of Tile<Item> to List<List<String>>
-        List<List<String>> stringBoard = level.board().stream()
+        List<List<String>> stringBoard = level.getBoard().stream()
             .map((List<Tile<Item>> row) -> row.stream()
                 .map((Tile<Item> tile) -> gameItemCode(tile.item)) // Convert each Tile<Item> to the item's string code
                 .collect(Collectors.toList())
@@ -350,14 +349,14 @@ public class ObjectMapper {
             .collect(Collectors.toList());
     
         //Place the player on the board at their X and Y position
-        int playerX = level.player().getLocation().x();
-        int playerY = level.player().getLocation().y();
+        int playerX = level.getGameState().player().getLocation().x();
+        int playerY = level.getGameState().player().getLocation().y();
     
         //Modify the specific tile to include "P" for player
         stringBoard.get(playerY).set(playerX, stringBoard.get(playerY).get(playerX) + "-P");
 
         //Robot
-        for (Robot robot : level.robots()) {
+        for (Robot robot : level.getGameState().robots()) {
             int robotX = robot.getLocation().x();
             int robotY = robot.getLocation().y();
             stringBoard.get(robotY).set(robotX, stringBoard.get(robotY).get(robotX) + "-R");

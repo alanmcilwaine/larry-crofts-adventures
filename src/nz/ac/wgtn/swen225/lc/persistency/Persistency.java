@@ -5,7 +5,6 @@ import java.util.List;
 import nz.ac.wgtn.swen225.lc.app.Command;
 import nz.ac.wgtn.swen225.lc.recorder.Recorder;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
-import nz.ac.wgtn.swen225.lc.domain.GameState;
 
 
 
@@ -20,7 +19,7 @@ public class Persistency{
      * @param filename The name of the file to save the GameState to.
      * @param level The GameState object to be saved.
      */
-    public static void saveGameState(String filename, GameState level){
+    public static void saveGameState(GameBoard level){
         // convert level to JSON format
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -30,7 +29,7 @@ public class Persistency{
         }
         //Write JSON string to file
         
-        filename = "src\\nz\\ac\\wgtn\\swen225\\lc\\persistency\\levels\\level" + level.level() + ".json";        
+        String filename = "src\\nz\\ac\\wgtn\\swen225\\lc\\persistency\\levels\\level" + level.getGameState().level() + ".json";        
         File file = new File(filename);
         try {
             FileWriter fileWriter = new FileWriter(file);
