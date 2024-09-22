@@ -6,7 +6,6 @@ import nz.ac.wgtn.swen225.lc.domain.GameState;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
-import nz.ac.wgtn.swen225.lc.domain.Tile;
 
 import java.util.Collection;
 import java.util.logging.Level;
@@ -33,7 +32,7 @@ public record LockedExit() implements Item, GameStateObserver {
                 .filter(x -> x.item instanceof LockedExit)
                 .findFirst()
                 .ifPresentOrElse(tile -> {
-                    if (playerTreasure == GameBoard.totalTreasure) {
+                    if (playerTreasure >= gameState.totalTreasure()) {
                         tile.item = new Exit();
                     }
                 }, () -> {
