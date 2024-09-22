@@ -4,11 +4,8 @@ import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.*;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
-import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
-import nz.ac.wgtn.swen225.lc.app.Command;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +29,7 @@ public class PersistencyTest {
             e.printStackTrace();
         }
 
-        // Test reading JSON
+        // Test reading JSON to GameState
         testReadJSON();
     }
 
@@ -50,6 +47,7 @@ public class PersistencyTest {
         // Add some items to the board
         board.get(0).get(1).item = new LockedDoor(ItemColor.RED);
         board.get(1).get(0).item = new Wall();
+        board.get(1).get(1).item = new Info("Hi");
 
         // Create player
         Player player = new Player(new Location(0, 0));
@@ -65,6 +63,7 @@ public class PersistencyTest {
 
     private static void testReadJSON() throws IOException{
         // Create a sample GameState
+        System.out.println("Reading JSON:");
         List<List<Tile<Item>>> board = new ArrayList<>();
         for (int y = 0; y < 5; y++) {
             List<Tile<Item>> row = new ArrayList<>();
@@ -78,6 +77,7 @@ public class PersistencyTest {
         // Add some items to the board
         board.get(1).get(3).item = new Key(ItemColor.RED);
         board.get(3).get(3).item = new LockedDoor(ItemColor.RED);
+        board.get(2).get(2).item = new Info("Hello");
 
         Player player = new Player(new Location(1, 1));
         List<Robot> robots = new ArrayList<>();
@@ -94,13 +94,29 @@ public class PersistencyTest {
         // Convert JSON back to GameState
         GameState convertedState = mapper.convertJSONtoGameState(json);
 
-        // Perform manual assertions and print results
+        // Compare original and converted GameState
         System.out.println("Level number matches: " + (originalState.level() == convertedState.level()));
         System.out.println("Time left matches: " + (originalState.timeLeft() == convertedState.timeLeft()));
         System.out.println("Player location matches: " + originalState.player().getLocation().equals(convertedState.player().getLocation()));
         System.out.println("Number of robots matches: " + (originalState.robots().size() == convertedState.robots().size()));
         System.out.println("Robot location matches: " + originalState.robots().get(0).getLocation().equals(convertedState.robots().get(0).getLocation()));
 
+        // Compare board
+        boolean boardMatches = true;
+        for (int y = 0; y < originalState.board().size(); y++) {
+            for (int x = 0; x < originalState.board().get(y).size(); x++) {
+                Item originalItem = originalState.board().get(y).get(x).item;
+                Item convertedItem = convertedState.board().get(y).get(x).item;
+                if (!originalItem.getClass().equals(convertedItem.getClass())) {
+                    boardMatches = false;
+                    break;
+                }
+            }
+        }
+        System.out.println("Board matches: " + boardMatches);
+
+        //Info
+        System.out.println("Info matches: " + originalState.board().get(2).get(2).item.equals(convertedState.board().get(2).get(2).item));
     }
 
 }

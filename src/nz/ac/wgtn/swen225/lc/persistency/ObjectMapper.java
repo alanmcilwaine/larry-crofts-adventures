@@ -78,7 +78,28 @@ public class ObjectMapper {
         json.append("    \"number\": \"").append(level.level()).append("\",\n");
         json.append("    \"Time Limit\": ").append(level.timeLeft()).append("\n");
         json.append("  }\n"); // Closing the level object
-    
+
+        //Get info object from the board
+        Info info = new Info("Null");
+        int x = 0;
+        int y = 0;
+        for (List<Tile<Item>> row : level.board()) {
+            for (Tile<Item> tile : row) {
+                if (tile.item instanceof Info) {
+                    info = ((Info) tile.item);
+                    x = row.indexOf(tile);
+                    y = level.board().indexOf(row);
+                }
+            }
+        }
+
+        // Info
+        json.append("  \"info\": {\n");
+        json.append("    \"info\": \"").append(info.info()).append("\"\n");
+        json.append("    \"x\": \"").append(x).append("\",\n");
+        json.append("    \"y\": \"").append(y).append("\"\n");
+        json.append("  }\n"); // Closing the info object
+
         json.append("}\n"); // Closing the entire JSON object
     
         return json.toString();
@@ -117,9 +138,6 @@ public class ObjectMapper {
      * @return GameState The GameState object to be loaded.
      */
     public GameState convertJSONtoGameState(String json) {
-        // Debug: Print the JSON string
-        System.out.println("Parsed JSON: " + json);
-    
         // Parse board
         List<List<Tile<Item>>> board = new ArrayList<>();
         Player player = null;
@@ -166,10 +184,43 @@ public class ObjectMapper {
         String levelString = json.substring(levelStart + 10);
         int levelNumber = Integer.parseInt(levelString.substring(levelString.indexOf("\"number\": \"") + 11, levelString.indexOf("\",\n")));
         int timeLimit = Integer.parseInt(levelString.substring(levelString.indexOf("\"Time Limit\": ") + 14, levelString.indexOf("\n  }")));
-    
+
+        // Parse info
+        int infoStart = json.indexOf("\"info\": {");
+        if (infoStart == -1) {
+            throw new IllegalArgumentException("Info not found in JSON");
+        }
+        String infoString = json.substring(infoStart + 9); // Skip past `"info": {`
+        int infoEnd = infoString.indexOf("}"); // Find the closing brace
+        if (infoEnd == -1) {
+            throw new IllegalArgumentException("Closing brace for info not found in JSON");
+        }
+        infoString = infoString.substring(0, infoEnd); // Get the content before the closing brace
+
+        System.out.println("Info String: " + infoString); // Debug print
+
+        String infoText = extractValue(infoString, "\"info\": \"");
+        int x = Integer.parseInt(extractValue(infoString, "\"x\": \""));
+        int y = Integer.parseInt(extractValue(infoString, "\"y\": \""));
+
+        board.get(y).get(x).item = new Info(infoText);
+
         return new GameState(board, player, robots, timeLimit, levelNumber);
     }
-    
+
+    // Helper method to extract values
+    private String extractValue(String jsonString, String key) {
+        int keyStart = jsonString.indexOf(key);
+        if (keyStart == -1) {
+            throw new IllegalArgumentException("Key not found in info: " + key);
+        }
+        keyStart += key.length();
+        int valueEnd = jsonString.indexOf("\"", keyStart);
+        if (valueEnd == -1) {
+            throw new IllegalArgumentException("Value not found for key: " + key);
+        }
+        return jsonString.substring(keyStart, valueEnd);
+    }  
     
     /**
      * Read the given list of actions as a JSON format from a file.
