@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.List;
 import nz.ac.wgtn.swen225.lc.app.Command;
 import nz.ac.wgtn.swen225.lc.recorder.Recorder;
+import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.GameState;
 
 
@@ -72,14 +73,13 @@ public class Persistency{
      * Loads a GameState object from a file.
      *
      * @author zhoudavi1 300652444
-     * @param filename The name of the file to save the GameState to.
-     * @return GameState Loading GameState from a file.
+     * @param filename The name of the file to load the GameBoard from.
+     * @return GameBoard Loading GameBoard from a file.
      */
-    public static GameState loadGameState(String filename){
+    public static GameBoard loadGameState(String filename){
         // load the level GameState from a file
         try{
             //Read JSON string from file
-            filename = filename;
             File file = new File(filename);
             FileReader fileReader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -92,7 +92,7 @@ public class Persistency{
             json = stringBuilder.toString();
             //Convert JSON string to GameState object
             ObjectMapper mapper = new ObjectMapper();
-            GameState level = mapper.convertJSONtoGameState(json);
+            GameBoard level = mapper.convertJSONtoGameBoard(json);
             return level;
         } catch (IOException e) {
             e.printStackTrace();
@@ -104,10 +104,10 @@ public class Persistency{
      * Loads a recording of actions from a file.
      *
      * @author zhoudavi1 300652444
-     * @param filename The name of the file to save the GameState to.
+     * @param filename The name of the file which to load gameBoard from
      * @return List<Action> Loading list of actions from a file.
      */
-    public static GameState loadRecording(Recorder r, String filename){
+    public static GameBoard loadRecording(Recorder r, String filename){
         // load the list of actions from a file
         try{
             //Read JSON string from file
