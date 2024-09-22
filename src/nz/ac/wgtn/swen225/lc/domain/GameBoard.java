@@ -10,6 +10,7 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -97,6 +98,27 @@ public class GameBoard {
     public List<List<Tile<Item>>> getBoard() {
         return Collections.unmodifiableList(board);
     }
+
+
+    /**
+     * Gives a deep copy of a given gameState
+     *
+     * @param original gameState
+     * @return new deep copy of gameState
+     */
+    public GameState copyOf(GameState original) {
+
+        return new GameState(new ArrayList<>(this.board),
+                new Player(this.player.getLocation()),
+                new ArrayList<>(this.robots),
+                this.timeLeft,
+                this.level,
+                this.width,
+                this.height,
+                this.totalTreasure);
+    }
+
+
 
     /**
      * Get current game board state.
