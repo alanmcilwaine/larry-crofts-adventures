@@ -14,7 +14,7 @@ public class UIPanel extends JPanel {
      */
     public UIPanel(GridLayout layout) {
         super(layout);
-        setPreferredSize(new Dimension(WIDTH/3, HEIGHT));     // 300x600
+        setPreferredSize(new Dimension(App.WIDTH/3, App.HEIGHT));     // 300x600
         setBackground(App.BACKGROUND);
     }
 }

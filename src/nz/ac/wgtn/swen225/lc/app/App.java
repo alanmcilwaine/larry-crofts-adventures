@@ -22,6 +22,7 @@ public class App extends JFrame implements AppInterface{
     // Window is made up of two main panels
     private GamePanel game = new GamePanel();
     private UIPanel ui = new UIPanel(new GridLayout(3, 1, 0, 15));
+    private Menu menu = new Menu(this);
 
     // Colours for the UI
     public static final Color BACKGROUND = new Color(47, 74, 58);
@@ -61,12 +62,13 @@ public class App extends JFrame implements AppInterface{
         setSize(WIDTH, HEIGHT);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        add(game, BorderLayout.CENTER);
-        add(ui, BorderLayout.EAST);
         setupButtons();
         setupDisplay();
+        add(game, BorderLayout.CENTER);
+        add(ui, BorderLayout.EAST);
         setVisible(true);
     }
+
 
     /**
      * startTick()
@@ -139,7 +141,8 @@ public class App extends JFrame implements AppInterface{
         elements.setBackground(FOREGROUND);
         ui.add(elements);
 
-        Menu menu = new Menu(this);
+        add(game, BorderLayout.CENTER);
+        add(ui, BorderLayout.EAST);
         setJMenuBar(menu);
     }
 
