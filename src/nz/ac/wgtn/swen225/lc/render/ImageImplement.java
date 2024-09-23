@@ -15,7 +15,7 @@ public class ImageImplement{
     // App's jpanel called game in App
     private JPanel jpanel;
     private static final int IMAGE_SIZE = 30;
-    private static final int BUFFER_SIZE = 70;
+    private static final int BUFFER_SIZE = 5;
 
 
     ImageImplement(JPanel jpanel) {
@@ -36,8 +36,8 @@ public class ImageImplement{
      * draw the image in each game board to the jpanel.
      */
     public void drawImages(GameState gameState){
-        drawActors(gameState);
         drawItemsTile(gameState);
+        drawActors(gameState);
     }
 
     /**
@@ -49,7 +49,7 @@ public class ImageImplement{
         // run through all the tiles
         gameBoard.forEach(listTile -> listTile.forEach(tile -> {
             // tile
-            drawOneImage("tile.png",
+            drawOneImage("Tile.png",
                     tile.location.x() - player.getLocation().x(),
                     tile.location.y() - player.getLocation().y(),
                     jpanel);
@@ -62,6 +62,11 @@ public class ImageImplement{
                             t.location.y() - player.getLocation().y(),
                             jpanel));
         }));
+        // robots
+        List<Robot> robots = gameState.robots();
+        robots.forEach(robot -> drawOneImage(robot.toString(),
+                robot.getLocation().x() - player.getLocation().x(),
+                robot.getLocation().y() - player.getLocation().y(), jpanel));
 
     }
 
@@ -71,12 +76,8 @@ public class ImageImplement{
     public void drawActors(GameState gameState){
         // player
         Player player = gameState.player();
-        drawOneImage(player.toString(), player.getLocation().x(), player.getLocation().y(), jpanel);
-        // robots
-        List<Robot> robots = gameState.robots();
-        robots.forEach(robot -> drawOneImage(robot.toString(),
-                robot.getLocation().x(),
-                robot.getLocation().y(), jpanel));
+        drawOneImage(player.toString(), 0, 0, jpanel);
+
     }
 
     /**
