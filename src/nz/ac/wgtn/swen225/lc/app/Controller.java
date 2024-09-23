@@ -37,10 +37,10 @@ class Controller extends Keys{
      * Maps the default key presses to their relevant action in the game.
      */
     public Controller(){
-        setAction(Action.UP, () -> currentCommand = Command.Up);
-        setAction(Action.DOWN, () -> currentCommand = Command.Down);
-        setAction(Action.LEFT, () -> currentCommand = Command.Left);
-        setAction(Action.RIGHT, () -> currentCommand = Command.Right);
+        setAction(Action.UP, () -> Keys.currentCommand = Command.Up);
+        setAction(Action.DOWN, () -> Keys.currentCommand = Command.Down);
+        setAction(Action.LEFT, () -> Keys.currentCommand = Command.Left);
+        setAction(Action.RIGHT, () -> Keys.currentCommand = Command.Right);
 
         //set all the stop functions.
         Arrays.stream(Action.values()).forEach(action -> action.stop = noCommand);

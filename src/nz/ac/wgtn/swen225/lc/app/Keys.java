@@ -20,7 +20,7 @@ import javax.swing.SwingUtilities;
  * @author John Rais and Alan McIlwaine
  */
 class Keys implements KeyListener {
-    protected Command currentCommand = Command.None;
+    protected static Command currentCommand = Command.None;
     protected final Runnable noCommand = () ->{currentCommand = Command.None;};
     private final Map<Integer,Runnable> actionsPressed= new HashMap<>();
     private final Map<Integer,Runnable> actionsReleased= new HashMap<>();

@@ -67,6 +67,7 @@ public class App extends JFrame implements AppInterface{
         add(game, BorderLayout.CENTER);
         add(ui, BorderLayout.EAST);
         setVisible(true);
+        game.setVisible(true);
     }
 
 
@@ -92,8 +93,8 @@ public class App extends JFrame implements AppInterface{
      * at a separate tick rate so movement isn't sluggish.
      */
     public void tick(){
-        recorder.tick(controller.currentCommand);
-        giveInput(controller.currentCommand);
+        recorder.tick(Keys.currentCommand);
+        giveInput(Keys.currentCommand);
         updateGraphics();
     }
 
