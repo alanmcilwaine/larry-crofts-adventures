@@ -7,7 +7,7 @@ import java.io.IOException;
 public class SoundEffectImplement {
     public void playMusic() {
         try {
-            File wavFile = new File("src/nz/ac/wgtn/swen225/lc/render/SoundEffect/soundEffect.wav");
+            File wavFile = new File("SoundEffect/soundEffect.wav");
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(wavFile);
 
             Clip clip = AudioSystem.getClip();
