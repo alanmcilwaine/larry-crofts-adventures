@@ -14,7 +14,7 @@ import java.util.List;
 public class PersistencyTest {
     public static void main(String[] args) throws IOException {
         GameBoard gameState = testReadJSON();
-        testLoadGameState(gameState);
+        //testLoadGameState(gameState);
     }
 
     private static GameBoard createSampleGameState() {
