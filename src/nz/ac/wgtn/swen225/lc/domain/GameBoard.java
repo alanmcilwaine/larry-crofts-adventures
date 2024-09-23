@@ -106,16 +106,23 @@ public class GameBoard {
      * @param original gameState
      * @return new deep copy of gameState
      */
-    public GameState copyOf(GameState original) {
+    public GameBoard copyOf() {
+        List<List<Tile<Item>>> newBoard = board.stream().map(x -> x.stream()
+                                                            .map(y -> new Tile<>(y.item, y.location))
+                                                            .toList())
+                                                            .toList();
 
-        return new GameState(new ArrayList<>(this.board),
-                new Player(this.player.getLocation()),
-                new ArrayList<>(this.robots),
-                this.timeLeft,
-                this.level,
-                this.width,
-                this.height,
-                this.totalTreasure);
+
+        // might have more types of robots in the future, could change this
+        List<Robot> newRobots = robots.stream()
+                                        .map(r -> (Robot) new KillerRobot(r.getLocation().x(), r.getLocation().y()))
+                                        .toList();
+
+        // make new board
+        return new GameBoardBuilder().addBoard(newBoard).addBoardSize(width, height)
+                                    .addLevel(level).addPlayer(new Player(player.getLocation()))
+                                    .addRobots(newRobots).addTimeLeft(timeLeft)
+                                    .addTreasure(totalTreasure).build();
     }
 
 

@@ -13,6 +13,8 @@ public abstract class Robot implements Actor {
   private Direction robotFacing = Direction.values()[(int) (Math.random() * 5)];
   private int switchDirCount;
 
+  // GETTERS
+
   @Override
   public Location getLocation() { return location; }
   @Override
