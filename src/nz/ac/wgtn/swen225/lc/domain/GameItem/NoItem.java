@@ -12,4 +12,7 @@ public record NoItem() implements Item {
     @Override
     public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {
     }
+
+    @Override
+    public String toString() { return "Tile"; } // nothing for now, should decide how to handle this
 }

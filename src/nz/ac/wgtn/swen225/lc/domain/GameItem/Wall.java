@@ -9,4 +9,7 @@ public record Wall() implements Item {
         return true;
     }
 
+    @Override
+    public String toString() { return "Wall"; }
+
 }

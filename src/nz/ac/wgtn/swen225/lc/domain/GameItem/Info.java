@@ -22,4 +22,7 @@ public record Info(String info) implements Item {
             p.setShowPlayerInfo(false);
         }
     }
+
+    @Override
+    public String toString() { return "Info"; }
 }
