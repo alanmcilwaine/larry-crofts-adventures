@@ -43,7 +43,7 @@ public class PersistencyTest {
         List<Robot> robots = new ArrayList<>();
         robots.add(new KillerRobot(2, 3));
         
-        return new GameBoardBuilder().addBoard(board).addBoardSize(5, 5).addTimeLeft(120).addTreasure(1).setLevel(1).addPlayer(player).addRobots(robots).build();
+        return new GameBoardBuilder().addBoard(board).addBoardSize(5, 5).addTimeLeft(120).addTreasure(1).addLevel(1).addPlayer(player).addRobots(robots).build();
     }
 
     private static GameBoard testReadJSON() throws IOException{

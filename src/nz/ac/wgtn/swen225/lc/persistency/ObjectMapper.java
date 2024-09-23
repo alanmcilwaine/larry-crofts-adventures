@@ -213,7 +213,7 @@ public class ObjectMapper {
         int height = board.size();
     
         return new GameBoardBuilder().addBoard(board).addBoardSize(width, height).addTimeLeft(timeLimit)
-                .addTreasure(totalTreasure).setLevel(levelNumber).addPlayer(player).addRobots(robots).build();
+                .addTreasure(totalTreasure).addLevel(levelNumber).addPlayer(player).addRobots(robots).build();
     }
 
     // Helper method to extract values

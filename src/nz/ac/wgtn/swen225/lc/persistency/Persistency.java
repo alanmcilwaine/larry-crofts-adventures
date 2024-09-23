@@ -11,7 +11,7 @@ import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 public class Persistency{
 
     private static String json;
-    private static String path = "src/nz/ac/wgtn/swen225/lc/persistency/levels/";
+    public static String path = "src/nz/ac/wgtn/swen225/lc/persistency/levels/";
 
     /**
      * Saves the given GameState object as a JSON format to a file.
