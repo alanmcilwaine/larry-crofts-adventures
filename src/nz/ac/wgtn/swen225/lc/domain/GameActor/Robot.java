@@ -60,5 +60,8 @@ public abstract class Robot implements Actor {
     this.location = new Location(location.x(), location.y());
   }
 
+  @Override
+  public String toString() { return "Robot"; }
+
   Robot(int x, int y) { this.location = new Location(x, y); }
 }

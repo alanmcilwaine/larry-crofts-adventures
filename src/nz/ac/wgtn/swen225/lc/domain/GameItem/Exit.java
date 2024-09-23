@@ -20,4 +20,7 @@ public record Exit() implements Item {
             p.setNextLevel(false);
         }
     }
+
+    @Override
+    public String toString() { return "Exit"; }
 }

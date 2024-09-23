@@ -17,21 +17,4 @@ public record GameState(List<List<Tile<Item>>> board,
                         int totalTreasure) {
 
 
-    /**
-     * Gives a deep copy of a given gameState
-     *
-     * @param original gameState
-     * @return new deep copy of gameState
-     */
-    public GameState copyOf(GameState original) {
-        return new GameState(new ArrayList<>(this.board),
-                new Player(this.player().getLocation()),
-                new ArrayList<>(this.robots),
-                this.timeLeft,
-                this.level,
-                this.width,
-                this.height,
-                this.totalTreasure);
-    }
-
 }

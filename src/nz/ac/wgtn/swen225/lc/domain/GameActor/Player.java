@@ -107,4 +107,7 @@ public class Player implements Actor {
     public void setNextLevel(boolean nextLevel) {
         this.nextLevel = nextLevel;
     }
+
+    @Override
+    public String toString() { return "Player"; }
 }

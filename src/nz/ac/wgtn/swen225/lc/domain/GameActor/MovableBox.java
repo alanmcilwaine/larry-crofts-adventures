@@ -37,4 +37,7 @@ public class MovableBox implements Actor {
   public void updateActorLocation(Location location) {
     this.location = new Location(location.x(), location.y());
   }
+
+  @Override
+  public String toString() { return "MovableBox"; }
 }
