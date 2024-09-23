@@ -31,7 +31,7 @@ public class PersistencyTest {
         // Add some items to the board
         board.get(1).get(3).item = new Key(ItemColor.RED);
         board.get(3).get(3).item = new LockedDoor(ItemColor.RED);
-        board.get(2).get(2).item = new Info("Hello, chap!");
+        board.get(2).get(2).item = new Info("Hello chap!");
         
         //Treasure
         board.get(3).get(2).item = new Treasure();
@@ -43,7 +43,7 @@ public class PersistencyTest {
         List<Robot> robots = new ArrayList<>();
         robots.add(new KillerRobot(2, 3));
         
-        return new GameBoardBuilder().addBoard(board).addBoardSize(5, 5).addTimeLeft(100).addTreasure(1).setLevel(1).addPlayer(player).addRobots(robots).build();
+        return new GameBoardBuilder().addBoard(board).addBoardSize(5, 5).addTimeLeft(120).addTreasure(1).setLevel(1).addPlayer(player).addRobots(robots).build();
     }
 
     private static GameBoard testReadJSON() throws IOException{

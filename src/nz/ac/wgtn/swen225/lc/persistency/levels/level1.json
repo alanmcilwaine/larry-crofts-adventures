@@ -8,11 +8,11 @@
   ],
   "level": {
     "number": 1,
-    "Time Limit": 100,
+    "Time Limit": 120,
     "Total Treasure": 1
   },
   "info": {
-    "info": "Hello",
+    "info": "Hello chap!",
     "x": 2,
     "y": 2
   }
