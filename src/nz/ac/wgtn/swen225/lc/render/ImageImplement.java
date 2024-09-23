@@ -62,11 +62,6 @@ public class ImageImplement{
                             t.location.y() - player.getLocation().y(),
                             jpanel));
         }));
-        // robots
-        List<Robot> robots = gameState.robots();
-        robots.forEach(robot -> drawOneImage(robot.toString(),
-                robot.getLocation().x() - player.getLocation().x(),
-                robot.getLocation().y() - player.getLocation().y(), jpanel));
 
     }
 
@@ -77,6 +72,12 @@ public class ImageImplement{
         // player
         Player player = gameState.player();
         drawOneImage(player.toString(), 0, 0, jpanel);
+
+        // robots
+        List<Robot> robots = gameState.robots();
+        robots.forEach(robot -> drawOneImage(robot.toString(),
+                robot.getLocation().x() - player.getLocation().x(),
+                robot.getLocation().y() - player.getLocation().y(), jpanel));
 
     }
 
