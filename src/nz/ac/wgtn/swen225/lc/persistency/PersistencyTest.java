@@ -14,7 +14,7 @@ import java.util.List;
 public class PersistencyTest {
     public static void main(String[] args) throws IOException {
         GameBoard gameState = testReadJSON();
-        //testLoadGameState(gameState);
+        testLoadGameState(gameState);
     }
 
     private static GameBoard createSampleGameState() {
@@ -56,7 +56,7 @@ public class PersistencyTest {
 
         // Convert GameState to JSON
         String json = mapper.saveLeveltoFile(originalState);
-        System.out.println("JSON Representation of GameState:\n" + json);
+        System.out.println("JSON Representation of GameBoard:\n" + json);
 
         // Convert JSON back to GameBoard
         GameBoard convertedBoard = mapper.convertJSONtoGameBoard(json);

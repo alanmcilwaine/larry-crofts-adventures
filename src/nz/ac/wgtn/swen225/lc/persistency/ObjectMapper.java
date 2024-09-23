@@ -223,27 +223,25 @@ public class ObjectMapper {
             throw new IllegalArgumentException("Key not found in JSON: " + key);
         }
         keyStart += key.length();
-    
-        // Skip any spaces, newlines, and the colon after the key
-        while (keyStart < jsonString.length() && (jsonString.charAt(keyStart) == ' ' || jsonString.charAt(keyStart) == ':' || jsonString.charAt(keyStart) == '\n')) {
+        
+        // Skip spaces and the colon
+        while (keyStart < jsonString.length() && (jsonString.charAt(keyStart) == ' ' || jsonString.charAt(keyStart) == ':' || jsonString.charAt(keyStart) == '\n' || jsonString.charAt(keyStart) == '\t')) {
             keyStart++;
         }
-    
-        // Look for the end of the value, either a comma or a closing brace
+        
+        // Find the end of the value
         int valueEnd = jsonString.indexOf(",", keyStart);
         if (valueEnd == -1) {
             valueEnd = jsonString.indexOf("}", keyStart);
         }
         if (valueEnd == -1) {
-            throw new IllegalArgumentException("Value not found for key: " + key);
+            valueEnd = jsonString.length();
         }
     
-        // Extract the value and trim whitespace
         String value = jsonString.substring(keyStart, valueEnd).trim();
-    
-        // Remove any quotes and return the value
-        return value.replace("\"", "").trim();
+        return value.replace("\"", "").trim(); // Remove quotes
     }
+    
     
     /**
      * Read the given list of actions as a JSON format from a file.
