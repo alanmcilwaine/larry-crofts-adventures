@@ -23,7 +23,7 @@ enum Img{
      * load all the images from a folder and save to the map.
      */
     public void loadImage() {
-       File imageFolder = new File("src/nz/ac/wgtn/swen225/lc/render/AllItemsImages");
+       File imageFolder = new File("AllItemsImages");
        File[] imageFiles = imageFolder.listFiles();
         assert imageFiles != null;
         for(File file: imageFiles){
