@@ -49,7 +49,7 @@ public class ImageImplement{
         // run through all the tiles
         gameBoard.forEach(listTile -> listTile.forEach(tile -> {
             // tile
-            drawOneImage("Tile.png",
+            drawOneImage("Tile",
                     tile.location.x() - player.getLocation().x(),
                     tile.location.y() - player.getLocation().y(),
                     jpanel);
