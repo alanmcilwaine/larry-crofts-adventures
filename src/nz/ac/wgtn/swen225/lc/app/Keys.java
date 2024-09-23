@@ -22,8 +22,8 @@ import javax.swing.SwingUtilities;
 class Keys implements KeyListener {
     protected static Command currentCommand = Command.None;
     protected final Runnable noCommand = () ->{currentCommand = Command.None;};
-    private final Map<Integer,Runnable> actionsPressed= new HashMap<>();
-    private final Map<Integer,Runnable> actionsReleased= new HashMap<>();
+    protected final Map<Integer,Runnable> actionsPressed= new HashMap<>();
+    protected final Map<Integer,Runnable> actionsReleased= new HashMap<>();
 
     /**
      * Links actions from a keyboard in the form of enum Action,

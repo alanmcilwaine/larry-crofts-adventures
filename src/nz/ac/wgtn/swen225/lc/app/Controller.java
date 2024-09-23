@@ -10,13 +10,13 @@ import nz.ac.wgtn.swen225.lc.app.Keys;
  *
  * @author Alan McIlwaine && John Rais
  */
-class Controller extends Keys{
+public class Controller extends Keys{
     /**
      * Action that is mapped to a KeyEvent. Each enum corresponds to a key press.
      */
     enum Action{
-        UP(KeyEvent.VK_W),
-        DOWN(KeyEvent.VK_S),
+        UP(KeyEvent.VK_S),
+        DOWN(KeyEvent.VK_W),
         LEFT(KeyEvent.VK_A),
         RIGHT(KeyEvent.VK_D);
 
