@@ -12,6 +12,7 @@ public abstract class Robot implements Actor {
   private Location location;
   private Direction robotFacing = Direction.values()[(int) (Math.random() * 5)];
   private int switchDirCount;
+  private int moveCount;
 
   // GETTERS
 
@@ -28,7 +29,7 @@ public abstract class Robot implements Actor {
 
   @Override
   public void doMove(Direction direction, GameBoard gameBoard) {
-    // TODO check if we can overlap robots
+    // TODO observe robot movement if it is going too fast
     Location newLoc = direction.act(this.location); // location to move to
 
     GameBoard.domainLogger.log(Level.INFO, "Robot is facing: " + robotFacing);
@@ -38,11 +39,13 @@ public abstract class Robot implements Actor {
 
 
     if (locationIsValid(newLoc, gameBoard)) {
-      if (nextTile.canStepOn(this) && switchDirCount <= 20) {
+      if (nextTile.canStepOn(this) && switchDirCount <= 20 && moveCount >= 1000) {
         currentTile.onExit(this);
-        currentTile.onEntry(this);
+        nextTile.onEntry(this);
         updateActorLocation(newLoc);
 
+        // robot should move only once and then wait for counts
+        moveCount = 0;
         GameBoard.domainLogger.log(Level.INFO, "Robot is now at:" + location);
       } else {
 
@@ -50,8 +53,10 @@ public abstract class Robot implements Actor {
         this.robotFacing = Direction.values()[(int) (Math.random() * 4)];
         switchDirCount = 0;
       }
+
       switchDirCount++; // don't know how often should switch direction
     } else {
+
       GameBoard.domainLogger.log(Level.INFO, "Robot tried to move to invalid, still at: " + location);
     }
 

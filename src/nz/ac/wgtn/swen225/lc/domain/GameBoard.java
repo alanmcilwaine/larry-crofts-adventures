@@ -135,7 +135,7 @@ public class GameBoard {
 
     //TODO
     public void onGameOver() {
-        throw new IllegalArgumentException("Game Over"); // temporary
+        //throw new IllegalArgumentException("Game Over"); // temporary
     }
 
     private static void attach(GameStateObserver ob) {
