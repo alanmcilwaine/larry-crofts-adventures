@@ -1,6 +1,12 @@
 package nz.ac.wgtn.swen225.lc.app;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 
+/**
+ * Command --- Contains the keys pressed by the user as a Command. Used to send to recorder because
+ * recorder cannot access Direction.
+ *
+ * @author Alan McIlwaine 300653905
+ */
 public enum Command{
     Left(Direction.LEFT),
     Right(Direction.RIGHT),

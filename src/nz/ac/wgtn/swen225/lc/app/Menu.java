@@ -1,12 +1,15 @@
 package nz.ac.wgtn.swen225.lc.app;
 
+import nz.ac.wgtn.swen225.lc.domain.GameState;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 
 import javax.swing.*;
 import java.util.List;
 
 /**
- * Generates a menu at the top of the Frame to handle saving.
+ * Menu --- Generates a menu at the top of the Frame to handle saving.
+ *
+ * @author Alan McIlwaine 300653905
  */
 public class Menu extends JMenuBar {
     private final JMenu file = new JMenu("File");
@@ -29,7 +32,7 @@ public class Menu extends JMenuBar {
         load.addActionListener((unused) -> {
             String filename = a.openFile();
             if (!filename.isEmpty()){
-                Persistency.loadGameState(a.openFile());
+                a.domain = Persistency.loadGameState(a.openFile());
             }
         });
         save.addActionListener((unused) -> {

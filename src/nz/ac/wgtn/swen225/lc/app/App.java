@@ -8,19 +8,25 @@ import java.util.Objects;
 
 import nz.ac.wgtn.swen225.lc.domain.DomainTest.Mock;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
+import nz.ac.wgtn.swen225.lc.domain.GameState;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 import nz.ac.wgtn.swen225.lc.recorder.Recorder;
 import nz.ac.wgtn.swen225.lc.render.ImageImplement;
 
+/**
+ * App --- Program to build the Application elements, and start the ticking process.
+ *
+ * @author Alan McIlwaine 300653905
+ */
 public class App extends JFrame implements AppInterface{
     // Window is made up of two main panels
-    private JPanel game = new JPanel();
-    private JPanel ui = new JPanel(new GridLayout(3, 1, 0, 15));
+    private GamePanel game = new GamePanel();
+    private UIPanel ui = new UIPanel(new GridLayout(3, 1, 0, 15));
 
     // Colours for the UI
-    private final Color BACKGROUND = new Color(47, 74, 58);
-    private final Color FOREGROUND = new Color(179, 178, 137);
-    private final Color FONT = new Color(31, 30, 25);
+    public static final Color BACKGROUND = new Color(47, 74, 58);
+    public static final Color FOREGROUND = new Color(179, 178, 137);
+    public static final Color FONT = new Color(31, 30, 25);
 
     // Window Dimensions
     public static final int WIDTH = 900;
@@ -30,7 +36,7 @@ public class App extends JFrame implements AppInterface{
     public static final int TICK_RATE = 50;
 
     // Game Information
-    public Controller controller = new Controller(); // Create controller before others for menu screen
+    public static Controller controller = new Controller(); // Create controller before others for menu screen
     public GameBoard domain;
     public ImageImplement render;
     public Recorder recorder;
@@ -47,13 +53,29 @@ public class App extends JFrame implements AppInterface{
     }
 
     /**
+     * setupUI()
+     * Sets up the base UI for the game inside a frame and displays.
+     * Includes configs for UI and Game panel.
+     */
+    private void setupUI(){
+        setSize(WIDTH, HEIGHT);
+        setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        add(game, BorderLayout.CENTER);
+        add(ui, BorderLayout.EAST);
+        setupButtons();
+        setupDisplay();
+        setVisible(true);
+    }
+
+    /**
      * startTick()
      * Starts the main update loop for the program. Packages Domain, Renderer and Recorder should be used here.
      */
     private void startTick(){
-        domain = Mock.getGameBoard();
+        domain = Persistency.loadGameState("src/nz/ac/wgtn/swen225/lc/persistency/levels/level1.json"); // TODO change to Persistency.PATh
         Objects.requireNonNull(domain);
-        render = new ImageImplement(game);
+        render = ImageImplement.getImageImplement(game);
         Objects.requireNonNull(render);
         recorder = Recorder.create(this);
         Objects.requireNonNull(recorder);
@@ -81,16 +103,15 @@ public class App extends JFrame implements AppInterface{
     @Override
     public void giveInput(Command input){
         domain.action(input.direction());
-
     }
 
     @Override
     public void initialStateRevert(){
-        domain = Mock.getGameBoard();
+        domain = Persistency.loadGameState("src/nz/ac/wgtn/swen225/lc/persistency/levels/level" + domain.getGameState().level() + ".json"); // TODO change to Persistency.PATH
     }
 
     @Override
-    public String openFile() {
+    public String openFile(){
         JFileChooser loader = new JFileChooser(new File(System.getProperty("user.dir")));
         if (loader.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             return loader.getSelectedFile().getName();
@@ -107,31 +128,6 @@ public class App extends JFrame implements AppInterface{
         return "";
     }
 
-    /**
-     * setupUI()
-     * Sets up the base UI for the game inside a frame and displays.
-     * Includes configs for UI and Game panel.
-     */
-    private void setupUI(){
-        // Frame config
-        setSize(WIDTH, HEIGHT);
-        setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // Panel config
-        game.setPreferredSize(new Dimension(WIDTH/3*2, HEIGHT)); // 600x600
-        ui.setPreferredSize(new Dimension(WIDTH/3, HEIGHT));     // 300x600
-        game.setBackground(Color.BLACK);
-        ui.setBackground(BACKGROUND);
-        game.setFocusable(true);                // Without this keyListener won't work
-        game.addKeyListener(controller);
-        add(game, BorderLayout.CENTER);
-        add(ui, BorderLayout.EAST);
-
-        setupButtons();
-        setupDisplay();
-        setVisible(true);
-    }
 
     /**
      * setupButtons()

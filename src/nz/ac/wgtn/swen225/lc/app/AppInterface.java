@@ -1,5 +1,10 @@
 package nz.ac.wgtn.swen225.lc.app;
 
+/**
+ * AppInterface --- Holds the default commands that should be the only things read by Recorder and Persistency for testing.
+ *
+ * @author Alan McIlwaine 300653905
+ */
 public interface AppInterface {
     int TICK_RATE = 50;
 
@@ -25,7 +30,7 @@ public interface AppInterface {
 
     /**
      * openFile()
-     * Opens a file at the given location.
+     * Opens a file at the given location. Note that it is expected to handle the "" case when no file is inputted.
      * @return File name.
      */
     String openFile();
@@ -33,7 +38,7 @@ public interface AppInterface {
 
     /**
      * saveFile()
-     * Saves a file at the given location.
+     * Saves a file at the given location. Note that it is expected to handle the "" case when no file is inputted.
      * @return File name.
      */
     String saveFile();
