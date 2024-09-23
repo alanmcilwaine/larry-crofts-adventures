@@ -10,7 +10,7 @@ import nz.ac.wgtn.swen225.lc.app.Keys;
  *
  * @author Alan McIlwaine && John Rais
  */
-public class Controller extends Keys{
+public class Controller extends Keys implements InputManager{
     /**
      * Action that is mapped to a KeyEvent. Each enum corresponds to a key press.
      */

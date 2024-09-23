@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.app;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyListener;
 
 /**
  * UIPanel --- JPanel extension which holds the Game elements on the left side of the screen.
@@ -16,6 +17,6 @@ public class GamePanel extends JPanel{
         setPreferredSize(new Dimension(App.WIDTH/3*2, App.HEIGHT)); // 600x600
         setBackground(Color.BLACK);
         setFocusable(true);                // Without this keyListener won't work
-        addKeyListener(App.controller);
+        addKeyListener((KeyListener) App.controller);
     }
 }
