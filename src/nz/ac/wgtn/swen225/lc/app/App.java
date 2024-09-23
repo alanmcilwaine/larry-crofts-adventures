@@ -36,10 +36,10 @@ public class App extends JFrame implements AppInterface{
     public static final int TICK_RATE = 50;
 
     // Game Information
-    public static Controller controller = new Controller(); // Create controller before others for menu screen
+    public static Controller controller = new Controller(); // Create controller before others for menu screen.
+    public Recorder recorder = Recorder.create(this); // Created earlier so UI can hook up buttons to recorder.
     public GameBoard domain;
     public ImageImplement render;
-    public Recorder recorder;
 
     /**
      * App()
@@ -73,7 +73,7 @@ public class App extends JFrame implements AppInterface{
      * Starts the main update loop for the program. Packages Domain, Renderer and Recorder should be used here.
      */
     private void startTick(){
-        domain = Persistency.loadGameState("src/nz/ac/wgtn/swen225/lc/persistency/levels/level1.json"); // TODO change to Persistency.PATh
+        domain = Persistency.loadGameBoard(Persistency.path + "level1.json");
         Objects.requireNonNull(domain);
         render = ImageImplement.getImageImplement(game);
         Objects.requireNonNull(render);
@@ -94,40 +94,6 @@ public class App extends JFrame implements AppInterface{
         giveInput(controller.currentCommand);
         updateGraphics();
     }
-
-    @Override
-    public void updateGraphics(){
-        render.drawImages(domain.getGameState());
-    }
-
-    @Override
-    public void giveInput(Command input){
-        domain.action(input.direction());
-    }
-
-    @Override
-    public void initialStateRevert(){
-        domain = Persistency.loadGameState("src/nz/ac/wgtn/swen225/lc/persistency/levels/level" + domain.getGameState().level() + ".json"); // TODO change to Persistency.PATH
-    }
-
-    @Override
-    public String openFile(){
-        JFileChooser loader = new JFileChooser(new File(System.getProperty("user.dir")));
-        if (loader.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            return loader.getSelectedFile().getName();
-        }
-        return "";
-    }
-
-    @Override
-    public String saveFile() {
-        JFileChooser saver = new JFileChooser(new File(System.getProperty("user.dir")));
-        if (saver.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            return saver.getSelectedFile().getName();
-        }
-        return "";
-    }
-
 
     /**
      * setupButtons()
@@ -175,5 +141,38 @@ public class App extends JFrame implements AppInterface{
 
         Menu menu = new Menu(this);
         setJMenuBar(menu);
+    }
+
+    @Override
+    public void updateGraphics(){
+        render.drawImages(domain.getGameState());
+    }
+
+    @Override
+    public void giveInput(Command input){
+        domain.action(input.direction());
+    }
+
+    @Override
+    public void initialStateRevert(){
+        domain = Persistency.loadGameBoard(Persistency.path + "level" + domain.getGameState().level() + ".json");
+    }
+
+    @Override
+    public String openFile(){
+        JFileChooser loader = new JFileChooser(new File(System.getProperty("user.dir")));
+        if (loader.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            return loader.getSelectedFile().getName();
+        }
+        return "";
+    }
+
+    @Override
+    public String saveFile() {
+        JFileChooser saver = new JFileChooser(new File(System.getProperty("user.dir")));
+        if (saver.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            return saver.getSelectedFile().getName();
+        }
+        return "";
     }
 }

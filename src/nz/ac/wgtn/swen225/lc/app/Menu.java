@@ -32,13 +32,13 @@ public class Menu extends JMenuBar {
         load.addActionListener((unused) -> {
             String filename = a.openFile();
             if (!filename.isEmpty()){
-                a.domain = Persistency.loadGameState(a.openFile());
+                a.domain = Persistency.loadGameBoard(a.openFile());
             }
         });
         save.addActionListener((unused) -> {
            String filename = a.saveFile();
            if (!filename.isEmpty()){
-               Persistency.saveGameState(a.saveFile(), a.domain.getGameState());
+               Persistency.saveGameBoard(a.domain);
            }
         });
         exit.addActionListener((unused) -> System.exit(1));
