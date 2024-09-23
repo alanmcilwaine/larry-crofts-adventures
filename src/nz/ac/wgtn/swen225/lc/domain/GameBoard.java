@@ -103,7 +103,6 @@ public class GameBoard {
     /**
      * Gives a deep copy of a given gameState
      *
-     * @param original gameState
      * @return new deep copy of gameState
      */
     public GameBoard copyOf() {
@@ -124,8 +123,6 @@ public class GameBoard {
                                     .addRobots(newRobots).addTimeLeft(timeLeft)
                                     .addTreasure(totalTreasure).build();
     }
-
-
 
     /**
      * Get current game board state.
