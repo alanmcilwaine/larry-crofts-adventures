@@ -3,15 +3,16 @@
     ["W", "W", "W", "W", "W"],
     ["W", "F-P", "F", "K#R", "W"],
     ["W", "F", "I", "F", "W"],
-    ["W", "F", "F-R", "LD#R", "W"],
+    ["W", "F", "T-R", "LD#R", "LX"],
     ["W", "W", "W", "W", "W"]
   ],
   "level": {
     "number": 1,
-    "Time Limit": 180
+    "Time Limit": 120,
+    "Total Treasure": 1
   },
   "info": {
-    "info": "Hello",
+    "info": "Hello chap!",
     "x": 2,
     "y": 2
   }

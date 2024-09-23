@@ -9,11 +9,11 @@ import java.util.function.Function;
 import java.util.HashMap;
 import nz.ac.wgtn.swen225.lc.app.Command;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
-import nz.ac.wgtn.swen225.lc.domain.GameState;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.*;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
@@ -49,7 +49,7 @@ public class ObjectMapper {
      * @return String The JSON string to be saved.
      * @throws IOException
      */
-    public String saveLeveltoFile(GameState level) throws IOException {
+    public String saveLeveltoFile(GameBoard level) throws IOException {
         StringBuilder json = new StringBuilder();
         json.append("{\n");
         
@@ -76,19 +76,23 @@ public class ObjectMapper {
         
         // Level
         json.append("  \"level\": {\n");
-        json.append("    \"number\": ").append(level.level()).append(",\n");
-        json.append("    \"Time Limit\": ").append(level.timeLeft()).append("\n");
+        json.append("    \"number\": ").append(level.getGameState().level()).append(",\n");
+        json.append("    \"Time Limit\": ").append(level.getGameState().timeLeft()).append(",\n");
+        
+        //Total Treasure
+        json.append("    \"Total Treasure\": ").append(level.getGameState().totalTreasure()).append("\n");
+
         json.append("  },\n"); // Closing the level object
     
         // Info
         Info info = new Info("Null");
         int x = 0, y = 0;
-        for (List<Tile<Item>> row : level.board()) {
+        for (List<Tile<Item>> row : level.getGameState().board()) {
             for (Tile<Item> tile : row) {
                 if (tile.item instanceof Info) {
                     info = (Info) tile.item;
                     x = row.indexOf(tile);
-                    y = level.board().indexOf(row);
+                    y = level.getBoard().indexOf(row);
                 }
             }
         }
@@ -173,7 +177,7 @@ public class ObjectMapper {
     
                 // Check if the cell contains a robot (-R)
                 if (parts.length > 1 && parts[1].equals("R")) {
-                    robots.add(new KillerRobot(new Location(x, y)));
+                    robots.add(new KillerRobot(x, y));
                 }
     
                 row.add(new Tile<>(item, new Location(x, y))); // Add the item to the board row
@@ -186,66 +190,60 @@ public class ObjectMapper {
         if (levelStart == -1) {
             throw new IllegalArgumentException("Level info not found in JSON");
         }
-        String levelString = json.substring(levelStart + 10, json.indexOf("}", levelStart) + 1);
+        String levelString = json.substring(levelStart, json.indexOf("}", levelStart));
 
         int levelNumber = Integer.parseInt(extractValue(levelString, "\"number\": "));
         int timeLimit = Integer.parseInt(extractValue(levelString, "\"Time Limit\": "));
+        int totalTreasure = Integer.parseInt(extractValue(levelString, "\"Total Treasure\": "));
 
-    
         // Parse info
         int infoStart = json.indexOf("\"info\": {");
         if (infoStart == -1) {
             throw new IllegalArgumentException("Info not found in JSON");
         }
         String infoString = json.substring(infoStart + 9, json.indexOf("}", infoStart) + 1);
-        
+    
         String infoText = extractValue(infoString, "\"info\": \"");
         int x = Integer.parseInt(extractValue(infoString, "\"x\": "));
         int y = Integer.parseInt(extractValue(infoString, "\"y\": "));
     
         board.get(y).get(x).item = new Info(infoText);
-
+    
         int width = board.get(0).size();
         int height = board.size();
     
-        return GameBoard.of(board, player, robots, timeLimit, levelNumber, width, height);
+        return new GameBoardBuilder().addBoard(board).addBoardSize(width, height).addTimeLeft(timeLimit)
+                .addTreasure(totalTreasure).setLevel(levelNumber).addPlayer(player).addRobots(robots).build();
     }
-    
 
     // Helper method to extract values
     private String extractValue(String jsonString, String key) {
         int keyStart = jsonString.indexOf(key);
         if (keyStart == -1) {
-            throw new IllegalArgumentException("Key not found in info: " + key);
+            throw new IllegalArgumentException("Key not found in JSON: " + key);
         }
         keyStart += key.length();
         
-        // Skip any spaces after the key
-        while (keyStart < jsonString.length() && jsonString.charAt(keyStart) == ' ') {
+        // Skip spaces and the colon
+        while (keyStart < jsonString.length() && (jsonString.charAt(keyStart) == ' ' || jsonString.charAt(keyStart) == ':' || jsonString.charAt(keyStart) == '\n' || jsonString.charAt(keyStart) == '\t')) {
             keyStart++;
         }
         
-        // Handle both string and numeric values
-        char nextChar = jsonString.charAt(keyStart);
-        if (nextChar == '\"') {
-            keyStart++; // Skip the starting quote for strings
-        }
-    
-        int valueEnd = jsonString.indexOf(nextChar == '\"' ? "\"" : ",", keyStart);
+        // Find the end of the value
+        int valueEnd = jsonString.indexOf(",", keyStart);
         if (valueEnd == -1) {
-            valueEnd = jsonString.indexOf("}", keyStart); // Look for the closing brace if no comma is found
+            valueEnd = jsonString.indexOf("}", keyStart);
         }
         if (valueEnd == -1) {
-            throw new IllegalArgumentException("Value not found for key: " + key);
+            valueEnd = jsonString.length();
         }
     
         String value = jsonString.substring(keyStart, valueEnd).trim();
-        return value.replace("\"", "");
+        return value.replace("\"", "").trim(); // Remove quotes
     }
     
     
-    
-    /**f
+    /**
      * Read the given list of actions as a JSON format from a file.
      *
      * @author zhoudavi1 300652444
@@ -340,9 +338,9 @@ public class ObjectMapper {
      * @param level The level to be converted.
      * @return List<List<String>> The converted level.
      */
-    public List<List<String>> convertBoardToStrings(GameState level) {
+    public List<List<String>> convertBoardToStrings(GameBoard level) {
         //Convert the board of Tile<Item> to List<List<String>>
-        List<List<String>> stringBoard = level.board().stream()
+        List<List<String>> stringBoard = level.getBoard().stream()
             .map((List<Tile<Item>> row) -> row.stream()
                 .map((Tile<Item> tile) -> gameItemCode(tile.item)) // Convert each Tile<Item> to the item's string code
                 .collect(Collectors.toList())
@@ -350,14 +348,14 @@ public class ObjectMapper {
             .collect(Collectors.toList());
     
         //Place the player on the board at their X and Y position
-        int playerX = level.player().getLocation().x();
-        int playerY = level.player().getLocation().y();
+        int playerX = level.getGameState().player().getLocation().x();
+        int playerY = level.getGameState().player().getLocation().y();
     
         //Modify the specific tile to include "P" for player
         stringBoard.get(playerY).set(playerX, stringBoard.get(playerY).get(playerX) + "-P");
 
         //Robot
-        for (Robot robot : level.robots()) {
+        for (Robot robot : level.getGameState().robots()) {
             int robotX = robot.getLocation().x();
             int robotY = robot.getLocation().y();
             stringBoard.get(robotY).set(robotX, stringBoard.get(robotY).get(robotX) + "-R");
