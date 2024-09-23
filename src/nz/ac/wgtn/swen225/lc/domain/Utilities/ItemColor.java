@@ -12,6 +12,8 @@ public enum ItemColor {
     GREEN {
         @Override
         public String toString() { return "Green"; }
-    };
+    },
+    InvalidColor
+    ;
 
 }
