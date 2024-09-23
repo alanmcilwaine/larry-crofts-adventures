@@ -4,6 +4,7 @@ import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.*;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 import java.io.IOException;
@@ -12,11 +13,11 @@ import java.util.List;
 
 public class PersistencyTest {
     public static void main(String[] args) throws IOException {
-        GameState gameState = testReadJSON();
+        GameBoard gameState = testReadJSON();
         testLoadGameState(gameState);
     }
 
-    private static GameState createSampleGameState() {
+    private static GameBoard createSampleGameState() {
         List<List<Tile<Item>>> board = new ArrayList<>();
         for (int y = 0; y < 5; y++) {
             List<Tile<Item>> row = new ArrayList<>();
@@ -31,12 +32,18 @@ public class PersistencyTest {
         board.get(1).get(3).item = new Key(ItemColor.RED);
         board.get(3).get(3).item = new LockedDoor(ItemColor.RED);
         board.get(2).get(2).item = new Info("Hello, chap!");
+        
+        //Treasure
+        board.get(3).get(2).item = new Treasure();
+
+        //Locked Exit
+        board.get(3).get(4).item = new LockedExit();
 
         Player player = new Player(new Location(1, 1));
         List<Robot> robots = new ArrayList<>();
-        robots.add(new KillerRobot(new Location(2, 3)));
+        robots.add(new KillerRobot(2, 3));
         
-        return new GameState(board, player, robots, 180, 1);
+        return new GameBoardBuilder().addBoard(board).addBoardSize(5, 5).addTimeLeft(100).addTreasure(1).setLevel(1).addPlayer(player).addRobots(robots).build();
     }
 
     private static GameBoard testReadJSON() throws IOException{
@@ -51,22 +58,23 @@ public class PersistencyTest {
         String json = mapper.saveLeveltoFile(originalState);
         System.out.println("JSON Representation of GameState:\n" + json);
 
-        // Convert JSON back to GameState
-        GameState convertedState = mapper.convertJSONtoGameState(json);
+        // Convert JSON back to GameBoard
+        GameBoard convertedBoard = mapper.convertJSONtoGameBoard(json);
 
         // Compare original and converted GameState
-        System.out.println("Level number matches: " + (originalState.level() == convertedState.level()));
-        System.out.println("Time left matches: " + (originalState.timeLeft() == convertedState.timeLeft()));
-        System.out.println("Player location matches: " + originalState.player().getLocation().equals(convertedState.player().getLocation()));
-        System.out.println("Number of robots matches: " + (originalState.robots().size() == convertedState.robots().size()));
-        System.out.println("Robot location matches: " + originalState.robots().get(0).getLocation().equals(convertedState.robots().get(0).getLocation()));
+        System.out.println("Level number matches: " + (originalState.getGameState().level() == convertedBoard.getGameState().level()));
+        System.out.println("Time left matches: " + (originalState.getGameState().timeLeft() == convertedBoard.getGameState().timeLeft()));
+        System.out.println("Player location matches: " + originalState.getGameState().player().getLocation().equals(convertedBoard.getGameState().player().getLocation()));
+        System.out.println("Number of robots matches: " + (originalState.getGameState().robots().size() == convertedBoard.getGameState().robots().size()));
+        System.out.println("Robot location matches: " + originalState.getGameState().robots().get(0).getLocation().equals(convertedBoard.getGameState().robots().get(0).getLocation()));
+        System.out.println("Number of treasures matches: " + (originalState.getGameState().totalTreasure() == convertedBoard.getGameState().totalTreasure()));
 
         // Compare board
         boolean boardMatches = true;
-        for (int y = 0; y < originalState.board().size(); y++) {
-            for (int x = 0; x < originalState.board().get(y).size(); x++) {
-                Item originalItem = originalState.board().get(y).get(x).item;
-                Item convertedItem = convertedState.board().get(y).get(x).item;
+        for (int y = 0; y < originalState.getGameState().board().size(); y++) {
+            for (int x = 0; x < originalState.getGameState().board().get(y).size(); x++) {
+                Item originalItem = originalState.getGameState().board().get(y).get(x).item;
+                Item convertedItem = convertedBoard.getGameState().board().get(y).get(x).item;
                 if (!originalItem.getClass().equals(convertedItem.getClass())) {
                     boardMatches = false;
                     break;
@@ -76,27 +84,28 @@ public class PersistencyTest {
         System.out.println("Board matches: " + boardMatches);
 
         //Save the converted GameState to a file
-        Persistency.saveGameState("src/nz/ac/wgtn/swen225/lc/persistency/levels/level1.json", convertedState);
-        return convertedState;
+        Persistency.saveGameBoard(convertedBoard);
+        return convertedBoard;
     }
 
     //Test loading a GameState from a file
-    private static void testLoadGameState(GameState original) throws IOException{
+    private static void testLoadGameState(GameBoard original) throws IOException{
         System.out.println("Loading GameState from file:--------------------------------------");
-        GameState loadedState = Persistency.loadGameState("src/nz/ac/wgtn/swen225/lc/persistency/levels/level1.json");
+        GameBoard loadedState = Persistency.loadGameBoard("src/nz/ac/wgtn/swen225/lc/persistency/levels/level1.json");
         //Check if the loaded GameState is the same as the original GameState
-        System.out.println("Level number matches: " + (original.level() == loadedState.level()));
-        System.out.println("Time left matches: " + (original.timeLeft() == loadedState.timeLeft()));
-        System.out.println("Player location matches: " + original.player().getLocation().equals(loadedState.player().getLocation()));
-        System.out.println("Number of robots matches: " + (original.robots().size() == loadedState.robots().size()));
-        System.out.println("Robot location matches: " + original.robots().get(0).getLocation().equals(loadedState.robots().get(0).getLocation()));
-
+        System.out.println("Level number matches: " + (original.getGameState().level() == loadedState.getGameState().level()));
+        System.out.println("Time left matches: " + (original.getGameState().timeLeft() == loadedState.getGameState().timeLeft()));
+        System.out.println("Player location matches: " + original.getGameState().player().getLocation().equals(loadedState.getGameState().player().getLocation()));
+        System.out.println("Number of robots matches: " + (original.getGameState().robots().size() == loadedState.getGameState().robots().size()));
+        System.out.println("Robot location matches: " + original.getGameState().robots().get(0).getLocation().equals(loadedState.getGameState().robots().get(0).getLocation()));
+        System.out.println("Number of treasures matches: " + (original.getGameState().totalTreasure() == loadedState.getGameState().totalTreasure()));
+        
         // Compare board
         boolean boardMatches = true;
-        for (int y = 0; y < original.board().size(); y++) {
-            for (int x = 0; x < original.board().get(y).size(); x++) {
-                Item originalItem = original.board().get(y).get(x).item;
-                Item loadedItem = loadedState.board().get(y).get(x).item;
+        for (int y = 0; y < original.getGameState().board().size(); y++) {
+            for (int x = 0; x < original.getGameState().board().get(y).size(); x++) {
+                Item originalItem = original.getGameState().board().get(y).get(x).item;
+                Item loadedItem = loadedState.getGameState().board().get(y).get(x).item;
                 if (!originalItem.getClass().equals(loadedItem.getClass())) {
                     boardMatches = false;
                     break;

@@ -13,6 +13,7 @@ import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.*;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
@@ -76,7 +77,11 @@ public class ObjectMapper {
         // Level
         json.append("  \"level\": {\n");
         json.append("    \"number\": ").append(level.getGameState().level()).append(",\n");
-        json.append("    \"Time Limit\": ").append(level.getGameState().timeLeft()).append("\n");
+        json.append("    \"Time Limit\": ").append(level.getGameState().timeLeft()).append(",\n");
+        
+        //Total Treasure
+        json.append("    \"Total Treasure\": ").append(level.getGameState().totalTreasure()).append("\n");
+
         json.append("  },\n"); // Closing the level object
     
         // Info
@@ -172,7 +177,7 @@ public class ObjectMapper {
     
                 // Check if the cell contains a robot (-R)
                 if (parts.length > 1 && parts[1].equals("R")) {
-                    robots.add(new KillerRobot(new Location(x, y)));
+                    robots.add(new KillerRobot(x, y));
                 }
     
                 row.add(new Tile<>(item, new Location(x, y))); // Add the item to the board row
@@ -185,66 +190,62 @@ public class ObjectMapper {
         if (levelStart == -1) {
             throw new IllegalArgumentException("Level info not found in JSON");
         }
-        String levelString = json.substring(levelStart + 10, json.indexOf("}", levelStart) + 1);
+        String levelString = json.substring(levelStart, json.indexOf("}", levelStart));
 
         int levelNumber = Integer.parseInt(extractValue(levelString, "\"number\": "));
         int timeLimit = Integer.parseInt(extractValue(levelString, "\"Time Limit\": "));
+        int totalTreasure = Integer.parseInt(extractValue(levelString, "\"Total Treasure\": "));
 
-    
         // Parse info
         int infoStart = json.indexOf("\"info\": {");
         if (infoStart == -1) {
             throw new IllegalArgumentException("Info not found in JSON");
         }
         String infoString = json.substring(infoStart + 9, json.indexOf("}", infoStart) + 1);
-        
+    
         String infoText = extractValue(infoString, "\"info\": \"");
         int x = Integer.parseInt(extractValue(infoString, "\"x\": "));
         int y = Integer.parseInt(extractValue(infoString, "\"y\": "));
     
         board.get(y).get(x).item = new Info(infoText);
-
+    
         int width = board.get(0).size();
         int height = board.size();
     
-        return GameBoard.of(board, player, robots, timeLimit, levelNumber, width, height);
+        return new GameBoardBuilder().addBoard(board).addBoardSize(width, height).addTimeLeft(timeLimit)
+                .addTreasure(totalTreasure).setLevel(levelNumber).addPlayer(player).addRobots(robots).build();
     }
-    
 
     // Helper method to extract values
     private String extractValue(String jsonString, String key) {
         int keyStart = jsonString.indexOf(key);
         if (keyStart == -1) {
-            throw new IllegalArgumentException("Key not found in info: " + key);
+            throw new IllegalArgumentException("Key not found in JSON: " + key);
         }
         keyStart += key.length();
-        
-        // Skip any spaces after the key
-        while (keyStart < jsonString.length() && jsonString.charAt(keyStart) == ' ') {
+    
+        // Skip any spaces, newlines, and the colon after the key
+        while (keyStart < jsonString.length() && (jsonString.charAt(keyStart) == ' ' || jsonString.charAt(keyStart) == ':' || jsonString.charAt(keyStart) == '\n')) {
             keyStart++;
         }
-        
-        // Handle both string and numeric values
-        char nextChar = jsonString.charAt(keyStart);
-        if (nextChar == '\"') {
-            keyStart++; // Skip the starting quote for strings
-        }
     
-        int valueEnd = jsonString.indexOf(nextChar == '\"' ? "\"" : ",", keyStart);
+        // Look for the end of the value, either a comma or a closing brace
+        int valueEnd = jsonString.indexOf(",", keyStart);
         if (valueEnd == -1) {
-            valueEnd = jsonString.indexOf("}", keyStart); // Look for the closing brace if no comma is found
+            valueEnd = jsonString.indexOf("}", keyStart);
         }
         if (valueEnd == -1) {
             throw new IllegalArgumentException("Value not found for key: " + key);
         }
     
+        // Extract the value and trim whitespace
         String value = jsonString.substring(keyStart, valueEnd).trim();
-        return value.replace("\"", "");
+    
+        // Remove any quotes and return the value
+        return value.replace("\"", "").trim();
     }
     
-    
-    
-    /**f
+    /**
      * Read the given list of actions as a JSON format from a file.
      *
      * @author zhoudavi1 300652444

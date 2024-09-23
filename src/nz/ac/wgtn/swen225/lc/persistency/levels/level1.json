@@ -8,7 +8,8 @@
   ],
   "level": {
     "number": 1,
-    "Time Limit": 180
+    "Time Limit": 180,
+    "Total Treasures": 1
   },
   "info": {
     "info": "Hello",

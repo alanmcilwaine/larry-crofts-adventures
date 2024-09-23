@@ -11,6 +11,7 @@ import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 public class Persistency{
 
     private static String json;
+    private static String path = "src/nz/ac/wgtn/swen225/lc/persistency/levels/";
 
     /**
      * Saves the given GameState object as a JSON format to a file.
@@ -19,7 +20,7 @@ public class Persistency{
      * @param filename The name of the file to save the GameState to.
      * @param level The GameState object to be saved.
      */
-    public static void saveGameState(GameBoard level){
+    public static void saveGameBoard(GameBoard level){
         // convert level to JSON format
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -29,7 +30,7 @@ public class Persistency{
         }
         //Write JSON string to file
         
-        String filename = "src\\nz\\ac\\wgtn\\swen225\\lc\\persistency\\levels\\level" + level.getGameState().level() + ".json";        
+        String filename = path + "level" + level.getGameState().level() + ".json";    
         File file = new File(filename);
         try {
             FileWriter fileWriter = new FileWriter(file);
@@ -75,7 +76,7 @@ public class Persistency{
      * @param filename The name of the file to load the GameBoard from.
      * @return GameBoard Loading GameBoard from a file.
      */
-    public static GameBoard loadGameState(String filename){
+    public static GameBoard loadGameBoard(String filename){
         // load the level GameState from a file
         try{
             //Read JSON string from file
@@ -125,7 +126,7 @@ public class Persistency{
             ObjectMapper mapper = new ObjectMapper();
             List<Command> actions = mapper.convertJSONtoActions(json);
             r.setCommands(actions);
-            return loadGameState(filename);
+            return loadGameBoard(filename);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
