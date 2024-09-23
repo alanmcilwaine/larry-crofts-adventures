@@ -84,7 +84,7 @@ public class ImageImplement{
      */
     public void drawOneImage(String imageName, int x, int y, JPanel jpanel){
         Graphics g = jpanel.getGraphics();
-        g.drawImage(Img.INSTANCE.getImgs(imageName), (x + BUFFER_SIZE) * IMAGE_SIZE,
+        g.drawImage(Img.INSTANCE.getImgs(imageName + ".png"), (x + BUFFER_SIZE) * IMAGE_SIZE,
                 (y + BUFFER_SIZE) * IMAGE_SIZE, jpanel);
 
     }

@@ -40,4 +40,7 @@ public record LockedExit() implements Item, GameStateObserver {
                     GameBoard.unsubscribeGameState(this);
                 });
     }
+
+    @Override
+    public String toString() { return "LockedExit"; }
 }

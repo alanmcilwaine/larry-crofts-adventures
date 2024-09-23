@@ -75,7 +75,7 @@ public class GameBoardBuilder {
         return this;
     }
 
-    public GameBoardBuilder setLevel(int level) {
+    public GameBoardBuilder addLevel(int level) {
         Util.checkNegative("Level", level);
         this.level = level;
         return this;

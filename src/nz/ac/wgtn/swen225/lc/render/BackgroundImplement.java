@@ -12,7 +12,7 @@ public class BackgroundImplement {
 
     BackgroundImplement(){
         try{
-            backgroundImage = ImageIO.read(new File("src/nz/ac/wgtn/swen225/lc/render/BackgroundImage/backgroundImage.png"));
+            backgroundImage = ImageIO.read(new File("BackgroundImage/backgroundImage.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
