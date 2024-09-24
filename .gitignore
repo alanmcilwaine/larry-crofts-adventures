@@ -33,6 +33,7 @@
 .metadata
 bin/
 tmp/
+out/
 *.tmp
 local.properties
 .settings/
