@@ -4,9 +4,7 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/src/nz/ac/wgtn/swen225/lc/app" />
-      <excludeFolder url="file://$MODULE_DIR$/src/nz/ac/wgtn/swen225/lc/persistency" />
-      <excludeFolder url="file://$MODULE_DIR$/src/nz/ac/wgtn/swen225/lc/recorder" />
+      <excludeFolder url="file://$MODULE_DIR$/src/nz/ac/wgtn/swen225/lc/domain/DomainTest" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

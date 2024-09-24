@@ -41,14 +41,7 @@ enum Img{
      * get all the type Image through the name of the image
      */
     public Image getImgs(String name){
-        return imageToName.getOrDefault(name, throwError(name));
-    }
-
-    /**
-     * throw the error if does not find the image in map.
-     */
-    private Image throwError(String name) {
-        throw new RuntimeException("Image not found: " + name);
+        return imageToName.get(name);
     }
 }
 
