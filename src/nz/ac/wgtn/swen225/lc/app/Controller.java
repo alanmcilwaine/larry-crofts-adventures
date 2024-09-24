@@ -10,7 +10,7 @@ import nz.ac.wgtn.swen225.lc.app.Keys;
  *
  * @author Alan McIlwaine && John Rais
  */
-public class Controller extends Keys implements InputManager{
+public class Controller extends Keys{
     /**
      * Action that is mapped to a KeyEvent. Each enum corresponds to a key press.
      */
@@ -46,8 +46,19 @@ public class Controller extends Keys implements InputManager{
         Arrays.stream(Action.values()).forEach(action -> action.stop = noCommand);
     }
 
-    @Override
+    /**
+     * The currenet lined up movement command to run
+     * @return Movement command
+     */
     public Command currentCommand() {
         return currentCommand;
+    }
+
+    /**
+     * How long to wait between taking in the next input
+     * @return Time in ms
+     */
+    public int movementWait() {
+        return 150;
     }
 }

@@ -37,7 +37,7 @@ public class App extends JFrame implements AppInterface{
     public static final int TICK_RATE = 50;
 
     // Game Information
-    public static InputManager controller;
+    public static Controller controller;
     private int movementWaitTime = 0;
     public Recorder recorder = Recorder.create(this); // Created earlier so UI can hook up buttons to recorder.
     public GameBoard domain;
@@ -56,7 +56,7 @@ public class App extends JFrame implements AppInterface{
         startTick();
     }
 
-    public App(InputManager c) {
+    public App(Controller c) {
         super("Larry Croft's Adventures");
         assert SwingUtilities.isEventDispatchThread();
         controller = c;
