@@ -20,7 +20,7 @@ import javax.swing.SwingUtilities;
  * @author John Rais and Alan McIlwaine
  */
 class Keys implements KeyListener {
-    protected static Command currentCommand = Command.None;
+    protected Command currentCommand = Command.None;
     protected final Runnable noCommand = () ->{currentCommand = Command.None;};
     protected final Map<Integer,Runnable> actionsPressed= new HashMap<>();
     protected final Map<Integer,Runnable> actionsReleased= new HashMap<>();
@@ -52,4 +52,5 @@ class Keys implements KeyListener {
         assert SwingUtilities.isEventDispatchThread();
         actionsReleased.getOrDefault(e.getKeyCode(), ()->{}).run();
     }
+
 }

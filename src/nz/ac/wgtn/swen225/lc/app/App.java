@@ -20,7 +20,7 @@ import nz.ac.wgtn.swen225.lc.render.ImageImplement;
  */
 public class App extends JFrame implements AppInterface{
     // Window is made up of two main panels
-    private GamePanel game = new GamePanel();
+    private GamePanel game; //Don't generate here as controller could be generated in constructor.
     private UIPanel ui = new UIPanel(new GridLayout(3, 1, 0, 15));
     private Menu menu = new Menu(this);
 
@@ -37,7 +37,8 @@ public class App extends JFrame implements AppInterface{
     public static final int TICK_RATE = 50;
 
     // Game Information
-    public static InputManager controller = new Controller();
+    public static InputManager controller;
+    private int movementWaitTime = 0;
     public Recorder recorder = Recorder.create(this); // Created earlier so UI can hook up buttons to recorder.
     public GameBoard domain;
     public ImageImplement render;
@@ -46,17 +47,20 @@ public class App extends JFrame implements AppInterface{
      * App()
      * Loads the default UI and starts the game loop.
      */
-    App(){
+    public App(){
         super("Larry Croft's Adventures");
         assert SwingUtilities.isEventDispatchThread();
+        controller = new Controller();
+        game = new GamePanel();
         setupUI();
         startTick();
     }
 
-    public App(InputManager controller) {
+    public App(InputManager c) {
         super("Larry Croft's Adventures");
         assert SwingUtilities.isEventDispatchThread();
-        App.controller = controller;
+        controller = c;
+        game = new GamePanel();
         setupUI();
         startTick();
     }
@@ -90,7 +94,7 @@ public class App extends JFrame implements AppInterface{
         Objects.requireNonNull(render);
         recorder = Recorder.create(this);
         Objects.requireNonNull(recorder);
-        controller = new Controller(); // Clears the current action;
+
         Timer tick = new Timer(TICK_RATE, (unused) -> tick());
         tick.start();
     }
@@ -101,8 +105,18 @@ public class App extends JFrame implements AppInterface{
      * at a separate tick rate so movement isn't sluggish.
      */
     public void tick(){
-        recorder.tick(Keys.currentCommand);
-        giveInput(Keys.currentCommand);
+        if (movementWaitTime > 0 && controller.currentCommand() != Command.None) {
+            movementWaitTime -= TICK_RATE;
+            recorder.tick(Command.None);
+            giveInput(Command.None);
+        } else if (movementWaitTime <= 0 && controller.currentCommand() != Command.None) {
+            recorder.tick(controller.currentCommand());
+            giveInput(controller.currentCommand());
+            movementWaitTime = controller.movementWait();
+        } else {
+            recorder.tick(Command.None);
+            giveInput(Command.None);
+        }
         updateGraphics();
     }
 
