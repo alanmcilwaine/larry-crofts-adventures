@@ -20,8 +20,10 @@ public class ImageImplement{
 
     ImageImplement(JPanel jpanel) {
         this.jpanel = jpanel;
+        this.jpanel.setDoubleBuffered(true);
         new BackgroundImplement().drawBackGround(jpanel);
         new SoundEffectImplement().playMusic();
+
     }
 
     /**
