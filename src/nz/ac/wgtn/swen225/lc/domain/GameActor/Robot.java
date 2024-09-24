@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.domain.GameActor;
 
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
+import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
@@ -29,17 +30,17 @@ public abstract class Robot implements Actor {
 
   @Override
   public void doMove(Direction direction, GameBoard gameBoard) {
-    // TODO observe robot movement if it is going too fast
+    // TODO observe robot movement if it is going too fast and also polish movement a bit more.
     Location newLoc = direction.act(this.location); // location to move to
 
     GameBoard.domainLogger.log(Level.INFO, "Robot is facing: " + robotFacing);
 
-    Tile currentTile = findTileInSpecificLocation(gameBoard, location); // current tile
-    Tile nextTile = findTileInSpecificLocation(gameBoard, newLoc); // tile to move to
+    Tile<Item> currentTile = findTileInSpecificLocation(gameBoard, location); // current tile
+    Tile<Item> nextTile = findTileInSpecificLocation(gameBoard, newLoc); // tile to move to
 
 
     if (locationIsValid(newLoc, gameBoard)) {
-      if (nextTile.canStepOn(this) && switchDirCount <= 20 && moveCount >= 1000) {
+      if (nextTile.canStepOn(this) && switchDirCount <= 20 && moveCount >= 20) {
         currentTile.onExit(this);
         nextTile.onEntry(this);
         updateActorLocation(newLoc);
@@ -50,15 +51,16 @@ public abstract class Robot implements Actor {
       } else {
 
         GameBoard.domainLogger.log(Level.INFO, "Robot did not move still at: " + location);
-        this.robotFacing = Direction.values()[(int) (Math.random() * 4)];
+        this.robotFacing = Direction.values()[(int) (Math.random() * 5)];
         switchDirCount = 0;
       }
 
       switchDirCount++; // don't know how often should switch direction
     } else {
-
       GameBoard.domainLogger.log(Level.INFO, "Robot tried to move to invalid, still at: " + location);
     }
+
+    moveCount++;
 
   }
 

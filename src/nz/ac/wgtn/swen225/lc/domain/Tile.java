@@ -4,7 +4,6 @@ package nz.ac.wgtn.swen225.lc.domain;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.Exit;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedExit;
-import nz.ac.wgtn.swen225.lc.domain.GameItem.Treasure;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
@@ -60,13 +59,5 @@ public class Tile<T extends Item> {
      *
      * @return run time Item class name plus color.
      */
-    public String getItemOnTile() {
-//        String attribute = "";
-////        try {
-////            attribute += item.getClass().getMethod("itemColor").invoke(item);
-////        } catch (Exception ignored) {
-////        }
-////        return item.getClass().getSimpleName() + attribute;
-        return item.toString();
-    }
+    public String getItemOnTile() { return item.toString(); }
 }
