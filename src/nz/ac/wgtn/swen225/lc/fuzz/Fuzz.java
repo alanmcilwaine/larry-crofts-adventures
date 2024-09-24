@@ -2,10 +2,13 @@ package nz.ac.wgtn.swen225.lc.fuzz;
 
 import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.app.Command;
+import nz.ac.wgtn.swen225.lc.app.Controller;
+import nz.ac.wgtn.swen225.lc.app.GamePanel;
 import nz.ac.wgtn.swen225.lc.recorder.RecorderTests;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -15,25 +18,57 @@ public class Fuzz {
 
 
         RecorderTests.main(arg);
+        FuzzController fuzzController = new FuzzController();
+        
+        /**
+         * Create a Runnable that creates the App
+         *
+         * This runnable will override tick with our own implementation to test
+         */
+        Runnable appCreator = () -> new App(fuzzController){
+                {
+                    //movementWait = 0;
+                }
+                public void tick(){
+                    try {
+                        fuzzController.randomizeInputs();
+                        recorder.tick(controller.currentCommand());
+                        giveInput(controller.currentCommand());
+                    }catch (Throwable t){
+                        System.out.println("ERROR CAUGHT BY FUZZ: " + fuzzController.keyLogger + "\n\n");
+                        throw new Error(t);
+                    }
+                }
+            };
 
-        SwingUtilities.invokeLater(App::new);
 
-    }
-    class FuzzController extends Controller{
-        void randomizeInputs(){
-            actionsPressed.getOrDefault(KeyEvent.VK_UP, ()->{}).run();
-        }
+        SwingUtilities.invokeLater(appCreator);
+
+
+
     }
 
     /**
-     * Create num commands. Each command is random. Commands can be NONE
-     *
-     * @param num the number of commands to generate
-     * @return the commands generated
+     * Creates a fake controller that generates random inputs
      */
-    static List<Controller.Action> randomActions(int num){
-        return IntStream.range(0,num)
-                .mapToObj(i -> Controller.Action.values()[(int)Math.round(Math.random()*4)])
-                .toList();
+    static class FuzzController extends Controller {
+        void randomizeInputs(){
+            int keyPressed = randomKey();
+            keyLogger.add(keyPressed);
+            actionsPressed.getOrDefault(keyPressed, ()->{}).run();
+
+
+            int keyReleased = randomKey();
+            keyLogger.add(keyReleased);
+            actionsReleased.getOrDefault(keyReleased, ()->{}).run();
+        }
+
+        int randomKey(){
+            return keys.get((int) (Math.random()*3.99));
+        }
+        List<Integer> keys = List.of(KeyEvent.VK_W,KeyEvent.VK_S,KeyEvent.VK_A,KeyEvent.VK_D);
+        List<Integer> keyLogger = new ArrayList<>();
     }
+
+
 }
