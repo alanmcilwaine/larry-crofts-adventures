@@ -226,6 +226,11 @@ public class RecorderTests {
             return null;
         }
 
+        @Override
+        public String saveFile() {
+            return null;
+        }
+
         public void movePlayer(int x, int y){
             System.out.println("\nx " + x + ", y " + y + "\n" + toPrint(state) + "\n");
             if(yp+y < 0 || yp+y >= state.length || xp+x < 0 || xp+x >= state[0].length){

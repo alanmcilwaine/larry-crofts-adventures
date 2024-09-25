@@ -19,9 +19,6 @@ public class MovableBox implements Actor {
   @Override
   public Direction getActorFacing() { return this.wallFacing; }
 
-
-
-
   @Override
   public void doMove(Direction direction, GameBoard gameBoard) {
     GameBoard.domainLogger.log(Level.INFO, "Player is attempting to push box towards direction: " + wallFacing);
@@ -30,6 +27,13 @@ public class MovableBox implements Actor {
     Tile currentTile = findTileInSpecificLocation(gameBoard, location);
     Tile nextTile = findTileInSpecificLocation(gameBoard, newLoc);
 
+    if(locationIsValid(newLoc, gameBoard)) {
+      if (nextTile.canStepOn(this)) {
+        currentTile.onExit(this);
+        nextTile.onEntry(this);
+        updateActorLocation(newLoc);
+      }
+    }
 
   }
 

@@ -1,5 +1,8 @@
 package nz.ac.wgtn.swen225.lc.domain.Utilities;
 
+/**
+ * Item colour for the Doors and Keys
+ */
 public enum ItemColor {
     RED {
         @Override

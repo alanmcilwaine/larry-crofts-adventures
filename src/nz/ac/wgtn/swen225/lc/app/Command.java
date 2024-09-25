@@ -1,20 +1,26 @@
 package nz.ac.wgtn.swen225.lc.app;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 
+/**
+ * Command --- Contains the keys pressed by the user as a Command. Used to send to recorder because
+ * recorder cannot access Direction.
+ *
+ * @author Alan McIlwaine 300653905
+ */
 public enum Command{
-    // FIXME pass in Direction instead of strings. Strings are a placeholder.
-    Left("Left"),
-    Right("Right"),
-    Up("Up"),
-    Down("Down"),
-    None("");
+    Left(Direction.LEFT),
+    Right(Direction.RIGHT),
+    Up(Direction.UP),
+    Down(Direction.DOWN),
+    None(Direction.NONE);
 
-    private final String direction;
+    private final Direction direction;
 
     /**
      * Constructor for the enum constants where each Command has a Direction it stores.
      * @param direction Direction that the player will move in.
      */
-    Command(String direction){ // FIXME change String direction to Direction
+    Command(Direction direction){
         this.direction = direction;
     }
 
@@ -25,6 +31,15 @@ public enum Command{
      */
     public String getSaveData(){
         return direction.toString();
+    }
+
+    /**
+     * direction()
+     * Getter for the direction of the Command.
+     * @return The Direction of the Command.
+     */
+    public Direction direction(){
+        return direction;
     }
 
     /**
@@ -39,6 +54,7 @@ public enum Command{
             case "Right" -> Command.Right;
             case "Up" -> Command.Up;
             case "Down" -> Command.Down;
+            case "None" -> Command.None;
             default -> throw new IllegalStateException("Unexpected value: " + command);
         };
     }
