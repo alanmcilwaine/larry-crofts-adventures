@@ -61,6 +61,7 @@ public class Player implements Actor {
 
     @Override
     public void doMove(Direction direction, GameBoard gameBoard) {
+        if (direction.equals(Direction.NONE)) return; // so that the terminal doesn't spam
         this.playerFacing = direction;
         GameBoard.domainLogger.log(Level.INFO, "Player is facing:" + playerFacing + " should try to move " + playerFacing);
         var currentTile = findTileInSpecificLocation(gameBoard, location);
