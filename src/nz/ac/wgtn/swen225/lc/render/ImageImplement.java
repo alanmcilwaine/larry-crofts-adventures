@@ -38,6 +38,7 @@ public class ImageImplement{
      * draw the image in each game board to the jpanel.
      */
     public void drawImages(GameState gameState){
+        new BackgroundImplement().drawBackGround(jpanel);
         drawItemsTile(gameState);
         drawActors(gameState);
     }
