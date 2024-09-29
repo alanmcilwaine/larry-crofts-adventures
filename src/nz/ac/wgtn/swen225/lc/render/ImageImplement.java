@@ -14,6 +14,7 @@ import java.awt.*;
 public class ImageImplement{
     // App's jpanel called game in App
     private JPanel jpanel;
+    private BackgroundImplement backgroundImplement;
     private static final int IMAGE_SIZE = 30;
     private static final int BUFFER_SIZE = 5;
 
@@ -21,7 +22,7 @@ public class ImageImplement{
     ImageImplement(JPanel jpanel) {
         this.jpanel = jpanel;
         this.jpanel.setDoubleBuffered(true);
-        new BackgroundImplement().drawBackGround(jpanel);
+        backgroundImplement = new BackgroundImplement();
         new SoundEffectImplement().playMusic();
 
     }
@@ -38,7 +39,7 @@ public class ImageImplement{
      * draw the image in each game board to the jpanel.
      */
     public void drawImages(GameState gameState, Graphics g){
-        new BackgroundImplement().drawBackGround(jpanel);
+        backgroundImplement.drawBackGround(jpanel, g);
         drawItemsTile(gameState, g);
         drawActors(gameState, g);
     }
