@@ -18,8 +18,7 @@ public class BackgroundImplement {
         }
     }
 
-    public void drawBackGround(JPanel jPanel){
-        Graphics g = jPanel.getGraphics();
+    public void drawBackGround(JPanel jPanel, Graphics g){
         g.drawImage(backgroundImage, 0, 0, jPanel.getWidth(), jPanel.getHeight(), jPanel);
     }
 }
