@@ -29,6 +29,12 @@ public interface AppInterface {
     void initialStateRevert();
 
     /**
+     * toggleTimer()
+     * Stops the timer that runs the ticks if the timer is running. Otherwise, resume the timer.
+     */
+    void toggleTimer();
+
+    /**
      * openFile()
      * Opens a file at the given location. Note that it is expected to handle the "" case when no file is inputted.
      * @return File name.
