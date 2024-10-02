@@ -1,6 +1,6 @@
-package nz.ac.wgtn.swen225.lc.app;
+package nz.ac.wgtn.swen225.lc.app.UI;
 
-import nz.ac.wgtn.swen225.lc.domain.GameState;
+import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 
 import javax.swing.*;
@@ -14,11 +14,14 @@ import java.util.List;
 public class Menu extends JMenuBar {
     private final JMenu file = new JMenu("File");
     private final JMenu input = new JMenu("Input");
+    private final JMenu help = new JMenu("Help");
     public Menu(App a){
         file(a);
         input(a);
+        help(a);
         add(file);
         add(input);
+        add(help);
     }
 
     /**
@@ -31,8 +34,9 @@ public class Menu extends JMenuBar {
         JMenuItem exit = new JMenuItem("Exit");
         load.addActionListener((unused) -> {
             String filename = a.openFile();
+
             if (!filename.isEmpty()){
-                a.domain = Persistency.loadGameBoard(a.openFile());
+                a.domain = Persistency.loadwithFilePath(a.openFile());
             }
         });
         save.addActionListener((unused) -> {
@@ -60,5 +64,17 @@ public class Menu extends JMenuBar {
             }
         });
         List.of(saveInputs, loadInputs).forEach(input::add);
+    }
+
+    /**
+     * Inputs the Help Items to give the player help information
+     * @param a App
+     */
+    private void help(App a) {
+        JMenuItem helpInput = new JMenuItem("Game Instructions");
+        help.addActionListener((unused) -> {
+            // Add a help screen from renderer here
+        });
+        help.add(helpInput);
     }
 }
