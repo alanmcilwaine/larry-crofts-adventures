@@ -90,6 +90,7 @@ public class App extends JFrame implements AppInterface{
      */
     private void startTick(){
         domain = Persistency.loadGameBoard(Persistency.path + "level1.json");
+        initialDomain = Persistency.loadGameBoard(Persistency.path + "level1.json");
         Objects.requireNonNull(domain);
         render = ImageImplement.getImageImplement(game);
         Objects.requireNonNull(render);
