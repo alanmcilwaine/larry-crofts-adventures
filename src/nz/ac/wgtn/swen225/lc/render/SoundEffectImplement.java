@@ -14,12 +14,12 @@ public class SoundEffectImplement {
 
             clip.open(audioStream);
 
-            clip.start();
+            //clip.start();
 
             clip.addLineListener(event -> {
                 if (event.getType() == LineEvent.Type.STOP) {
                     clip.setFramePosition(0);
-                    clip.start();
+                  //  clip.start();
                 }
             });
 

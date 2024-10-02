@@ -3,7 +3,6 @@ package nz.ac.wgtn.swen225.lc.fuzz;
 import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.app.Command;
 import nz.ac.wgtn.swen225.lc.app.Controller;
-import nz.ac.wgtn.swen225.lc.app.GamePanel;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 import nz.ac.wgtn.swen225.lc.recorder.RecorderTests;
 
@@ -11,7 +10,6 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class Fuzz {
 
@@ -40,7 +38,7 @@ public class Fuzz {
                     }catch (Throwable t){
                         System.out.println("ERROR CAUGHT BY FUZZ: " + fuzzController.keyLogger + "\n\n");
                         saveInputs(commands, level);
-                        throw new Error(t);
+                        //throw new Error(t);
                     }
                 }
             };

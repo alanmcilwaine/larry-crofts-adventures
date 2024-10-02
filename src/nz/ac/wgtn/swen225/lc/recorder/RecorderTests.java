@@ -222,6 +222,11 @@ public class RecorderTests {
         }
 
         @Override
+        public void pauseTimer(boolean state) {
+
+        }
+
+        @Override
         public String openFile() {
             return null;
         }
