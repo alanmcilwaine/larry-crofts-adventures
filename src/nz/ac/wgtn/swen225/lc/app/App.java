@@ -4,8 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
 
+import nz.ac.wgtn.swen225.lc.app.UI.AppFrame;
+import nz.ac.wgtn.swen225.lc.app.UI.Menu;
+import nz.ac.wgtn.swen225.lc.app.UI.UIPanel;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 import nz.ac.wgtn.swen225.lc.recorder.Recorder;
@@ -16,7 +18,7 @@ import nz.ac.wgtn.swen225.lc.render.ImageImplement;
  *
  * @author Alan McIlwaine 300653905
  */
-public class App extends JFrame implements AppInterface{
+public class App extends AppFrame implements AppInterface{
     // Window is made up of two main panels
     private GamePanel game; //Don't generate here as controller could be generated in constructor.
     private UIPanel ui = new UIPanel(new GridLayout(3, 1, 0, 15));
@@ -36,20 +38,18 @@ public class App extends JFrame implements AppInterface{
 
     // Game Information
     public static Controller controller;
-    private int movementWaitTime = 0;
     public Recorder recorder = Recorder.create(this); // Created earlier so UI can hook up buttons to recorder.
     public GameBoard domain;
     public GameBoard initialDomain;
     public ImageImplement render;
 
-    private Timer tick;
+    private Timer tick = new Timer(TICK_RATE, (unused) -> tick());
 
     /**
      * App()
      * Loads the default UI and starts the game loop.
      */
     public App(){
-        super("Larry Croft's Adventures PLAYING");
         assert SwingUtilities.isEventDispatchThread();
         controller = new Controller();
         game = new GamePanel(this);
@@ -58,7 +58,6 @@ public class App extends JFrame implements AppInterface{
     }
 
     public App(Controller c) {
-        super("Larry Croft's Adventures");
         assert SwingUtilities.isEventDispatchThread();
         controller = c;
         game = new GamePanel(this);
@@ -72,9 +71,6 @@ public class App extends JFrame implements AppInterface{
      * Includes configs for UI and Game panel.
      */
     private void setupUI(){
-        setSize(WIDTH, HEIGHT);
-        setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setupButtons();
         setupDisplay();
         add(game, BorderLayout.CENTER);
@@ -89,12 +85,10 @@ public class App extends JFrame implements AppInterface{
      * Starts the main update loop for the program. Packages Domain, Renderer and Recorder should be used here.
      */
     private void startTick(){
-        domain = Persistency.loadGameBoard(Persistency.path + "level1.json");
-        Objects.requireNonNull(domain);
+        domain = Persistency.loadGameBoard(1);
+        initialDomain = Persistency.loadGameBoard(1);
         render = ImageImplement.getImageImplement(game);
-        Objects.requireNonNull(render);
 
-        tick = new Timer(TICK_RATE, (unused) -> tick());
         tick.start();
     }
 
@@ -104,19 +98,18 @@ public class App extends JFrame implements AppInterface{
      * at a separate tick rate so movement isn't sluggish.
      */
     public void tick(){
-        if (movementWaitTime > 0 && controller.currentCommand() != Command.None) {
-            movementWaitTime -= TICK_RATE;
-            recorder.tick(Command.None);
-            giveInput(Command.None);
-        } else if (movementWaitTime <= 0 && controller.currentCommand() != Command.None) {
-            recorder.tick(controller.currentCommand());
-            giveInput(controller.currentCommand());
-            movementWaitTime = controller.movementWait();
-        } else {
-            recorder.tick(Command.None);
-            giveInput(Command.None);
+        // Allow an input every Keys.INPUT_WAIT time
+        Command input = Command.None;
+        if (controller.movementWaitTime <= 0 && controller.currentCommand() != Command.None) {
+            input = controller.currentCommand();
+            controller.movementWaitTime = Keys.INPUT_WAIT;
         }
+
+        recorder.tick(input);
+        giveInput(input);
         updateGraphics();
+
+        controller.movementWaitTime -= TICK_RATE;
     }
 
     /**
@@ -128,12 +121,12 @@ public class App extends JFrame implements AppInterface{
         JButton undo = new JButton("Undo");     // On press, it should save the game state.
         JButton redo = new JButton("Redo");     // On press, it should open a window to load a saved file.
         JButton pause = new JButton("Pause/Resume");   // On press, it should pause and change to "Resume".
-        JButton help = new JButton("Help");     // On press, it should display a help screen.
+        JButton play = new JButton("Play");
         undo.addActionListener(recorder.undo());
         redo.addActionListener(recorder.redo());
+        play.addActionListener(recorder.play());
         pause.addActionListener((unused) -> { pauseTimer(tick.isRunning()); });
-        //help.addActionListener((unused) -> render.help());
-        List.of(undo, redo, pause, help).forEach(i -> {
+        List.of(undo, redo, pause, play).forEach(i -> {
             i.setFont(new Font("Monospaced", Font.BOLD, 15));
             i.setForeground(FONT);
             buttons.add(i);
@@ -181,7 +174,7 @@ public class App extends JFrame implements AppInterface{
     @Override
     public void initialStateRevert(){
         domain = initialDomain;
-        initialDomain = Persistency.loadGameBoard(Persistency.path + "level" + domain.getGameState().level() + ".json");
+        initialDomain = Persistency.loadGameBoard(domain.getGameState().level());
     }
 
     @Override

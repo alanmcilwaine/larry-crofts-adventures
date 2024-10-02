@@ -205,6 +205,8 @@ public class RecorderTests {
             graphics = state;
             log += "updatedGraphics.\n";
         }
+
+
         @Override
         public void giveInput(Command input) {
             switch(input){

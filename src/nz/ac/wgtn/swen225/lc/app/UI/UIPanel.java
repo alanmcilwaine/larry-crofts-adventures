@@ -1,4 +1,6 @@
-package nz.ac.wgtn.swen225.lc.app;
+package nz.ac.wgtn.swen225.lc.app.UI;
+
+import nz.ac.wgtn.swen225.lc.app.App;
 
 import javax.swing.*;
 import java.awt.*;
