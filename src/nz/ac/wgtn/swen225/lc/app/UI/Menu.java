@@ -1,6 +1,6 @@
-package nz.ac.wgtn.swen225.lc.app;
+package nz.ac.wgtn.swen225.lc.app.UI;
 
-import nz.ac.wgtn.swen225.lc.domain.GameState;
+import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 
 import javax.swing.*;
@@ -36,7 +36,7 @@ public class Menu extends JMenuBar {
             String filename = a.openFile();
 
             if (!filename.isEmpty()){
-                //a.domain = Persistency.loadGameBoard(a.openFile());
+                a.domain = Persistency.loadwithFilePath(a.openFile());
             }
         });
         save.addActionListener((unused) -> {

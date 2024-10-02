@@ -25,8 +25,8 @@ import javax.swing.SwingUtilities;
  */
 class Keys implements KeyListener {
     protected Stack<Command> inputBuffer = new Stack<>();
-    protected final Map<Action, Runnable> actionsPressed= new HashMap<>();
-    protected final Map<Action, Runnable> actionsReleased= new HashMap<>();
+    protected final Map<Integer, Runnable> actionsPressed= new HashMap<>();
+    protected final Map<Integer, Runnable> actionsReleased= new HashMap<>();
 
     public static final int INPUT_WAIT = App.TICK_RATE * 3;
     public int movementWaitTime = 0;
@@ -39,34 +39,30 @@ class Keys implements KeyListener {
      * @param onPressed The action to do when the key is pressed.
      */
     public void setAction(Action action, Runnable onPressed){
-        actionsPressed.put(action, onPressed);
-        actionsReleased.put(action, () -> inputBuffer.remove(Command.generate(action.name())));
+        actionsPressed.put(action.key, onPressed);
+        actionsReleased.put(action.key, () -> inputBuffer.remove(Command.generate(action.name())));
     }
 
     @Override
     public void keyPressed(KeyEvent e){
         assert SwingUtilities.isEventDispatchThread();
+        // We make sure the queue doesn't already contain this command.
         Optional<Action> a = Action.getAction(e.getKeyCode());
         if (a.isEmpty()){
             return;
         }
-
-        // We make sure the queue doesn't already contain this command. Otherwise movement is sluggish.
         Command command = Command.generate(a.get().name());
-        if (inputBuffer.stream().anyMatch(c -> c.equals(command))){
+        if (inputBuffer.stream().anyMatch(c -> c.equals(command))){ // Buffer already contains the movement.
             return;
         }
-        actionsPressed.getOrDefault(a.get(), ()->{}).run();
+
+        actionsPressed.getOrDefault(e.getKeyCode(), ()->{}).run();
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         assert SwingUtilities.isEventDispatchThread();
-        Optional<Action> a = Action.getAction(e.getKeyCode());
-        if (a.isEmpty()){
-            return;
-        }
-        actionsReleased.getOrDefault(a.get(), ()->{}).run();
+        actionsReleased.getOrDefault(e.getKeyCode(), ()->{}).run();
     }
     @Override
     public void keyTyped(KeyEvent e){}

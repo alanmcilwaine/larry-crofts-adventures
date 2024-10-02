@@ -5,6 +5,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.List;
 
+import nz.ac.wgtn.swen225.lc.app.UI.AppFrame;
 import nz.ac.wgtn.swen225.lc.app.UI.GamePanel;
 import nz.ac.wgtn.swen225.lc.app.UI.Menu;
 import nz.ac.wgtn.swen225.lc.app.UI.UIPanel;
@@ -18,11 +19,11 @@ import nz.ac.wgtn.swen225.lc.render.ImageImplement;
  *
  * @author Alan McIlwaine 300653905
  */
-public class App extends JFrame implements AppInterface{
+public class App extends AppFrame implements AppInterface{
     // Window is made up of two main panels
     private GamePanel game; //Don't generate here as controller could be generated in constructor.
     private UIPanel ui = new UIPanel(new GridLayout(3, 1, 0, 15));
-    private nz.ac.wgtn.swen225.lc.app.UI.Menu menu = new Menu(this);
+    private Menu menu = new Menu(this);
 
     // Colours for the UI
     public static final Color BACKGROUND = new Color(47, 74, 58);
@@ -50,19 +51,17 @@ public class App extends JFrame implements AppInterface{
      * Loads the default UI and starts the game loop.
      */
     public App(){
-        super("Larry Croft's Adventures PLAYING");
         assert SwingUtilities.isEventDispatchThread();
-        controller = new Controller();
         game = new GamePanel(this);
+        controller = new Controller();
         setupUI();
         startTick();
     }
 
     public App(Controller c) {
-        super("Larry Croft's Adventures");
         assert SwingUtilities.isEventDispatchThread();
-        controller = c;
         game = new GamePanel(this);
+        controller = c;
         setupUI();
         startTick();
     }
@@ -73,9 +72,6 @@ public class App extends JFrame implements AppInterface{
      * Includes configs for UI and Game panel.
      */
     private void setupUI(){
-        setSize(WIDTH, HEIGHT);
-        setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setupButtons();
         setupDisplay();
         add(game, BorderLayout.CENTER);
@@ -103,10 +99,10 @@ public class App extends JFrame implements AppInterface{
      * at a separate tick rate so movement isn't sluggish.
      */
     public void tick(){
-        Command input = Command.None;
         // Allow an input every Keys.INPUT_WAIT time
-        if (controller.movementWaitTime <= 0 && !controller.inputBuffer.isEmpty()) {
-            input = controller.inputBuffer.peek();
+        Command input = Command.None;
+        if (controller.movementWaitTime <= 0 && controller.currentCommand() != Command.None) {
+            input = controller.currentCommand();
             controller.movementWaitTime = Keys.INPUT_WAIT;
         }
 

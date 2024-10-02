@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.app;
 
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
+import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -22,5 +23,17 @@ public class Controller extends Keys{
         setAction(Action.Down, () -> inputBuffer.add(Command.Down));
         setAction(Action.Left, () -> inputBuffer.add(Command.Left));
         setAction(Action.Right, () -> inputBuffer.add(Command.Right));
+    }
+
+    /**
+     * The current lined up movement command to run.
+     * @return Movement command
+     */
+    public Command currentCommand() {
+        try{
+            return inputBuffer.peek();
+        } catch (EmptyStackException e) {
+            return Command.None;
+        }
     }
 }

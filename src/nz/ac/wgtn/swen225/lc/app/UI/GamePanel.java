@@ -1,4 +1,6 @@
-package nz.ac.wgtn.swen225.lc.app;
+package nz.ac.wgtn.swen225.lc.app.UI;
+
+import nz.ac.wgtn.swen225.lc.app.App;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,6 +13,7 @@ import java.awt.event.KeyListener;
  */
 public class GamePanel extends JPanel{
     private App app;
+
     /**
      *  Create a new JPanel with 600x600 size with the default layout manager.
      */
@@ -18,7 +21,7 @@ public class GamePanel extends JPanel{
         setPreferredSize(new Dimension(App.WIDTH/3*2, App.HEIGHT)); // 600x600
         setBackground(Color.BLACK);
         setFocusable(true);                // Without this keyListener won't work
-        addKeyListener((KeyListener) App.controller);
+        addKeyListener(App.controller);
         this.app = a;
     }
 
