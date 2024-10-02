@@ -131,7 +131,7 @@ public class App extends JFrame implements AppInterface{
         JButton help = new JButton("Help");     // On press, it should display a help screen.
         undo.addActionListener(recorder.undo());
         redo.addActionListener(recorder.redo());
-        pause.addActionListener((unused) -> { toggleTimer(); });
+        pause.addActionListener((unused) -> { pauseTimer(tick.isRunning()); });
         //help.addActionListener((unused) -> render.help());
         List.of(undo, redo, pause, help).forEach(i -> {
             i.setFont(new Font("Monospaced", Font.BOLD, 15));
@@ -185,12 +185,12 @@ public class App extends JFrame implements AppInterface{
     }
 
     @Override
-    public void toggleTimer() {
-        if (tick.isRunning()) {
+    public void pauseTimer(boolean state) {
+        if (state) {
             tick.stop();
         } else {
             tick.start();
-            game.requestFocusInWindow(); // Set focusable for key listener.
+            game.requestFocusInWindow();
         }
         String status = tick.isRunning() ? "PLAYING" : "PAUSED";
         setTitle("Larry Croft's Adventures " + status);
