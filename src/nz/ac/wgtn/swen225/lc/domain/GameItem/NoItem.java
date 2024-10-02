@@ -14,5 +14,5 @@ public record NoItem() implements Item {
     }
 
     @Override
-    public String toString() { return "Tile"; } // nothing for now, should decide how to handle this
+    public String toString() { return "Tile"; }
 }

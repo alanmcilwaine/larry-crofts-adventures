@@ -205,6 +205,8 @@ public class RecorderTests {
             graphics = state;
             log += "updatedGraphics.\n";
         }
+
+
         @Override
         public void giveInput(Command input) {
             switch(input){
@@ -222,7 +224,17 @@ public class RecorderTests {
         }
 
         @Override
+        public void pauseTimer(boolean state) {
+
+        }
+
+        @Override
         public String openFile() {
+            return null;
+        }
+
+        @Override
+        public String saveFile() {
             return null;
         }
 
