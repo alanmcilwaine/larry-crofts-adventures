@@ -29,6 +29,18 @@ public interface AppInterface {
     void initialStateRevert();
 
     /**
+     * toggleTimer()
+     * Stops the timer that runs the ticks if the timer is running. Otherwise, resume the timer.
+     */
+
+    /**
+     * pauseTimer
+     * Pauses or resumes the game based on the state given. True is pause, False is resume.
+     * @param state True for pause, false for resume
+     */
+    void pauseTimer(boolean state);
+
+    /**
      * openFile()
      * Opens a file at the given location. Note that it is expected to handle the "" case when no file is inputted.
      * @return File name.

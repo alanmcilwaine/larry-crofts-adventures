@@ -6,9 +6,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Objects;
 
-import nz.ac.wgtn.swen225.lc.domain.DomainTest.Mock;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
-import nz.ac.wgtn.swen225.lc.domain.GameState;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 import nz.ac.wgtn.swen225.lc.recorder.Recorder;
 import nz.ac.wgtn.swen225.lc.render.ImageImplement;
@@ -41,17 +39,20 @@ public class App extends JFrame implements AppInterface{
     private int movementWaitTime = 0;
     public Recorder recorder = Recorder.create(this); // Created earlier so UI can hook up buttons to recorder.
     public GameBoard domain;
+    public GameBoard initialDomain;
     public ImageImplement render;
+
+    private Timer tick;
 
     /**
      * App()
      * Loads the default UI and starts the game loop.
      */
     public App(){
-        super("Larry Croft's Adventures");
+        super("Larry Croft's Adventures PLAYING");
         assert SwingUtilities.isEventDispatchThread();
         controller = new Controller();
-        game = new GamePanel();
+        game = new GamePanel(this);
         setupUI();
         startTick();
     }
@@ -60,7 +61,7 @@ public class App extends JFrame implements AppInterface{
         super("Larry Croft's Adventures");
         assert SwingUtilities.isEventDispatchThread();
         controller = c;
-        game = new GamePanel();
+        game = new GamePanel(this);
         setupUI();
         startTick();
     }
@@ -92,10 +93,8 @@ public class App extends JFrame implements AppInterface{
         Objects.requireNonNull(domain);
         render = ImageImplement.getImageImplement(game);
         Objects.requireNonNull(render);
-        recorder = Recorder.create(this);
-        Objects.requireNonNull(recorder);
 
-        Timer tick = new Timer(TICK_RATE, (unused) -> tick());
+        tick = new Timer(TICK_RATE, (unused) -> tick());
         tick.start();
     }
 
@@ -128,11 +127,11 @@ public class App extends JFrame implements AppInterface{
         JPanel buttons = new JPanel(new GridLayout(2, 3, 5, 10));
         JButton undo = new JButton("Undo");     // On press, it should save the game state.
         JButton redo = new JButton("Redo");     // On press, it should open a window to load a saved file.
-        JButton pause = new JButton("Pause");   // On press, it should pause and change to "Resume".
+        JButton pause = new JButton("Pause/Resume");   // On press, it should pause and change to "Resume".
         JButton help = new JButton("Help");     // On press, it should display a help screen.
         undo.addActionListener(recorder.undo());
         redo.addActionListener(recorder.redo());
-        pause.addActionListener(recorder.pause());
+        pause.addActionListener((unused) -> { pauseTimer(tick.isRunning()); });
         //help.addActionListener((unused) -> render.help());
         List.of(undo, redo, pause, help).forEach(i -> {
             i.setFont(new Font("Monospaced", Font.BOLD, 15));
@@ -171,7 +170,7 @@ public class App extends JFrame implements AppInterface{
 
     @Override
     public void updateGraphics(){
-        render.drawImages(domain.getGameState());
+        game.repaint();
     }
 
     @Override
@@ -181,7 +180,20 @@ public class App extends JFrame implements AppInterface{
 
     @Override
     public void initialStateRevert(){
-        domain = Persistency.loadGameBoard(Persistency.path + "level" + domain.getGameState().level() + ".json");
+        domain = initialDomain;
+        initialDomain = Persistency.loadGameBoard(Persistency.path + "level" + domain.getGameState().level() + ".json");
+    }
+
+    @Override
+    public void pauseTimer(boolean state) {
+        if (state) {
+            tick.stop();
+        } else {
+            tick.start();
+            game.requestFocusInWindow();
+        }
+        String status = tick.isRunning() ? "PLAYING" : "PAUSED";
+        setTitle("Larry Croft's Adventures " + status);
     }
 
     @Override
