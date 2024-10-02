@@ -49,7 +49,7 @@ public class App extends AppFrame implements AppInterface{
      */
     public App(){
         assert SwingUtilities.isEventDispatchThread();
-        controller = new Controller();
+        controller = new Controller(this);
         game = new GamePanel(this);
         ui = new UIPanel(this);
         setupUI();
@@ -71,10 +71,9 @@ public class App extends AppFrame implements AppInterface{
      * Includes configs for UI and Game panel.
      */
     private void setupUI(){
-        setupButtons();
-        setupDisplay();
         add(game, BorderLayout.CENTER);
         add(ui, BorderLayout.EAST);
+        setJMenuBar(menu);
         setVisible(true);
         game.setVisible(true);
     }
@@ -112,60 +111,6 @@ public class App extends AppFrame implements AppInterface{
         controller.movementWaitTime -= TICK_RATE;
     }
 
-    /**
-     * setupButtons()
-     * Sets up the buttons inside the UI panel.
-     */
-    private void setupButtons(){
-        /*
-        JPanel buttons = new JPanel(new GridLayout(2, 3, 5, 10));
-        JButton undo = new JButton("Undo");     // On press, it should save the game state.
-        JButton redo = new JButton("Redo");     // On press, it should open a window to load a saved file.
-        JButton pause = new JButton("Pause/Resume");   // On press, it should pause and change to "Resume".
-        JButton play = new JButton("Play");
-        undo.addActionListener(recorder.undo());
-        redo.addActionListener(recorder.redo());
-        play.addActionListener(recorder.play());
-        pause.addActionListener((unused) -> { pauseTimer(tick.isRunning()); });
-        List.of(undo, redo, pause, play).forEach(i -> {
-            i.setFont(new Font("Monospaced", Font.BOLD, 15));
-            i.setForeground(FONT);
-            buttons.add(i);
-        });
-        buttons.setBackground(FOREGROUND);
-        ui.add(buttons);
-
-         */
-    }
-
-    /**
-     * setupDisplay()
-     * Sets up the time left to play, current level,
-     * keys collected and number of treasures that need collecting.
-     */
-    private void setupDisplay(){
-        /*
-        JPanel elements = new JPanel(new GridLayout(4, 1, 10, 10));
-        JLabel time = new JLabel("Time: ");
-        JLabel level = new JLabel("Level: ");
-        JLabel keys = new JLabel("Keys: ");
-        JLabel keysToCollect = new JLabel("Keys to Collect: ");
-
-        List.of(time, level, keys, keysToCollect).forEach(i -> {
-            i.setFont(new Font("Monospaced", Font.BOLD, 18));
-            i.setForeground(FONT);
-            elements.add(i);
-        });
-
-
-        elements.setBackground(FOREGROUND);
-        ui.add(elements);
-         */
-
-        add(game, BorderLayout.CENTER);
-        add(ui, BorderLayout.EAST);
-        setJMenuBar(menu);
-    }
 
     @Override
     public void updateGraphics(){
@@ -200,7 +145,7 @@ public class App extends AppFrame implements AppInterface{
     public String openFile(){
         JFileChooser loader = new JFileChooser(new File(System.getProperty("user.dir")));
         if (loader.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            return loader.getSelectedFile().getName();
+            return loader.getSelectedFile().getPath();
         }
         return "";
     }
@@ -209,7 +154,7 @@ public class App extends AppFrame implements AppInterface{
     public String saveFile() {
         JFileChooser saver = new JFileChooser(new File(System.getProperty("user.dir")));
         if (saver.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            return saver.getSelectedFile().getName();
+            return saver.getSelectedFile().getPath();
         }
         return "";
     }
