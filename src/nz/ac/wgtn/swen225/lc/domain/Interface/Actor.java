@@ -29,6 +29,12 @@ public interface Actor {
      */
     void doMove(Direction direction, GameBoard gameBoard);
 
+    default void actOnTile(Direction dir, GameBoard gameBoard, Tile current, Tile next) {
+        current.onExit(this);
+        next.onEntry(this);
+        updateActorLocation(next.location);
+    }
+
     /**
      * Updates current actor's location to new location
      * @param location new location to update with

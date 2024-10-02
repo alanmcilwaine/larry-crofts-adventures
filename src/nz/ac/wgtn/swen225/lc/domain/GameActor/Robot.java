@@ -30,7 +30,7 @@ public abstract class Robot implements Actor {
 
   @Override
   public void doMove(Direction direction, GameBoard gameBoard) {
-    // TODO observe robot movement if it is going too fast and also polish movement a bit more.
+    // TODO make it have a deterministic pattern
     Location newLoc = direction.act(this.location); // location to move to
 
     GameBoard.domainLogger.log(Level.INFO, "Robot is facing: " + robotFacing);
@@ -38,12 +38,9 @@ public abstract class Robot implements Actor {
     Tile<Item> currentTile = findTileInSpecificLocation(gameBoard, location); // current tile
     Tile<Item> nextTile = findTileInSpecificLocation(gameBoard, newLoc); // tile to move to
 
-
     if (locationIsValid(newLoc, gameBoard)) {
-      if (nextTile.canStepOn(this) && switchDirCount <= 20 && moveCount >= 20) {
-        currentTile.onExit(this);
-        nextTile.onEntry(this);
-        updateActorLocation(newLoc);
+      if (nextTile.canStepOn(this) && moveCount >= 20) {
+        actOnTile(direction, gameBoard, currentTile, nextTile);
 
         // robot should move only once and then wait for counts
         moveCount = 0;

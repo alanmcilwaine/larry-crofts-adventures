@@ -58,33 +58,41 @@ public class Player implements Actor {
         GameBoard.domainLogger.log(Level.INFO, String.format("Player has %s treasure", treasure.size()));
     }
 
+    public boolean attemptMove(Direction direction, GameBoard gameBoard) {
+        // i moved this here so we could have cleaner code and not have nesting if-statements
+        this.playerFacing = direction;
+
+        if (!locationIsValid(direction.act(this.location), gameBoard)) {
+            //GameBoard.domainLogger.log(Level.INFO, "Player tried to move to invalid location:" + nextLocation);
+            return false;
+        }
+
+        doMove(direction, gameBoard);
+        return true;
+    }
 
     @Override
     public void doMove(Direction direction, GameBoard gameBoard) {
-        if (direction.equals(Direction.NONE)) return; // so that the terminal doesn't spam
-        this.playerFacing = direction;
         GameBoard.domainLogger.log(Level.INFO, "Player is facing:" + playerFacing + " should try to move " + playerFacing);
+
         var currentTile = findTileInSpecificLocation(gameBoard, location);
         Location nextLocation = direction.act(this.location);
+        Tile<Item> nextTile = findTileInSpecificLocation(gameBoard, nextLocation);
 
-        if(locationIsValid(nextLocation, gameBoard)) {
-
-            Tile<Item> nextTile = findTileInSpecificLocation(gameBoard, nextLocation);
-
-            if (nextTile.canStepOn(this)) {
-                currentTile.onExit(this);
-                nextTile.onEntry(this);
-                updateActorLocation(nextLocation);
-                GameBoard.domainLogger.log(Level.INFO, "Player is at:" + location + " after moving " + direction);
-            } else {
-                GameBoard.domainLogger.log(Level.INFO, "Player tried to move to but blocked:" + nextLocation);
+        if (nextTile.canStepOn(this)) {
+            if(!(nextTile.item instanceof MovableBox m && m.attemptPush(direction, gameBoard))) {
+                actOnTile(direction, gameBoard, currentTile, nextTile);
             }
-            if(gameBoard.getGameState().robots().stream().anyMatch((x)->x.getLocation().equals(this.location))){
-                isDead = true;
-                gameBoard.onGameOver();
-            }
+
+            GameBoard.domainLogger.log(Level.INFO, "Player is at:" + location + " after moving " + direction);
         } else {
-            GameBoard.domainLogger.log(Level.INFO, "Player tried to move to invalid location:" + nextLocation);
+            GameBoard.domainLogger.log(Level.INFO, "Player tried to move to but blocked:" + nextLocation);
+        }
+
+        // check for game over
+        if(gameBoard.getGameState().robots().stream().anyMatch((x)->x.getLocation().equals(this.location))){
+            isDead = true;
+            gameBoard.onGameOver();
         }
     }
 
