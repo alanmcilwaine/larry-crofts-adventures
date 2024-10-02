@@ -10,7 +10,7 @@ public enum DomainLogger {
 
     DomainLogger() {
         this.logger = Logger.getLogger("Domain");
-        this.logger.setLevel(Level.OFF);
+        //this.logger.setLevel(Level.OFF);
     }
 
     public Logger getLogger() {

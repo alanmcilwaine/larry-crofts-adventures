@@ -80,9 +80,8 @@ public class Player implements Actor {
         Tile<Item> nextTile = findTileInSpecificLocation(gameBoard, nextLocation);
 
         if (nextTile.canStepOn(this)) {
-            if(!(nextTile.item instanceof MovableBox m && m.attemptPush(direction, gameBoard))) {
-                actOnTile(direction, gameBoard, currentTile, nextTile);
-            }
+            if (nextTile.item instanceof MovableBox m && !m.attemptPush(direction, gameBoard)) { return; }
+            actOnTile(direction, gameBoard, currentTile, nextTile);
 
             GameBoard.domainLogger.log(Level.INFO, "Player is at:" + location + " after moving " + direction);
         } else {
