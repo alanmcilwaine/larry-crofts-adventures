@@ -91,7 +91,7 @@ public class PersistencyTest {
     //Test loading a GameState from a file
     private static void testLoadGameState(GameBoard original) throws IOException{
         System.out.println("Loading GameState from file:--------------------------------------");
-        GameBoard loadedState = Persistency.loadGameBoard("src/nz/ac/wgtn/swen225/lc/persistency/levels/level1.json");
+        GameBoard loadedState = Persistency.loadGameBoard(1);
         //Check if the loaded GameState is the same as the original GameState
         System.out.println("Level number matches: " + (original.getGameState().level() == loadedState.getGameState().level()));
         System.out.println("Time left matches: " + (original.getGameState().timeLeft() == loadedState.getGameState().timeLeft()));

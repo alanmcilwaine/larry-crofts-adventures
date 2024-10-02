@@ -70,17 +70,30 @@ public class Persistency{
     }
 
     /**
-     * Loads a GameState object from a file.
+     * Loads a GameState object from a level number.
      *
      * @author zhoudavi1 300652444
      * @param level The level of the file to load the GameBoard from.
      * @return GameBoard Loading GameBoard from a file.
      */
     public static GameBoard loadGameBoard(int levelNum){
-        // load the level GameState from a file
-        try{
+        // load the level GameState from a level number
             //Read JSON string from file
             String filename = path + "level" + levelNum + ".json";
+            return loadwithFilePath(filename);
+    }
+
+        /**
+     * Loads a GameState object from a level number.
+     *
+     * @author zhoudavi1 300652444
+     * @param level The level of the file to load the GameBoard from.
+     * @return GameBoard Loading GameBoard from a file.
+     */
+    public static GameBoard loadwithFilePath(String filename){
+        // load the level GameState from a file path
+        try{
+            //Read JSON string from file
             File file = new File(filename);
             FileReader fileReader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
