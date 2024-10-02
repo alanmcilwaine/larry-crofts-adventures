@@ -33,17 +33,14 @@ public class Menu extends JMenuBar {
         JMenuItem save = new JMenuItem("Save");
         JMenuItem exit = new JMenuItem("Exit");
         load.addActionListener((unused) -> {
-            String filename = a.openFile();
-
-            if (!filename.isEmpty()){
-                a.domain = Persistency.loadwithFilePath(a.openFile());
+            String path = a.openFile();
+            if (!path.isEmpty()){
+                a.domain = Persistency.loadwithFilePath(path);
+                a.initialDomain = a.domain.copyOf();
             }
         });
         save.addActionListener((unused) -> {
-           String filename = a.saveFile();
-           if (!filename.isEmpty()){
-               Persistency.saveGameBoard(a.domain);
-           }
+            Persistency.saveGameBoard(a.domain);
         });
         exit.addActionListener((unused) -> System.exit(1));
         List.of(load, save, exit).forEach(file::add);
@@ -72,9 +69,15 @@ public class Menu extends JMenuBar {
      */
     private void help(App a) {
         JMenuItem helpInput = new JMenuItem("Game Instructions");
+        JMenuItem controls = new JMenuItem("Controls");
         help.addActionListener((unused) -> {
             // Add a help screen from renderer here
         });
+        controls.addActionListener((unused) -> {
+            a.pauseTimer(true);
+            new RemapFrame();
+        });
         help.add(helpInput);
+        help.add(controls);
     }
 }
