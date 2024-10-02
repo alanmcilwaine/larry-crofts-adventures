@@ -85,8 +85,8 @@ public class App extends AppFrame implements AppInterface{
      * Starts the main update loop for the program. Packages Domain, Renderer and Recorder should be used here.
      */
     private void startTick(){
-        domain = Persistency.loadGameBoard(2);
-        initialDomain = Persistency.loadGameBoard(2);
+        domain = Persistency.loadGameBoard(1);
+        initialDomain = Persistency.loadGameBoard(1);
         render = ImageImplement.getImageImplement(game);
 
         tick.start();
