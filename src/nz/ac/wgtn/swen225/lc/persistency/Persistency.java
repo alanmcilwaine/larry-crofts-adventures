@@ -73,13 +73,14 @@ public class Persistency{
      * Loads a GameState object from a file.
      *
      * @author zhoudavi1 300652444
-     * @param filename The name of the file to load the GameBoard from.
+     * @param level The level of the file to load the GameBoard from.
      * @return GameBoard Loading GameBoard from a file.
      */
-    public static GameBoard loadGameBoard(String filename){
+    public static GameBoard loadGameBoard(int levelNum){
         // load the level GameState from a file
         try{
             //Read JSON string from file
+            String filename = path + "level" + levelNum + ".json";
             File file = new File(filename);
             FileReader fileReader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -107,11 +108,11 @@ public class Persistency{
      * @param filename The name of the file which to load gameBoard from
      * @return List<Action> Loading list of actions from a file.
      */
-    public static GameBoard loadRecording(Recorder r, String filename){
+    public static GameBoard loadRecording(Recorder r, int levelNum){
         // load the list of actions from a file
         try{
             //Read JSON string from file
-            filename = "levels/" + filename;
+            String filename = path + "level" + levelNum + "_commands.json";
             File file = new File(filename);
             FileReader fileReader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -126,7 +127,7 @@ public class Persistency{
             ObjectMapper mapper = new ObjectMapper();
             List<Command> actions = mapper.convertJSONtoActions(json);
             r.setCommands(actions);
-            return loadGameBoard(filename);
+            return loadGameBoard(levelNum);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
