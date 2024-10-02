@@ -205,6 +205,8 @@ public class RecorderTests {
             graphics = state;
             log += "updatedGraphics.\n";
         }
+
+
         @Override
         public void giveInput(Command input) {
             switch(input){
@@ -219,6 +221,11 @@ public class RecorderTests {
             xp = xpo; yp = ypo;
             state = deepclone(init);
             System.out.println("\n===REVERT\n");
+        }
+
+        @Override
+        public void pauseTimer(boolean state) {
+
         }
 
         @Override

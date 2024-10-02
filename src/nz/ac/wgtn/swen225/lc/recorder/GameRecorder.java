@@ -29,7 +29,7 @@ class GameRecorder implements Recorder{
      */
     public GameRecorder(AppInterface app){
         this.app = app;
-        timer = new PlaybackTimer(this::_redo);
+        timer = new PlaybackTimer(this::redoFrame);
     }
 
 
@@ -83,31 +83,66 @@ class GameRecorder implements Recorder{
     protected void _undo(){
         assert currentTick >= -1 : "Should never be less than zero";
 
-        if(currentTick == -1) return;
+        int current = currentTick;
+        int lastMove = lastActualMove(current);
+
+        if(currentTick == -1 || lastMove == -1) return;
 
         _pause();
-        int current = currentTick;
         currentTick = -1;
         app.initialStateRevert();
 
-        IntStream.range(0, current).forEach(i -> {app.giveInput(nextCommand());});
+        IntStream.range(0, lastMove).forEach(i -> {app.giveInput(nextCommand());});
 
         app.updateGraphics();
 
-        //Should have moved backwards 1 tick
-        assert currentTick == current -1 : "expected " + (current -1) +", was " + currentTick;
+        //Should have moved backwards at least 1 tick
+        assert currentTick == lastMove-1 : "expected " + (lastMove-1) +", was " + currentTick;
     }
 
+    /**
+     * For redoing finds the index of the last ACTUAL move, that way you don't have to spam the undo button
+     * @return index of last move +1, so you can use it as range
+     */
+    private int lastActualMove(int current) {
+        return IntStream.range(0, current)
+                .boxed()
+                .sorted(Collections.reverseOrder())
+                .filter(i -> commands.get(i) != Command.None)
+                .findFirst()
+                .orElse(-1);
+    }
     /**
      * Plays the next move. (If currentTick == 0, commands.get(1) will play, as command 0 was already used)
      */
     protected void _redo(){
+
         assert currentTick < commands.size() : "Should never be bigger than commands";
 
         if(currentTick == commands.size()-1) return;//We have already redo'd as much as possible
 
+        Command next = nextCommand();
+
         _pause();
-        app.giveInput(nextCommand());
+        app.giveInput(next);
+
+        //call it recursively until we find a move
+        if(next == Command.None) _redo();
+        else  app.updateGraphics();
+    }
+    /**
+     * Plays the next frame, (compared to the next move)
+     */
+    protected void redoFrame(){
+
+        assert currentTick < commands.size() : "Should never be bigger than commands";
+
+        if(currentTick == commands.size()-1) return;//We have already redo'd as much as possible
+
+        Command next = nextCommand();
+
+        app.giveInput(next);
+
         app.updateGraphics();
     }
 
@@ -123,6 +158,7 @@ class GameRecorder implements Recorder{
      */
     private void _pause(){
         timer.stop();
+        app.pauseTimer(true);
     }
 
     /**
@@ -132,6 +168,7 @@ class GameRecorder implements Recorder{
     protected void _takeControl(){
         //Delete all actions after this point.
         commands = commands.stream().limit(currentTick+1).collect(Collectors.toCollection(ArrayList::new));
-        _pause();
+        timer.stop();
+        app.pauseTimer(false);
     }
 }
