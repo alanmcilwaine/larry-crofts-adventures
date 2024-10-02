@@ -6,7 +6,6 @@ import java.io.File;
 import java.util.List;
 
 import nz.ac.wgtn.swen225.lc.app.UI.AppFrame;
-import nz.ac.wgtn.swen225.lc.app.UI.GamePanel;
 import nz.ac.wgtn.swen225.lc.app.UI.Menu;
 import nz.ac.wgtn.swen225.lc.app.UI.UIPanel;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
@@ -52,16 +51,16 @@ public class App extends AppFrame implements AppInterface{
      */
     public App(){
         assert SwingUtilities.isEventDispatchThread();
-        game = new GamePanel(this);
         controller = new Controller();
+        game = new GamePanel(this);
         setupUI();
         startTick();
     }
 
     public App(Controller c) {
         assert SwingUtilities.isEventDispatchThread();
-        game = new GamePanel(this);
         controller = c;
+        game = new GamePanel(this);
         setupUI();
         startTick();
     }

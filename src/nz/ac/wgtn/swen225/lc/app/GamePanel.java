@@ -1,10 +1,7 @@
-package nz.ac.wgtn.swen225.lc.app.UI;
-
-import nz.ac.wgtn.swen225.lc.app.App;
+package nz.ac.wgtn.swen225.lc.app;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyListener;
 
 /**
  * UIPanel --- JPanel extension which holds the Game elements on the left side of the screen.
