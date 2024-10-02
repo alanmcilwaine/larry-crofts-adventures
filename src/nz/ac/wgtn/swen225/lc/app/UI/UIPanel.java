@@ -4,7 +4,7 @@ import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.domain.GameState;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.Treasure;
-import nz.ac.wgtn.swen225.lc.render.Img;
+// import nz.ac.wgtn.swen225.lc.render.Img;
 
 import javax.swing.*;
 import java.awt.*;
