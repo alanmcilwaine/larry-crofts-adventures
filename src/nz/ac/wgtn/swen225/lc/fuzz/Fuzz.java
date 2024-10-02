@@ -4,6 +4,7 @@ import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.app.Command;
 import nz.ac.wgtn.swen225.lc.app.Controller;
 import nz.ac.wgtn.swen225.lc.app.GamePanel;
+import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 import nz.ac.wgtn.swen225.lc.recorder.RecorderTests;
 
 import javax.swing.*;
@@ -19,7 +20,8 @@ public class Fuzz {
 
         RecorderTests.main(arg);
         FuzzController fuzzController = new FuzzController();
-        
+        List<Command> commands = new ArrayList<>();
+        int level = 1;
         /**
          * Create a Runnable that creates the App
          *
@@ -32,10 +34,12 @@ public class Fuzz {
                 public void tick(){
                     try {
                         fuzzController.randomizeInputs();
+                        commands.add(controller.currentCommand());
                         recorder.tick(controller.currentCommand());
                         giveInput(controller.currentCommand());
                     }catch (Throwable t){
                         System.out.println("ERROR CAUGHT BY FUZZ: " + fuzzController.keyLogger + "\n\n");
+                        saveInputs(commands, level);
                         throw new Error(t);
                     }
                 }
@@ -45,6 +49,12 @@ public class Fuzz {
         SwingUtilities.invokeLater(appCreator);
 
 
+
+    }
+
+    static void saveInputs(List<Command> commands, int level){
+
+        Persistency.saveCommands(commands, level);
 
     }
 
