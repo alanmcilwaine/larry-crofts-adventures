@@ -58,7 +58,9 @@ public class Persistency{
             e.printStackTrace();
         }
         //Write JSON string to file
-        String filename = "levels/level" + level + "_commands.json";
+        String filename = path + level + "_commands.json";
+        //Unique Filename (to avoid overriding when having multiple recordings)
+        filename = uniqueFilename(filename);
         File file = new File(filename);
         try {
             FileWriter fileWriter = new FileWriter(file);
@@ -67,6 +69,21 @@ public class Persistency{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String uniqueFilename(String filename){
+        // check if the filename already exists
+        File file = new File(filename);
+        if(file.exists()){
+            // if it does, add a .number to the end of the filename
+            int i = 1;
+            while(file.exists()){
+                filename = filename.substring(0, filename.indexOf(".")) + "." + i + ".json";
+                file = new File(filename);
+                i++;
+            }
+        }
+        return filename;
     }
 
     /**
@@ -121,11 +138,10 @@ public class Persistency{
      * @param filename The name of the file which to load gameBoard from
      * @return List<Action> Loading list of actions from a file.
      */
-    public static GameBoard loadRecording(Recorder r, int levelNum){
+    public static GameBoard loadRecording(Recorder r, String filename){
         // load the list of actions from a file
         try{
             //Read JSON string from file
-            String filename = path + "level" + levelNum + "_commands.json";
             File file = new File(filename);
             FileReader fileReader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -140,7 +156,7 @@ public class Persistency{
             ObjectMapper mapper = new ObjectMapper();
             List<Command> actions = mapper.convertJSONtoActions(json);
             r.setCommands(actions);
-            return loadGameBoard(levelNum);
+            return loadwithFilePath(filename);
         } catch (IOException e) {
             e.printStackTrace();
             return null;

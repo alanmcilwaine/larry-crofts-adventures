@@ -242,7 +242,6 @@ public class ObjectMapper {
         return value.replace("\"", "").trim(); // Remove quotes
     }
     
-    
     /**
      * Read the given list of actions as a JSON format from a file.
      *
@@ -265,7 +264,7 @@ public class ObjectMapper {
         return actions;
     }
     
-
+    // Helper method to get a code for an item
     public String gameItemCode(Item item) {
         // Get the base code from the item class name
         String itemClassName = item.getClass().getSimpleName();
@@ -288,6 +287,7 @@ public class ObjectMapper {
         return baseCode + colorCode;
     }
     
+    //Helper methdo to get color code
     private String getColorCode(ItemColor color) {
         // Map the ItemColor to the appropriate code
         return switch (color) {

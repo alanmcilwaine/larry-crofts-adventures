@@ -1,5 +1,6 @@
 package nz.ac.wgtn.swen225.lc.persistency;
 
+import nz.ac.wgtn.swen225.lc.app.Command;
 import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.*;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
@@ -7,6 +8,7 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,7 @@ public class PersistencyTest {
     public static void main(String[] args) throws IOException {
         GameBoard gameState = testReadJSON();
         testLoadGameState(gameState);
+        testUniqueFilename();
     }
 
     private static GameBoard createSampleGameState() {
@@ -113,6 +116,15 @@ public class PersistencyTest {
             }
         }
         System.out.println("Board matches: " + boardMatches);
+    }
+
+    //Test Unique filename generation
+    private static void testUniqueFilename(){
+        System.out.println("Testing unique filename generation:");
+        String filename = Persistency.path + "level1.json";
+        System.out.println("Original filename: " + filename);
+        filename = Persistency.uniqueFilename(filename);
+        System.out.println("Unique filename: " + filename);
     }
 
 }
