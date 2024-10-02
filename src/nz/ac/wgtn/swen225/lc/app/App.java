@@ -21,12 +21,10 @@ import nz.ac.wgtn.swen225.lc.render.ImageImplement;
 public class App extends AppFrame implements AppInterface{
     // Window is made up of two main panels
     private GamePanel game; //Don't generate here as controller could be generated in constructor.
-    private UIPanel ui = new UIPanel(new GridLayout(3, 1, 0, 15));
+    private UIPanel ui;
     private Menu menu = new Menu(this);
 
     // Colours for the UI
-    public static final Color BACKGROUND = new Color(47, 74, 58);
-    public static final Color FOREGROUND = new Color(179, 178, 137);
     public static final Color FONT = new Color(31, 30, 25);
 
     // Window Dimensions
@@ -43,7 +41,7 @@ public class App extends AppFrame implements AppInterface{
     public GameBoard initialDomain;
     public ImageImplement render;
 
-    private Timer tick = new Timer(TICK_RATE, (unused) -> tick());
+    public Timer tick = new Timer(TICK_RATE, (unused) -> tick());
 
     /**
      * App()
@@ -53,6 +51,7 @@ public class App extends AppFrame implements AppInterface{
         assert SwingUtilities.isEventDispatchThread();
         controller = new Controller();
         game = new GamePanel(this);
+        ui = new UIPanel(this);
         setupUI();
         startTick();
     }
@@ -61,6 +60,7 @@ public class App extends AppFrame implements AppInterface{
         assert SwingUtilities.isEventDispatchThread();
         controller = c;
         game = new GamePanel(this);
+        ui = new UIPanel(this);
         setupUI();
         startTick();
     }
@@ -117,6 +117,7 @@ public class App extends AppFrame implements AppInterface{
      * Sets up the buttons inside the UI panel.
      */
     private void setupButtons(){
+        /*
         JPanel buttons = new JPanel(new GridLayout(2, 3, 5, 10));
         JButton undo = new JButton("Undo");     // On press, it should save the game state.
         JButton redo = new JButton("Redo");     // On press, it should open a window to load a saved file.
@@ -133,6 +134,8 @@ public class App extends AppFrame implements AppInterface{
         });
         buttons.setBackground(FOREGROUND);
         ui.add(buttons);
+
+         */
     }
 
     /**
@@ -141,6 +144,7 @@ public class App extends AppFrame implements AppInterface{
      * keys collected and number of treasures that need collecting.
      */
     private void setupDisplay(){
+        /*
         JPanel elements = new JPanel(new GridLayout(4, 1, 10, 10));
         JLabel time = new JLabel("Time: ");
         JLabel level = new JLabel("Level: ");
@@ -153,8 +157,10 @@ public class App extends AppFrame implements AppInterface{
             elements.add(i);
         });
 
+
         elements.setBackground(FOREGROUND);
         ui.add(elements);
+         */
 
         add(game, BorderLayout.CENTER);
         add(ui, BorderLayout.EAST);
@@ -163,6 +169,7 @@ public class App extends AppFrame implements AppInterface{
 
     @Override
     public void updateGraphics(){
+        ui.repaint();
         game.repaint();
     }
 
@@ -185,8 +192,8 @@ public class App extends AppFrame implements AppInterface{
             tick.start();
             game.requestFocusInWindow();
         }
-        String status = tick.isRunning() ? "PLAYING" : "PAUSED";
-        setTitle("Larry Croft's Adventures " + status);
+        String status = tick.isRunning() ? "Pause" : "Resume";
+        ui.pause.setText(status);
     }
 
     @Override
