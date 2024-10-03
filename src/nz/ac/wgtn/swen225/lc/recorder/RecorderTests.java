@@ -156,7 +156,7 @@ public class RecorderTests {
 
         recorder.undo();
         recorder.redo();
-        assert recorder.currentTick == 4 : "Tick was " + recorder.currentTick;
+        assert recorder.currentTick == 3 : "Tick was " + recorder.currentTick;
         assertArrays(app.state,new String[][]{
                 {"_", "_", "_"},
                 {"P", "_", "_"},
@@ -175,7 +175,7 @@ public class RecorderTests {
      */
     static List<Command> randomCommands(int num){
         return IntStream.range(0,num)
-                .mapToObj(i -> Command.values()[(int)Math.round(Math.random()*4)])
+                .mapToObj(i -> Command.values()[(int)Math.round(Math.random()*3)])
                 .toList();
     }
     static MockApp mockApp(){

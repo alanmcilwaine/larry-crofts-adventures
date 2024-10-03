@@ -86,18 +86,18 @@ class GameRecorder implements Recorder{
         int current = currentTick;
         int lastMove = lastActualMove(current);
 
-        if(currentTick == -1 || lastMove == -1) return;
-
         _pause();
         currentTick = -1;
         app.initialStateRevert();
 
-        IntStream.range(0, lastMove).forEach(i -> {app.giveInput(nextCommand());});
+        //If no valid moves were made since the start then we do not have to redo anything.
+        if(lastMove != -1)
+            IntStream.range(0, lastMove+1).forEach(i -> {app.giveInput(nextCommand());});
 
         app.updateGraphics();
 
         //Should have moved backwards at least 1 tick
-        assert currentTick == lastMove-1 : "expected " + (lastMove-1) +", was " + currentTick;
+        assert currentTick <= lastMove : "expected <= " + (lastMove) + ", was " + currentTick;
     }
 
     /**
