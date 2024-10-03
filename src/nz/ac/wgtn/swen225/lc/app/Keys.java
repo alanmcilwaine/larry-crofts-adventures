@@ -2,8 +2,7 @@ package nz.ac.wgtn.swen225.lc.app;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.swing.SwingUtilities;
 
@@ -20,10 +19,12 @@ import javax.swing.SwingUtilities;
  * @author John Rais and Alan McIlwaine
  */
 class Keys implements KeyListener {
-    protected Command currentCommand = Command.None;
-    protected final Runnable noCommand = () ->{currentCommand = Command.None;};
-    protected final Map<Integer,Runnable> actionsPressed= new HashMap<>();
-    protected final Map<Integer,Runnable> actionsReleased= new HashMap<>();
+    protected Stack<Command> inputBuffer = new Stack<>();
+    protected final Map<Action, Runnable> actionsPressed= new HashMap<>();
+    protected final Map<Action, Runnable> actionsReleased= new HashMap<>();
+
+    public static final int INPUT_WAIT = App.TICK_RATE * 3;
+    public int movementWaitTime = 0;
 
     /**
      * Links actions from a keyboard in the form of enum Action,
@@ -32,25 +33,39 @@ class Keys implements KeyListener {
      * @param action Action holds the KeyEvent from the keyboard and the opposite key.
      * @param onPressed The action to do when the key is pressed.
      */
-    public void setAction(Controller.Action action, Runnable onPressed){
-        actionsPressed.put(action.key, () -> {onPressed.run(); action.opposite.stop = onPressed;});
-        //On released depends on what other keys you are holding down, so it can change
-        actionsReleased.put(action.key, () -> {action.stop.run(); action.opposite.stop = noCommand;});
+    public void setAction(Action action, Runnable onPressed){
+        actionsPressed.put(action, onPressed);
+        // If it's a movement action we need to remove it from the input buffer.
+        Runnable r = List.of("Up", "Down", "Left", "Right").contains(action.name()) ? () -> inputBuffer.remove(Command.generate(action.name())) : () -> {};
+        actionsReleased.put(action, r);
     }
-
-    @Override
-    public void keyTyped(KeyEvent e){}
 
     @Override
     public void keyPressed(KeyEvent e){
         assert SwingUtilities.isEventDispatchThread();
-        actionsPressed.getOrDefault(e.getKeyCode(), ()->{}).run();
+        Optional<Action> a = Action.getAction(e.getKeyCode(), e.isControlDown());
+        if (a.isEmpty()){
+            return;
+        }
+        // Checks specific to movement.
+        if (List.of("Up", "Down", "Left", "Right").contains(a.get().name())){
+            Command command = Command.generate(a.get().name());
+            if (inputBuffer.stream().anyMatch(c -> c.equals(command))){ // Buffer already contains the movement.
+                return;
+            }
+        }
+        actionsPressed.getOrDefault(a.get(), ()->{}).run();
     }
 
     @Override
-    public void keyReleased(KeyEvent e){
+    public void keyReleased(KeyEvent e) {
         assert SwingUtilities.isEventDispatchThread();
-        actionsReleased.getOrDefault(e.getKeyCode(), ()->{}).run();
+        Optional<Action> a = Action.getAction(e.getKeyCode(), e.isControlDown());
+        if (a.isEmpty()){
+            return;
+        }
+        actionsReleased.getOrDefault(a.get(), ()->{}).run();
     }
-
+    @Override
+    public void keyTyped(KeyEvent e){}
 }
