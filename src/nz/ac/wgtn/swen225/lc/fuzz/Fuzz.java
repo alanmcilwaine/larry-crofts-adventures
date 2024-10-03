@@ -23,7 +23,7 @@ public class Fuzz {
     public static void main(String[] arg){
 
         fuzzTest();
-       // testAllJUnits();
+        testAllJUnits();
     }
 
     /**
