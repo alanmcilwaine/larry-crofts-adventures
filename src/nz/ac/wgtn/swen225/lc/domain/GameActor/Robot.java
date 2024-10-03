@@ -31,7 +31,7 @@ public abstract class Robot implements Actor {
 
   @Override
   public void doMove(Direction direction, GameBoard gameBoard, Tile<Item> current, Tile<Item> next) {
-    // TODO make it have a deterministic pattern
+    // TODO make it have a deterministic pattern, using states probably
     GameBoard.domainLogger.log(Level.INFO, "Robot is facing: " + robotFacing);
 
     if (!next.canStepOn(this) && moveCount < 20) { return; }
@@ -53,4 +53,8 @@ public abstract class Robot implements Actor {
   public String toString() { return "Robot"; }
 
   Robot(int x, int y) { this.location = new Location(x, y); }
+}
+
+abstract class RobotPath {
+  abstract void doMove();
 }

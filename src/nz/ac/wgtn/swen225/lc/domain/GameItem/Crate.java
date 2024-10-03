@@ -8,4 +8,7 @@ public class Crate extends MovableBox {
   public Crate(Location location) {
     super(location);
   }
+
+  @Override
+  public String toString() { return "Crate"; }
 }
