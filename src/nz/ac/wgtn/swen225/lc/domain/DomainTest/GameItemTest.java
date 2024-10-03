@@ -281,4 +281,34 @@ public class GameItemTest {
         assertEquals(player.getLocation(), destination);
         assertEquals(player.getTreasure().size(), 0);
     }
+
+    @Test
+    public void teleportShouldNotGoInfinite() {
+        //Arrange, loop teleport
+        var gameboard = Mock.getGameBoard();
+        var destination1 = new Location(0,5);
+        var destination2 = new Location(4,5);
+        var player = gameboard.getGameState().player();
+
+        gameboard.getBoard().get(5).get(0).item = new OneWayTeleport(destination2);
+        gameboard.getBoard().get(5).get(4).item = new OneWayTeleport(destination1);
+
+        assertThrows(IllegalArgumentException.class, ()->gameboard.action(Direction.UP));
+    }
+
+    @Test
+    public void relayTeleport() {
+        //Arrange, relay teleport
+        var gameboard = Mock.getGameBoard();
+        var destination1 = new Location(0,5);
+        var destination2 = new Location(3,5);
+        var player = gameboard.getGameState().player();
+
+        gameboard.getBoard().get(5).get(0).item = new OneWayTeleport(destination2);
+        gameboard.getBoard().get(5).get(4).item = new OneWayTeleport(destination1);
+
+        assertEquals(player.getLocation(), new Location(4,4));
+        gameboard.action(Direction.UP);
+        assertEquals(player.getLocation(), new Location(3,5));
+    }
 }
