@@ -13,6 +13,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * All game item tests
+ * @author Yee Li
+ */
 public class GameItemTest {
 
     private final Location testLocation = new Location(1, 1);
@@ -117,7 +121,7 @@ public class GameItemTest {
         var player = Mock.getPlayer();
         var key = new Key(ItemColor.BLUE);
 
-        assertEquals("LockedDoorBLUE", tile.getItemOnTile());
+        assertEquals("LockedDoorBlue", tile.getItemOnTile());
 
         player.addTreasure(key);
 
@@ -147,6 +151,7 @@ public class GameItemTest {
 
         assertFalse(tile.canStepOn(player));
     }
+
     @Test
     public void lockedExitBecomesUnlockedUponFullTreasure() {
         GameBoard gameBoard = Mock.getGameBoard();
@@ -186,8 +191,9 @@ public class GameItemTest {
         tile.onEntry(player);
         assertTrue(player.isNextLevel());
     }
+
     @Test
-    public void exitIsFreeToPass(){
+    public void exitIsFreeToPass() {
         var exit = new Exit();
         var tile = new Tile<>(exit, testLocation);
         var player = Mock.getPlayer();
@@ -197,9 +203,9 @@ public class GameItemTest {
 
     /* Info item test */
     @Test
-    public void infoToggleOnEntryExit(){
+    public void infoToggleOnEntryExit() {
         var info = new Info("info");
-        var tile = new Tile<>(info,testLocation);
+        var tile = new Tile<>(info, testLocation);
         var player = Mock.getPlayer();
 
         assertFalse(player.isShowPlayerInfo());
@@ -210,5 +216,69 @@ public class GameItemTest {
         assertFalse(player.isShowPlayerInfo());
         tile.onEntry(player);
         assertTrue(player.isShowPlayerInfo());
+    }
+
+    /*
+    Teleport item test
+     */
+    @Test
+    public void teleportWillTransferPlayerToValidTile() {
+        //Arrange
+        var gameboard = Mock.getGameBoard();
+        var destination = new Location(5,0);
+        var player = gameboard.getGameState().player();
+        gameboard.getBoard().get(5).get(4).item = new OneWayTeleport(destination);
+
+        //Act
+        gameboard.action(Direction.UP);
+        //Assert
+        assertEquals(player.getLocation(), destination);
+    }
+
+    @Test
+    public void teleportWillNotTransferPlayerToInvalidTile() {
+        //Arrange
+        var gameboard = Mock.getGameBoard();
+        var destination = new Location(5,0);
+        var player = gameboard.getGameState().player();
+
+        gameboard.getBoard().get(5).get(4).item = new OneWayTeleport(destination);
+        gameboard.getBoard().get(0).get(5).item = new Wall();
+
+        //Act
+        gameboard.action(Direction.UP);
+        //Assert
+        assertEquals(player.getLocation(), new Location(4,5));
+    }
+
+    @Test
+    public void teleportMeetGeneralRules() {
+        //Arrange
+        var gameboard = Mock.getGameBoard();
+        var destination = new Location(5,0);
+        var player = gameboard.getGameState().player();
+        gameboard.getBoard().get(5).get(4).item = new OneWayTeleport(destination);
+        gameboard.getBoard().get(0).get(5).item = new LockedDoor(ItemColor.RED);
+        //Act
+        gameboard.action(Direction.UP);
+        //Assert, player can't be teleported to locked door.
+        assertEquals(player.getLocation(), new Location(4,5));
+
+        //player can't be teleported to locked exit.
+        var destination2 = new Location(3, 0);
+        gameboard.getBoard().get(5).get(1).item = new OneWayTeleport(destination2);
+        gameboard.action(Direction.DOWN);
+        gameboard.action(Direction.UP);
+
+        assertEquals(player.getLocation(), new Location(4,5));
+
+
+        //Player can be teleported to locked door if it has key.
+        player.addTreasure(new Key(ItemColor.RED));
+        gameboard.action(Direction.DOWN);
+        gameboard.action(Direction.UP);
+
+        assertEquals(player.getLocation(), destination);
+        assertEquals(player.getTreasure().size(), 0);
     }
 }
