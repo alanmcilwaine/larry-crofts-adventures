@@ -2,12 +2,7 @@ package nz.ac.wgtn.swen225.lc.app;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Queue;
-import java.util.ArrayDeque;
-import java.util.Stack;
+import java.util.*;
 
 import javax.swing.SwingUtilities;
 
@@ -25,8 +20,8 @@ import javax.swing.SwingUtilities;
  */
 class Keys implements KeyListener {
     protected Stack<Command> inputBuffer = new Stack<>();
-    protected final Map<Integer, Runnable> actionsPressed= new HashMap<>();
-    protected final Map<Integer, Runnable> actionsReleased= new HashMap<>();
+    protected final Map<Action, Runnable> actionsPressed= new HashMap<>();
+    protected final Map<Action, Runnable> actionsReleased= new HashMap<>();
 
     public static final int INPUT_WAIT = App.TICK_RATE * 3;
     public int movementWaitTime = 0;
@@ -39,30 +34,37 @@ class Keys implements KeyListener {
      * @param onPressed The action to do when the key is pressed.
      */
     public void setAction(Action action, Runnable onPressed){
-        actionsPressed.put(action.key, onPressed);
-        actionsReleased.put(action.key, () -> inputBuffer.remove(Command.generate(action.name())));
+        actionsPressed.put(action, onPressed);
+        // If it's a movement action we need to remove it from the input buffer.
+        Runnable r = List.of("Up", "Down", "Left", "Right").contains(action.name()) ? () -> inputBuffer.remove(Command.generate(action.name())) : () -> {};
+        actionsReleased.put(action, r);
     }
 
     @Override
     public void keyPressed(KeyEvent e){
         assert SwingUtilities.isEventDispatchThread();
-        // We make sure the queue doesn't already contain this command.
-        Optional<Action> a = Action.getAction(e.getKeyCode());
+        Optional<Action> a = Action.getAction(e.getKeyCode(), e.isControlDown());
         if (a.isEmpty()){
             return;
         }
-        Command command = Command.generate(a.get().name());
-        if (inputBuffer.stream().anyMatch(c -> c.equals(command))){ // Buffer already contains the movement.
-            return;
+        // Checks specific to movement.
+        if (List.of("Up", "Down", "Left", "Right").contains(a.get().name())){
+            Command command = Command.generate(a.get().name());
+            if (inputBuffer.stream().anyMatch(c -> c.equals(command))){ // Buffer already contains the movement.
+                return;
+            }
         }
-
-        actionsPressed.getOrDefault(e.getKeyCode(), ()->{}).run();
+        actionsPressed.getOrDefault(a.get(), ()->{}).run();
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         assert SwingUtilities.isEventDispatchThread();
-        actionsReleased.getOrDefault(e.getKeyCode(), ()->{}).run();
+        Optional<Action> a = Action.getAction(e.getKeyCode(), e.isControlDown());
+        if (a.isEmpty()){
+            return;
+        }
+        actionsReleased.getOrDefault(a.get(), ()->{}).run();
     }
     @Override
     public void keyTyped(KeyEvent e){}
