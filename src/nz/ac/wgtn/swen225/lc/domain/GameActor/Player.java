@@ -3,6 +3,7 @@ package nz.ac.wgtn.swen225.lc.domain.GameActor;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
+import nz.ac.wgtn.swen225.lc.domain.Interface.TeleportItem;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
@@ -10,6 +11,7 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 
 public class Player implements Actor {
@@ -26,6 +28,11 @@ public class Player implements Actor {
 
     private boolean nextLevel = false;
 
+    private GameBoard gameBoard;
+
+    public GameBoard getGameBoard() {
+        return gameBoard;
+    }
     @Override
     public Location getLocation() {
         return location;
@@ -63,6 +70,13 @@ public class Player implements Actor {
 
     @Override
     public void doMove(Direction direction, GameBoard gameBoard, Tile<Item> current, Tile<Item> next) {
+        if(Objects.isNull(this.gameBoard)) {
+            this.gameBoard = gameBoard; // not ideal, but to support extended features.
+        }
+        if (direction.equals(Direction.NONE)) return;
+
+        this.playerFacing = direction;
+
         GameBoard.domainLogger.log(Level.INFO, "Player is facing:" + playerFacing + " should try to move " + playerFacing);
 
         if (!next.canStepOn(this) || next.item instanceof MovableBox m && !m.attemptMove(direction, gameBoard)) { return; }
