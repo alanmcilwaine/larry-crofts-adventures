@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.recorder;
 
 import nz.ac.wgtn.swen225.lc.app.Command;
 import nz.ac.wgtn.swen225.lc.app.AppInterface;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -11,23 +12,11 @@ import java.util.stream.IntStream;
 
 public class RecorderTests {
 
-    public static void main(String[] args) {
-        testRecorder();
-    }
-
-    static void testRecorder(){
-        //Make sure assertions are on
-        try{
-            assert false;
-            throw new Error("Assertions disabled");
-        }catch(AssertionError ignored){}
-
-        simpleTest();
-        testManual();
+   @Test
+   void testRecorder(){
         IntStream.range(0,1000).forEach( i -> cornerCaseRedoZeroCommands());
-        fuzzActions();
     }
-    static void simpleTest(){
+    @Test void simpleTest(){
         System.out.println("_______________SIMPLE__________");
         MockApp app = mockApp();
         GameRecorder recorder = mockRecorder(app);
@@ -41,7 +30,7 @@ public class RecorderTests {
 
         assertArrays(app.state, s1);
     }
-    static void cornerCaseRedoZeroCommands(){
+    void cornerCaseRedoZeroCommands(){
         System.out.println("_______________ZERO COMMAND__________");
         MockApp app = mockApp();
         GameRecorder recorder = mockRecorder(app);
@@ -103,7 +92,7 @@ public class RecorderTests {
         assert recorder.currentTick == 2; assertArrays(app.state,s4);
 
     }
-    static void fuzzActions(){
+    @Test void fuzzActions(){
         System.out.println("_______________FUZZ__________");
         for(int trys = 0; trys < 1000; trys++) {
             MockApp app = mockApp();
@@ -126,7 +115,7 @@ public class RecorderTests {
             assertArrays(app.state,save);
         }
     }
-    static void testManual(){
+    @Test void testManual(){
         MockApp app = mockApp();
         GameRecorder recorder = mockRecorder(app);
         recorder.setCommands(List.of(Command.Up,Command.Down,Command.Up,Command.Left,Command.None,Command.Up));
