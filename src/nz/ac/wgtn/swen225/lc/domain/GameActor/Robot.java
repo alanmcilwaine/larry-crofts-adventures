@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.domain.GameActor;
 
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
+import nz.ac.wgtn.swen225.lc.domain.Interface.ActorPath;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
@@ -12,18 +13,25 @@ import java.util.logging.Level;
 public abstract class Robot implements Actor {
   private Location location;
   private Direction robotFacing = Direction.values()[(int) (Math.random() * 5)];
-  private int switchDirCount;
+  private ActorPath actorPath;
   private int moveCount;
 
   // GETTERS
 
   @Override
-  public Location getLocation() { return location; }
-  @Override
-  public Direction getActorFacing() { return robotFacing; }
+  public Location getLocation() {
+    return location;
+  }
 
   @Override
-  public void setActorFacing(Direction dir) { this.robotFacing = dir; }
+  public Direction getActorFacing() {
+    return robotFacing;
+  }
+
+  @Override
+  public void setActorFacing(Direction dir) {
+    this.robotFacing = dir;
+  }
 
   public void update(GameBoard gameBoard) {
     attemptMove(this.robotFacing, gameBoard);
@@ -34,7 +42,9 @@ public abstract class Robot implements Actor {
     // TODO make it have a deterministic pattern, using states probably
     GameBoard.domainLogger.log(Level.INFO, "Robot is facing: " + robotFacing);
 
-    if (!next.canStepOn(this) && moveCount < 20) { return; }
+    if (!next.canStepOn(this) && moveCount < 20) {
+      return;
+    }
     actOnTile(direction, gameBoard, current, next);
 
     // robot should move only once and then wait for counts
@@ -50,11 +60,11 @@ public abstract class Robot implements Actor {
   }
 
   @Override
-  public String toString() { return "Robot"; }
+  public String toString() {
+    return "Robot";
+  }
 
-  Robot(int x, int y) { this.location = new Location(x, y); }
-}
-
-abstract class RobotPath {
-  abstract void doMove();
+  Robot(int x, int y) {
+    this.location = new Location(x, y);
+  }
 }
