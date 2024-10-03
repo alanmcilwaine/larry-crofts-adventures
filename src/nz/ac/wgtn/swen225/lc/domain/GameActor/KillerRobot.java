@@ -13,6 +13,4 @@ public class KillerRobot extends Robot {
     public String toString() {
         return "KillerRobot";
     }
-
 }
-

@@ -21,13 +21,32 @@ public interface Actor {
      * @return current Direction the Actor is facing
      */
     Direction getActorFacing();
+    void setActorFacing(Direction d);
+
+
+    default boolean attemptMove(Direction direction, GameBoard gameBoard) {
+        // i moved this here so we could have cleaner code and not have nesting if-statements
+        setActorFacing(direction);
+
+        Location nextLocation = direction.act(this.getLocation());
+
+        if (!locationIsValid(direction.act(this.getLocation()), gameBoard)) {
+            //GameBoard.domainLogger.log(Level.INFO, "Player tried to move to invalid location:" + nextLocation);
+            return false;
+        }
+
+        var nextTile = findTileInSpecificLocation(gameBoard, nextLocation);
+        var currentTile = findTileInSpecificLocation(gameBoard, this.getLocation());
+        doMove(direction, gameBoard, currentTile, nextTile);
+        return true;
+    }
 
     /**
      * Performs the move of the actor
      * @param direction direction actor is facing
      * @param gameBoard gameboard of current level
      */
-    void doMove(Direction direction, GameBoard gameBoard);
+    void doMove(Direction direction, GameBoard gameBoard, Tile<Item> current, Tile<Item> next);
 
     default void actOnTile(Direction dir, GameBoard gameBoard, Tile current, Tile next) {
         current.onExit(this);

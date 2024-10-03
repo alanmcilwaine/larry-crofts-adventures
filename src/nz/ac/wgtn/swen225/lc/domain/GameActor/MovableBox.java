@@ -22,31 +22,19 @@ public class MovableBox implements Actor, Item {
   @Override
   public Direction getActorFacing() { return this.wallFacing; }
 
-  public boolean attemptPush(Direction direction, GameBoard gameBoard) {
-    GameBoard.domainLogger.log(Level.INFO, "Player is attempting to push box towards direction: " + direction);
-    Location newLoc = direction.act(this.location);
-    if(locationIsValid(newLoc, gameBoard)) {
-      doMove(direction, gameBoard);
-      return true;
-    }
-    return false;
-  }
+  @Override
+  public void setActorFacing(Direction d) { this.wallFacing = d; }
 
   @Override
-  public void doMove(Direction direction, GameBoard gameBoard) {
+  public void doMove(Direction direction, GameBoard gameBoard, Tile<Item> current, Tile<Item> next) {
+    // if can't be stepped on then leave function and not do anything
+    if (!next.canStepOn(this)) { return; }
 
-    Location newLoc = direction.act(this.location);
-    Tile currentTile = findTileInSpecificLocation(gameBoard, location);
-    Tile nextTile = findTileInSpecificLocation(gameBoard, newLoc);
+    actOnTile(direction, gameBoard, current, next);
 
-
-    if (nextTile.canStepOn(this)) {
-      actOnTile(direction, gameBoard, currentTile, nextTile);
-
-      // free up the current one and occupy the next space.
-      currentTile.item = new NoItem();
-      nextTile.item = this;
-    }
+    // free up the current one and occupy the next space.
+    current.item = new NoItem();
+    next.item = this;
   }
 
   @Override
