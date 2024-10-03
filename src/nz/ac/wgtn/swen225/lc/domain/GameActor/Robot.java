@@ -48,7 +48,7 @@ public abstract class Robot implements Actor {
       } else {
 
         GameBoard.domainLogger.log(Level.INFO, "Robot did not move still at: " + location);
-        this.robotFacing = Direction.values()[(int) (Math.random() * 5)];
+        //this.robotFacing = Direction.values()[(int) (Math.random() * 5)];
         switchDirCount = 0;
       }
 
@@ -56,9 +56,7 @@ public abstract class Robot implements Actor {
     } else {
       GameBoard.domainLogger.log(Level.INFO, "Robot tried to move to invalid, still at: " + location);
     }
-
     moveCount++;
-
   }
 
   @Override

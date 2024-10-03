@@ -90,7 +90,7 @@ public class Player implements Actor {
 
         // check for game over
         if(gameBoard.getGameState().robots().stream().anyMatch((x)->x.getLocation().equals(this.location))){
-            isDead = true;
+            die();
             gameBoard.onGameOver();
         }
     }
@@ -115,6 +115,11 @@ public class Player implements Actor {
     public void setNextLevel(boolean nextLevel) {
         this.nextLevel = nextLevel;
     }
+
+    /**
+     * Kills the player
+     */
+    public void die() { isDead = true; }
 
     @Override
     public String toString() { return "Player"; }
