@@ -28,9 +28,7 @@ public abstract class Robot implements Actor {
   }
 
   @Override
-  public void setActorFacing(Direction dir) {
-    this.robotFacing = dir;
-  }
+  public void setActorFacing(Direction dir) { this.robotFacing = dir; }
 
   public void setActorPath(ActorPath actorPath) { this.actorPath = actorPath; }
 
