@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A game board builder.
+ * All entities on game board shall meet certain rules.
+ */
 public class GameBoardBuilder {
     private List<List<Tile<Item>>> board;
 

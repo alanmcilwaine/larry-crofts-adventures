@@ -21,6 +21,10 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
+/**
+ * The main game board
+ * @author Yee Li, Maria Louisa Carla Parinas
+ */
 public class GameBoard {
     public static final Logger domainLogger = DomainLogger.LOGGER.getLogger();
 
@@ -183,7 +187,6 @@ public class GameBoard {
         detach(observer);
     }
 
-    //TODO
     public void notifyObservers() {
         for (GameStateObserver observer : obs) {
             observer.update(getGameState());

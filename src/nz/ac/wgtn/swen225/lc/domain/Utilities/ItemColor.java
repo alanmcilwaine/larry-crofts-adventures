@@ -1,7 +1,8 @@
 package nz.ac.wgtn.swen225.lc.domain.Utilities;
 
 /**
- * Item colour for the Doors and Keys
+ * Item colour for the Doors and Keys etc.
+ * @author Yee Li
  */
 public enum ItemColor {
     RED {
@@ -18,5 +19,4 @@ public enum ItemColor {
     },
     InvalidColor
     ;
-
 }

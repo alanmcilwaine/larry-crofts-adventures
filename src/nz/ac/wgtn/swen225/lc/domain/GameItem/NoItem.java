@@ -6,6 +6,7 @@ import nz.ac.wgtn.swen225.lc.domain.Tile;
 
 /**
  * A free tile.
+ * @author Yee Li
  */
 public record NoItem() implements Item {
 

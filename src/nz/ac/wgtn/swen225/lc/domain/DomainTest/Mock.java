@@ -36,9 +36,13 @@ public class Mock {
      * bcd is black closed door,
      * e is exit, le is locked exit,
      * t is treasure, i is info,
-     * mb is movableBox
+     * mb is movableBox.
+     * <br>
+     * Item and Actor can be added to board for testing,
+     * such as robots and additional features.
      *
      * @return mocked game board
+     * @author Yee Li
      */
     public static GameBoard getGameBoard() {
         return constructGameBoard();
@@ -53,10 +57,19 @@ public class Mock {
         return new Player(new Location(0, 0));
     }
 
+    /**
+     * Get player at provided location.
+     * @param location location
+     * @return Player at specific location.
+     */
     public static Player getPlayer(Location location) {
         return new Player(location);
     }
 
+    /**
+     * Construct a 6x6 game board for testing purpose.
+     * @return game board.
+     */
     private static GameBoard constructGameBoard() {
         int width = 6;
         int height = 6;

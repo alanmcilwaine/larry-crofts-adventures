@@ -11,6 +11,10 @@ import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Integrated player tests on game board.
+ * @author Yee Li
+ */
 public class PlayerMoveTest {
     @Test
     public void playerMoveTestsSet01() {
@@ -28,6 +32,12 @@ public class PlayerMoveTest {
         assertEquals("Direction is null", exception.getMessage());
 
         assertEquals(player.getLocation(), new Location(4, 4));
+
+        //can't move out of board
+        gameboard.action(Direction.RIGHT);
+        gameboard.action(Direction.RIGHT);
+        gameboard.action(Direction.RIGHT);
+        assertEquals(player.getLocation(), new Location(5, 4));
 
         //can't step on wall
         gameboard.action(Direction.LEFT);

@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Common methods for checking.
+ * @author Yee Li
+ */
 public class Util {
     public static void checkNull(Object o, String s) {
         if (Objects.isNull(o)) {

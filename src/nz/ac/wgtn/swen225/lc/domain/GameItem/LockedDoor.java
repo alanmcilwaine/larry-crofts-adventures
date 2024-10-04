@@ -8,6 +8,10 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 
 import java.util.Optional;
 
+/**
+ * Locked door on tile
+ * @author Yee Li
+ */
 public record LockedDoor(ItemColor itemColor) implements Item {
     @Override
     public boolean blockActor(Actor actor) {

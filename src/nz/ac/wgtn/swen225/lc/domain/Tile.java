@@ -2,10 +2,7 @@ package nz.ac.wgtn.swen225.lc.domain;
 
 
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
-import nz.ac.wgtn.swen225.lc.domain.GameItem.Exit;
-import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedExit;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
-import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Util;
@@ -22,6 +19,7 @@ public class Tile<T extends Item> {
 
     /**
      * Checks if Tile can be stepped on
+     *
      * @param actor Actor to check
      * @return true if can be stepped, false if not
      */
@@ -32,6 +30,7 @@ public class Tile<T extends Item> {
 
     /**
      * Occurs when an Actor has stepped into this Tile
+     *
      * @param actor Actor interacting with Tile
      */
     public void onEntry(Actor actor) {
@@ -47,7 +46,6 @@ public class Tile<T extends Item> {
 
     /**
      * Occurs when an Actor has exited this Tile
-     * @param actor
      */
     public void onExit(Actor actor) {
         Util.checkNull(actor, "Actor");
@@ -59,5 +57,7 @@ public class Tile<T extends Item> {
      *
      * @return run time Item class name plus color.
      */
-    public String getItemOnTile() { return item.toString(); }
+    public String getItemOnTile() {
+        return item.toString();
+    }
 }
