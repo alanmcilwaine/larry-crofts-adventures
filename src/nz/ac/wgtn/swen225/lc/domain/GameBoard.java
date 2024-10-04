@@ -48,6 +48,7 @@ public class GameBoard {
         this.height = builder.getHeight();
         this.totalTreasure = builder.getTotalTreasure();
         subscribeGameState(getLockedExit());
+        playerMove(Direction.NONE, this);
     }
 
     /**
