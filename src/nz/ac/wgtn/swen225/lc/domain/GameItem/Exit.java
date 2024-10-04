@@ -5,6 +5,10 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 
+/**
+ * Exit on tile
+ * @author Yee Li
+ */
 public record Exit() implements Item {
 
     @Override

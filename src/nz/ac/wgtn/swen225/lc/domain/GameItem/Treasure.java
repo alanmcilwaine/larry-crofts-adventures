@@ -5,6 +5,10 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 
+/**
+ * Treasure on tile
+ * @author Yee Li
+ */
 public record Treasure() implements Item {
     @Override
     public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {

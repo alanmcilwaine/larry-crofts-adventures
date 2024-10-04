@@ -14,7 +14,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * All game item tests
+ * All standard game item tests plus
+ * Oneway teleport item tests.
  * @author Yee Li
  */
 public class GameItemTest {

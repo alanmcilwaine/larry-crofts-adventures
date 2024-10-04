@@ -9,6 +9,7 @@ import java.util.Collection;
 
 /**
  * A game character that moves around.
+ * @author Yee Li, Maria Louisa Carla Parinas
  */
 public interface Actor {
 
@@ -25,7 +26,6 @@ public interface Actor {
 
 
     default boolean attemptMove(Direction direction, GameBoard gameBoard) {
-        // i moved this here so we could have cleaner code and not have nesting if-statements
         setActorFacing(direction);
 
         Location nextLocation = direction.act(this.getLocation());
@@ -44,11 +44,11 @@ public interface Actor {
     /**
      * Performs the move of the actor
      * @param direction direction actor is facing
-     * @param gameBoard gameboard of current level
+     * @param gameBoard game board of current level
      */
     void doMove(Direction direction, GameBoard gameBoard, Tile<Item> current, Tile<Item> next);
 
-    default void actOnTile(Direction dir, GameBoard gameBoard, Tile current, Tile next) {
+    default void actOnTile(Direction dir, GameBoard gameBoard, Tile<Item> current, Tile<Item> next) {
         current.onExit(this);
         next.onEntry(this);
         if(!(next.item instanceof TeleportItem)) {

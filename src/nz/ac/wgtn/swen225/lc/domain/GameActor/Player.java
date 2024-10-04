@@ -14,6 +14,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 
+/**
+ * Player on the board
+ * @author Yee Li
+ */
 public class Player implements Actor {
 
     private final List<Item> treasure = new ArrayList<>();
