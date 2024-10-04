@@ -23,8 +23,10 @@ class Keys implements KeyListener {
     protected final Map<Action, Runnable> actionsPressed= new HashMap<>();
     protected final Map<Action, Runnable> actionsReleased= new HashMap<>();
 
-    public static final int INPUT_WAIT = App.TICK_RATE * 3;
+    public static final int INPUT_WAIT = App.TICK_RATE * 3; // move every 3 ticks.
     public int movementWaitTime = 0;
+
+    private final List<Action> inputs = List.of(Action.Up, Action.Down, Action.Left, Action.Right);
 
     /**
      * Links actions from a keyboard in the form of enum Action,
@@ -35,9 +37,7 @@ class Keys implements KeyListener {
      */
     public void setAction(Action action, Runnable onPressed){
         actionsPressed.put(action, onPressed);
-        // If it's a movement action we need to remove it from the input buffer.
-        Runnable r = List.of("Up", "Down", "Left", "Right").contains(action.name()) ? () -> inputBuffer.remove(Command.generate(action.name())) : () -> {};
-        actionsReleased.put(action, r);
+        actionsReleased.put(action, inputs.contains(action) ? () -> inputBuffer.remove(Command.generate(action.name())) : ()->{});
     }
 
     @Override
@@ -47,12 +47,8 @@ class Keys implements KeyListener {
         if (a.isEmpty()){
             return;
         }
-        // Checks specific to movement.
-        if (List.of("Up", "Down", "Left", "Right").contains(a.get().name())){
-            Command command = Command.generate(a.get().name());
-            if (inputBuffer.stream().anyMatch(c -> c.equals(command))){ // Buffer already contains the movement.
-                return;
-            }
+        if (inputs.contains(a.get()) && inputBuffer.stream().anyMatch(c -> c.equals(Command.generate(a.get().name())))) {
+           return;
         }
         actionsPressed.getOrDefault(a.get(), ()->{}).run();
     }

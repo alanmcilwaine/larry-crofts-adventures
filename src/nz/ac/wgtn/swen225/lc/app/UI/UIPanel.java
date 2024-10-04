@@ -21,8 +21,8 @@ public class UIPanel extends JPanel {
     public JLabel time = new JLabel("0");
     public JLabel chips = new JLabel("0");
     public JButton pause = new JButton("Pause");
-    private Image backgroundImage;
-    private App app;
+    private final Image backgroundImage;
+    private final App app;
 
     public static final Color FOREGROUND = new Color(203, 219, 202);
     /**
