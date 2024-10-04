@@ -14,7 +14,7 @@ import java.awt.*;
 public class ImageImplement{
     // App's jpanel called game in App
     private JPanel jpanel;
-    private static final int IMAGE_SIZE = 30;
+    public static final int IMAGE_SIZE = 70;
     private static final int BUFFER_SIZE = 5;
     private BackgroundImplement backgroundImplement;
     private InfoImplement info;
@@ -46,7 +46,7 @@ public class ImageImplement{
         drawItemsTile(gameState, g);
         drawActors(gameState, g);
         info.locationMatch(gameState);
-        WinLoseImplement.drawWinLose(gameState, g);
+        WinLoseImplement.drawWinLose(gameState, g, jpanel);
 
 
     }
@@ -97,10 +97,11 @@ public class ImageImplement{
      */
     public void drawOneImage(String imageName, int x, int y, Graphics g){
 
-
-        g.drawImage(Img.INSTANCE.getImgs(imageName + ".png"), (x + BUFFER_SIZE) * IMAGE_SIZE,
-                (y + BUFFER_SIZE) * IMAGE_SIZE, jpanel);
+        if(Math.abs(x) < BUFFER_SIZE && Math.abs(y) < BUFFER_SIZE) {
+            g.drawImage(Img.INSTANCE.getImgs(imageName + ".png"), (x + BUFFER_SIZE) * IMAGE_SIZE,
+                    (y + BUFFER_SIZE) * IMAGE_SIZE, jpanel);
         }
+    }
 
 
 }
