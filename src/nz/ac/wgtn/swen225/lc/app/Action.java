@@ -24,8 +24,8 @@ public enum Action{
     LoadSave(KeyEvent.VK_R, true, "Load Game");
 
     public int key;
-    public boolean control;
-    public String description;
+    public final boolean control;
+    public final String description;
     Action(int key, boolean control, String description){
         this.key = key;
         this.control = control;
