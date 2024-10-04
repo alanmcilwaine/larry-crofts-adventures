@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * store all the images
  */
-enum Img{
+public enum Img{
     INSTANCE;
 
     // store all the image name with the type Image

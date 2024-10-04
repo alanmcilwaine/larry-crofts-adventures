@@ -8,17 +8,17 @@ import java.io.File;
 import java.io.IOException;
 
 public class BackgroundImplement {
-    private BufferedImage backgroundImage;
+    private ImageIcon gifImage;
 
-    BackgroundImplement(){
-        try{
-            backgroundImage = ImageIO.read(new File("BackgroundImage/backgroundImage.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public BackgroundImplement() {
+
+        gifImage = new ImageIcon(getClass().getResource("/BackgroundImage/bc.gif"));
     }
 
-    public void drawBackGround(JPanel jPanel, Graphics g){
-        g.drawImage(backgroundImage, 0, 0, jPanel.getWidth(), jPanel.getHeight(), jPanel);
+
+    public void drawBackGround(JPanel jPanel, Graphics g) {
+
+        g.drawImage(gifImage.getImage(), 0, 0, jPanel.getWidth(), jPanel.getHeight(), jPanel);
+
     }
 }
