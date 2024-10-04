@@ -81,6 +81,7 @@ public class Player implements Actor {
 
         if (!next.canStepOn(this) || next.item instanceof MovableBox m && !m.attemptMove(direction, gameBoard)) { return; }
         actOnTile(direction, gameBoard, current, next);
+
         GameBoard.domainLogger.log(Level.INFO, "Player is at:" + location + " after moving " + direction);
 
         // check for game over

@@ -51,7 +51,9 @@ public interface Actor {
     default void actOnTile(Direction dir, GameBoard gameBoard, Tile current, Tile next) {
         current.onExit(this);
         next.onEntry(this);
-        updateActorLocation(next.location);
+        if(!(next.item instanceof TeleportItem)) {
+            updateActorLocation(next.location);
+        }
     }
 
     /**

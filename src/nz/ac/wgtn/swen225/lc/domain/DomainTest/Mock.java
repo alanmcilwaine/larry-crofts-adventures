@@ -101,8 +101,6 @@ public class Mock {
 
         l.get(4).get(2).item = new Wall();
         l.get(4).get(3).item = new Wall();
-
-        l.get(2).get(2).item = new MovableBox(new Location(2, 2));
     }
 
 }
