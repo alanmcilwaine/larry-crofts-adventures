@@ -4,7 +4,7 @@ import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.domain.GameState;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.Treasure;
-// import nz.ac.wgtn.swen225.lc.render.Img;
+import nz.ac.wgtn.swen225.lc.render.Img;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,14 +80,10 @@ public class UIPanel extends JPanel {
         super.paintComponent(g);
         g.drawImage(backgroundImage, 0, 0, this);
 
-        // Drawing treasure
-        /*
         IntStream.range(0, treasure.size())
                 .boxed()
                 .forEach(i -> {
                     g.drawImage(Img.INSTANCE.getImgs(treasure.get(i).toString() + ".png"), 45 + (i * 60), 422, this);
                 });
-        */
-
     }
 }
