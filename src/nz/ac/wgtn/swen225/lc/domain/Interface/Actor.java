@@ -10,7 +10,7 @@ import java.util.Collection;
 /**
  * A game character that moves around.
  */
-public interface Actor {
+public interface Actor  {
 
     /**
      * @return current location of Actor

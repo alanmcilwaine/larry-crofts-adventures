@@ -12,8 +12,8 @@ import java.util.logging.Level;
 
 public abstract class Robot implements Actor {
   private Location location;
-  private Direction robotFacing = Direction.values()[(int) (Math.random() * 5)];
-  private ActorPath actorPath;
+  private Direction robotFacing = Direction.NONE;
+  private ActorPath actorPath = ActorPath.UPDOWN;
   private int moveCount;
 
   // GETTERS
@@ -40,18 +40,8 @@ public abstract class Robot implements Actor {
   @Override
   public void doMove(Direction direction, GameBoard gameBoard, Tile<Item> current, Tile<Item> next) {
     // TODO make it have a deterministic pattern, using states probably
-    GameBoard.domainLogger.log(Level.INFO, "Robot is facing: " + robotFacing);
+    actorPath.doMove(this, gameBoard, current, next);
 
-    if (!next.canStepOn(this) && moveCount < 20) {
-      return;
-    }
-    actOnTile(direction, gameBoard, current, next);
-
-    // robot should move only once and then wait for counts
-    moveCount = 0;
-    GameBoard.domainLogger.log(Level.INFO, "Robot is now at:" + location);
-
-    moveCount++;
   }
 
   @Override
