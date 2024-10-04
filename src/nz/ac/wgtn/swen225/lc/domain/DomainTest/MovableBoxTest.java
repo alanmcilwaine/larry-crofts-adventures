@@ -13,6 +13,7 @@ public class MovableBoxTest {
   @Test
   public void boxPushOpen() {
     var gameboard = Mock.getGameBoard();
+    gameboard.getBoard().get(2).get(2).item = new MovableBox(new Location(2, 2));
     var player = gameboard.getGameState().player();
 
     gameboard.action(Direction.DOWN);
@@ -31,7 +32,7 @@ public class MovableBoxTest {
   @Test
   public void boxPushBlocked() {
     var gameboard = Mock.getGameBoard();
-
+    gameboard.getBoard().get(2).get(2).item = new MovableBox(new Location(2, 2));
     var player = gameboard.getGameState().player();
 
     gameboard.action(Direction.DOWN);
