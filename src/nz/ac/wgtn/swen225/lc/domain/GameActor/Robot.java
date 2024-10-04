@@ -2,18 +2,17 @@ package nz.ac.wgtn.swen225.lc.domain.GameActor;
 
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
-import nz.ac.wgtn.swen225.lc.domain.Interface.ActorPath;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.ActorPath;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
-import java.util.logging.Level;
-
 public abstract class Robot implements Actor {
   private Location location;
-  private Direction robotFacing = Direction.NONE;
   private ActorPath actorPath = ActorPath.UPDOWN;
+
+  private Direction robotFacing = actorPath.getDir1();
   private int moveCount;
 
   // GETTERS
