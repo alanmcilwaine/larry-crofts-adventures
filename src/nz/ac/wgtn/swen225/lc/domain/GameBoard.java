@@ -89,7 +89,7 @@ public class GameBoard {
     }
 
     public void addBoxAtLocation(int x, int y) {
-        boxes.add(new MovableBox(new Location(x, y)));
+        boxes.add(new MovableBox(x,y));
     }
 
     /**
@@ -130,7 +130,9 @@ public class GameBoard {
                                         .toList();
 
         List<MovableBox> newBoxes = boxes.stream()
-                                            .map(b -> b instanceof Crate ? new Crate(b.getLocation()) : new MovableBox(b.getLocation()))
+                                            .map(b -> b instanceof Crate ?
+                                                    new Crate(b.getLocation().x(), b.getLocation().y()) :
+                                                    new MovableBox(b.getLocation().x(), b.getLocation().y()))
                                             .toList();
 
         // make new board

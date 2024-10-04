@@ -14,7 +14,7 @@ public class MovableBox implements Actor {
   private Location location;
   private Direction wallFacing = Direction.NONE; // set to none on initialization
 
-  public MovableBox(Location location) { this.location = location; }
+  public MovableBox(int x , int y) { this.location = new Location(x, y); }
 
   @Override
   public Location getLocation() { return this.location; }

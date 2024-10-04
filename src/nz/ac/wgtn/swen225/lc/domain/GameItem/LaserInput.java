@@ -10,7 +10,6 @@ public class LaserInput implements Item {
   @Override
   public boolean blockActor(Actor actor) { return true; }
 
-  public void passLaserPath(Direction direction) { }
 
   @Override
   public String toString() { return "LaserInput"; }

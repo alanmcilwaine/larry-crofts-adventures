@@ -10,7 +10,7 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
 public abstract class Robot implements Actor {
   private Location location;
-  private ActorPath actorPath = ActorPath.UPDOWN;
+  private ActorPath actorPath = ActorPath.LEFTRIGHT;
 
   private Direction robotFacing = actorPath.getDir1();
   private int moveCount;

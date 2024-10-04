@@ -5,8 +5,8 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
 public class Crate extends MovableBox {
 
-  public Crate(Location location) {
-    super(location);
+  public Crate(int x, int y) {
+    super(x , y);
   }
 
   @Override

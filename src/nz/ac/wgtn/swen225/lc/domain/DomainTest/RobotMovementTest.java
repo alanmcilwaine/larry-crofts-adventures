@@ -49,7 +49,7 @@ public class RobotMovementTest {
     GameBoard gameBoard = Mock.getGameBoard();
 
     Player player = gameBoard.getGameState().player();
-    gameBoard.addRobotAtLocation(0,4);
+    gameBoard.addRobotAtLocation(0,0);
     List<Robot> robots = gameBoard.getGameState().robots();
     Robot track = robots.getFirst();
 
@@ -78,7 +78,7 @@ public class RobotMovementTest {
     GameBoard gameBoard = Mock.getGameBoard();
 
     Player player = gameBoard.getGameState().player();
-    gameBoard.addRobotAtLocation(2,2);
+    gameBoard.addRobotAtLocation(0,0);
     List<Robot> robots = gameBoard.getGameState().robots();
     Robot track = robots.getFirst();
 
