@@ -13,7 +13,6 @@ public class MovableBoxTest {
   @Test
   public void boxPushOpen() {
     var gameboard = Mock.getGameBoard();
-
     var player = gameboard.getGameState().player();
 
     gameboard.action(Direction.DOWN);

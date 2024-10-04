@@ -9,5 +9,13 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 public interface ActorPath {
   // TODO: Gotta decide if we want more than one paths
 
-  void doMove(Direction d, GameBoard b);
+  void doMove(Actor a, Direction d, GameBoard b);
+}
+
+class UpNDown implements ActorPath {
+  int stepCount;
+  Direction d = Direction.UP;
+  public void doMove(Actor a, Direction d, GameBoard b) {
+
+  }
 }
