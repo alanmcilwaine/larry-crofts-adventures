@@ -1,5 +1,6 @@
 package nz.ac.wgtn.swen225.lc.domain.DomainTest;
 
+import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
@@ -34,7 +35,8 @@ public class Mock {
      * rcd is red closed door, rk is red key, bk is blue key,
      * bcd is black closed door,
      * e is exit, le is locked exit,
-     * t is treasure, i is info.
+     * t is treasure, i is info,
+     * mb is movableBox
      *
      * @return mocked game board
      */
@@ -100,6 +102,5 @@ public class Mock {
         l.get(4).get(2).item = new Wall();
         l.get(4).get(3).item = new Wall();
     }
-
 
 }

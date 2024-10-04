@@ -43,6 +43,9 @@ public class Player implements Actor {
         return playerFacing;
     }
 
+    @Override
+    public void setActorFacing(Direction direction) { this.playerFacing = direction; }
+
     public List<Item> getTreasure() {
         return List.copyOf(treasure);
     }
@@ -65,39 +68,26 @@ public class Player implements Actor {
         GameBoard.domainLogger.log(Level.INFO, String.format("Player has %s treasure", treasure.size()));
     }
 
-
     @Override
-    public void doMove(Direction direction, GameBoard gameBoard) {
+    public void doMove(Direction direction, GameBoard gameBoard, Tile<Item> current, Tile<Item> next) {
         if(Objects.isNull(this.gameBoard)) {
             this.gameBoard = gameBoard; // not ideal, but to support extended features.
         }
         if (direction.equals(Direction.NONE)) return;
 
         this.playerFacing = direction;
+
         GameBoard.domainLogger.log(Level.INFO, "Player is facing:" + playerFacing + " should try to move " + playerFacing);
-        var currentTile = findTileInSpecificLocation(gameBoard, location);
-        Location nextLocation = direction.act(this.location);
 
-        if(locationIsValid(nextLocation, gameBoard)) {
+        if (!next.canStepOn(this) || next.item instanceof MovableBox m && !m.attemptMove(direction, gameBoard)) { return; }
+        actOnTile(direction, gameBoard, current, next);
 
-            Tile<Item> nextTile = findTileInSpecificLocation(gameBoard, nextLocation);
+        GameBoard.domainLogger.log(Level.INFO, "Player is at:" + location + " after moving " + direction);
 
-            if (nextTile.canStepOn(this)) {
-                currentTile.onExit(this);
-                nextTile.onEntry(this);
-                if(!(nextTile.item instanceof TeleportItem)){
-                    updateActorLocation(nextLocation);
-                }
-                GameBoard.domainLogger.log(Level.INFO, "Player is at:" + location + " after moving " + direction);
-            } else {
-                GameBoard.domainLogger.log(Level.INFO, "Player tried to move to but blocked:" + nextLocation);
-            }
-            if(gameBoard.getGameState().robots().stream().anyMatch((x)->x.getLocation().equals(this.location))){
-                isDead = true;
-                gameBoard.onGameOver();
-            }
-        } else {
-            GameBoard.domainLogger.log(Level.INFO, "Player tried to move to invalid location:" + nextLocation);
+        // check for game over
+        if(gameBoard.getGameState().robots().stream().anyMatch((x)->x.getLocation().equals(this.location))){
+            die();
+            gameBoard.onGameOver();
         }
     }
 
@@ -121,6 +111,11 @@ public class Player implements Actor {
     public void setNextLevel(boolean nextLevel) {
         this.nextLevel = nextLevel;
     }
+
+    /**
+     * Kills the player
+     */
+    public void die() { isDead = true; }
 
     @Override
     public String toString() { return "Player"; }

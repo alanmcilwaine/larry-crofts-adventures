@@ -9,6 +9,7 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Util;
+import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,7 +66,7 @@ public class GameBoard {
     }
 
     private void playerMove(Direction direction, GameBoard gameBoard) {
-        player.doMove(direction, gameBoard);
+        player.attemptMove(direction, gameBoard);
     }
 
     public int getWidth() {
@@ -137,6 +138,17 @@ public class GameBoard {
     //TODO
     public void onGameOver() {
         //throw new IllegalArgumentException("Game Over"); // temporary
+    }
+
+    /**
+     * Calls the next level GameBoard from Persistency.
+     * It uses the current board's level number and passes is it to Persistency's
+     * loadGameBoard method.
+     * @return returns a new GameBoard
+     */
+    public GameBoard nextLevel() {
+        int next = level + 1;
+        return Persistency.loadGameBoard(next);
     }
 
     private static void attach(GameStateObserver ob) {
