@@ -14,15 +14,17 @@ import java.awt.*;
 public class ImageImplement{
     // App's jpanel called game in App
     private JPanel jpanel;
-    private BackgroundImplement backgroundImplement;
     private static final int IMAGE_SIZE = 30;
     private static final int BUFFER_SIZE = 5;
+    private BackgroundImplement backgroundImplement;
+    private InfoImplement info;
 
 
     ImageImplement(JPanel jpanel) {
         this.jpanel = jpanel;
         this.jpanel.setDoubleBuffered(true);
         backgroundImplement = new BackgroundImplement();
+        info = new InfoImplement();
         new SoundEffectImplement().playMusic();
 
     }
@@ -39,9 +41,14 @@ public class ImageImplement{
      * draw the image in each game board to the jpanel.
      */
     public void drawImages(GameState gameState, Graphics g){
+        info.fillAction(g, gameState);
         backgroundImplement.drawBackGround(jpanel, g);
         drawItemsTile(gameState, g);
         drawActors(gameState, g);
+        info.locationMatch(gameState);
+        WinLoseImplement.drawWinLose(gameState, g);
+
+
     }
 
     /**
@@ -56,7 +63,7 @@ public class ImageImplement{
             drawOneImage("Tile",
                     tile.location.x() - player.getLocation().x(),
                     tile.location.y() - player.getLocation().y(),
-                    jpanel, g);
+                    g);
 
             // items on the tile
             listTile.stream()
@@ -64,7 +71,7 @@ public class ImageImplement{
                     .forEach(t -> drawOneImage(t.getItemOnTile(),
                             t.location.x() - player.getLocation().x(),
                             t.location.y() - player.getLocation().y(),
-                            jpanel, g));
+                            g));
         }));
 
     }
@@ -75,22 +82,25 @@ public class ImageImplement{
     public void drawActors(GameState gameState, Graphics g){
         // player
         Player player = gameState.player();
-        drawOneImage(player.toString(), 0, 0, jpanel, g);
+        drawOneImage(player.toString(), 0, 0, g);
 
         // robots
         List<Robot> robots = gameState.robots();
         robots.forEach(robot -> drawOneImage(robot.toString(),
                 robot.getLocation().x() - player.getLocation().x(),
-                robot.getLocation().y() - player.getLocation().y(), jpanel, g));
+                robot.getLocation().y() - player.getLocation().y(), g));
 
     }
 
     /**
      * draw one image
      */
-    public void drawOneImage(String imageName, int x, int y, JPanel jpanel, Graphics g){
+    public void drawOneImage(String imageName, int x, int y, Graphics g){
+
+
         g.drawImage(Img.INSTANCE.getImgs(imageName + ".png"), (x + BUFFER_SIZE) * IMAGE_SIZE,
                 (y + BUFFER_SIZE) * IMAGE_SIZE, jpanel);
+        }
 
-    }
+
 }
