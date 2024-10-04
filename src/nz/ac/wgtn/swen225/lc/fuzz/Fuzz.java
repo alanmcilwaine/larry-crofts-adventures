@@ -3,6 +3,7 @@ package nz.ac.wgtn.swen225.lc.fuzz;
 import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.app.Command;
 import nz.ac.wgtn.swen225.lc.app.Controller;
+import nz.ac.wgtn.swen225.lc.app.Action;
 import nz.ac.wgtn.swen225.lc.domain.DomainTest.GameItemTest;
 import nz.ac.wgtn.swen225.lc.domain.DomainTest.PlayerMoveTest;
 import nz.ac.wgtn.swen225.lc.domain.DomainTest.RobotMovementTest;
@@ -12,7 +13,6 @@ import nz.ac.wgtn.swen225.lc.recorder.RecorderTests;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
-import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,6 +49,9 @@ public class Fuzz {
         );
     }
 
+    /**
+     * Creates an implementation of App that allows us to auto test our code
+     */
     static void fuzzTest(){
         FuzzController fuzzController = new FuzzController();
         List<Command> commands = new ArrayList<>();
@@ -77,29 +80,25 @@ public class Fuzz {
         SwingUtilities.invokeLater(appCreator);
     }
 
-    static void saveInputs(List<Command> commands, int level){
-        Persistency.saveCommands(commands, level);
-    }
     /**
      * Creates a fake controller that generates random inputs
      */
     static class FuzzController extends Controller {
         void randomizeInputs(){
-            int keyPressed = randomKey();
+            Action keyPressed = randomKey();
             keyLogger.add(keyPressed);
             actionsPressed.getOrDefault(keyPressed, ()->{}).run();
 
 
-            int keyReleased = randomKey();
+            Action keyReleased = randomKey();
             keyLogger.add(keyReleased);
             actionsReleased.getOrDefault(keyReleased, ()->{}).run();
         }
 
-        int randomKey(){
-            return keys.get((int) (Math.random()*3.99));
+        Action randomKey() {
+            return List.of(Action.Up, Action.Down, Action.Left, Action.Right).get((int) (Math.random() * 4));
         }
-        List<Integer> keys = List.of(KeyEvent.VK_W,KeyEvent.VK_S,KeyEvent.VK_A,KeyEvent.VK_D);
-        List<Integer> keyLogger = new ArrayList<>();
+        List<Action> keyLogger = new ArrayList<>();
     }
 
 
