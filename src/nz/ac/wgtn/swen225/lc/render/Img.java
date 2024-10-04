@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * store all the images
  */
-enum Img{
+public enum Img{
     INSTANCE;
 
     // store all the image name with the type Image
@@ -23,18 +23,25 @@ enum Img{
      * load all the images from a folder and save to the map.
      */
     public void loadImage() {
+        int size = ImageImplement.IMAGE_SIZE;
        File imageFolder = new File("AllItemsImages");
        File[] imageFiles = imageFolder.listFiles();
         assert imageFiles != null;
         for(File file: imageFiles){
            try{
-               imageToName.put(file.getName(), ImageIO.read(file));
+               Image originalImage = ImageIO.read(file);
+               Image resizedImage = resizeImage(originalImage, size, size);
+               imageToName.put(file.getName(), resizedImage);
            }
            catch (IOException e){
                throw new Error("Failed to load image: " + file.getName());
            }
 
        }
+    }
+
+    public Image resizeImage(Image originalImage, int width, int height) {
+        return originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
     }
 
     /**

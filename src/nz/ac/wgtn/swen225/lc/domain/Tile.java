@@ -39,7 +39,7 @@ public class Tile<T extends Item> {
         if (!canStepOn(actor)) {
             throw new IllegalArgumentException("Can't move into tile.");
         }
-
+        //TODO seems not reasonable
         if (actor instanceof Player) {
             item.onTouch(actor, this);
         }

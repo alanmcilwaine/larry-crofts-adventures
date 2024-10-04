@@ -9,7 +9,7 @@ import java.awt.*;
  * @author Alan McIlwaine 300653905
  */
 public class GamePanel extends JPanel{
-    private App app;
+    private final App app;
 
     /**
      *  Create a new JPanel with 600x600 size with the default layout manager.

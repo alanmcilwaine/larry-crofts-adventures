@@ -20,9 +20,9 @@ import nz.ac.wgtn.swen225.lc.render.ImageImplement;
  */
 public class App extends AppFrame implements AppInterface{
     // Window is made up of two main panels
-    private GamePanel game; //Don't generate here as controller could be generated in constructor.
-    private UIPanel ui;
-    private Menu menu = new Menu(this);
+    private final GamePanel game; //Don't generate here as controller could be generated in constructor.
+    private final UIPanel ui;
+    private final Menu menu = new Menu(this);
 
     // Colours for the UI
     public static final Color FONT = new Color(31, 30, 25);
@@ -111,6 +111,15 @@ public class App extends AppFrame implements AppInterface{
         controller.movementWaitTime -= TICK_RATE;
     }
 
+    /**
+     * Saves a list of inputs to a JSON file.
+     * @param commands List of inputs.
+     * @param level What level the inputs were made on.
+     */
+    public static void saveInputs(List<Command> commands, int level) {
+        Persistency.saveCommands(commands, level);
+    }
+
 
     @Override
     public void updateGraphics(){
@@ -158,4 +167,5 @@ public class App extends AppFrame implements AppInterface{
         }
         return "";
     }
+
 }

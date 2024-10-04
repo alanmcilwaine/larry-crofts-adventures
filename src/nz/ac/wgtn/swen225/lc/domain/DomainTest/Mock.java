@@ -1,5 +1,6 @@
 package nz.ac.wgtn.swen225.lc.domain.DomainTest;
 
+import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
@@ -18,21 +19,24 @@ public class Mock {
     /**
      * Get a mock game board with layout:
      * <br>
-     * "f f w w p"
+     * "f f f f f f"
      * <br>
-     * "f rod f rcd f"
+     * "f f w w p f"
      * <br>
-     * "f f f t f "
+     * "f rod f rcd f f"
      * <br>
-     * "f rk f bk f"
+     * "f f f t f f"
      * <br>
-     * "f bcd f le i";
+     * "f rk f bk f f"
+     * <br>
+     * "f bcd f le i f";
      * <br>
      * w is wall, p is player, rod is red opened door,
      * rcd is red closed door, rk is red key, bk is blue key,
      * bcd is black closed door,
      * e is exit, le is locked exit,
-     * t is treasure, i is info.
+     * t is treasure, i is info,
+     * mb is movableBox
      *
      * @return mocked game board
      */
@@ -54,8 +58,8 @@ public class Mock {
     }
 
     private static GameBoard constructGameBoard() {
-        int width = 5;
-        int height = 5;
+        int width = 6;
+        int height = 6;
         int level = 1;
         int timeLeft = 999;
 
@@ -72,9 +76,9 @@ public class Mock {
 
     private static List<List<Tile<Item>>> constructTiles() {
         List<List<Tile<Item>>> t = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             ArrayList<Tile<Item>> row = new ArrayList<>();
-            for (int j = 0; j < 5; j++) {
+            for (int j = 0; j < 6; j++) {
                 row.add(new Tile<>(new NoItem(), new Location(j, i)));
             }
             t.add(row);
@@ -98,6 +102,5 @@ public class Mock {
         l.get(4).get(2).item = new Wall();
         l.get(4).get(3).item = new Wall();
     }
-
 
 }
