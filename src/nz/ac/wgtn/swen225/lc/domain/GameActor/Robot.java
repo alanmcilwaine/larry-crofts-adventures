@@ -32,6 +32,8 @@ public abstract class Robot implements Actor {
     this.robotFacing = dir;
   }
 
+  public void setActorPath(ActorPath actorPath) { this.actorPath = actorPath; }
+
   public void update(GameBoard gameBoard) {
     attemptMove(this.robotFacing, gameBoard);
   }
