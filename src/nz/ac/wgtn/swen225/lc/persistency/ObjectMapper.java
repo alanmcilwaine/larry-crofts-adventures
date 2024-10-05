@@ -31,6 +31,10 @@ public class ObjectMapper {
         itemConstructors.put("T", color -> new Treasure());
         itemConstructors.put("UD", UnLockedDoor::new);
         itemConstructors.put("W", color -> new Wall());
+        itemConstructors.put("M", color -> new Mirror());
+        itemConstructors.put("Tu", color -> new Tube());
+        itemConstructors.put("B", color -> new Button());
+        itemConstructors.put("LI", color -> new LaserInput());
 
         gameItems.put("Exit", "X");
         gameItems.put("Info", "I");
@@ -41,8 +45,14 @@ public class ObjectMapper {
         gameItems.put("Treasure", "T");
         gameItems.put("UnLockedDoor", "UD");
         gameItems.put("Wall", "W");
-        gameItems.put("OneWayTeleport", "TP");
-        gameItems.put("MovableBox", "MB");
+        gameItems.put("OneWayTeleport", "TP"); //Special case (has own creator)
+        gameItems.put("MovableBox", "MB"); //Special case (has own creator)
+        gameItems.put("Crate", "C"); //Special case (has own creator)
+        gameItems.put("Tube", "Tu"); 
+        gameItems.put("LaserSource", "L"); //Special case (has own creator)
+        gameItems.put("Mirror", "M");
+        gameItems.put("Button", "B");
+        gameItems.put("LaserInput", "LI");
     }
 
     /**
@@ -144,17 +154,18 @@ public class ObjectMapper {
     
 
     /**
-     * Read the given GameState object as a JSON format to a file.
+     * Read the given JSON string and return a GameBoard object.
      *
      * @author zhoudavi1 300652444
      * @param json The string to be converted to a GameState object.
-     * @return GameState The GameState object to be loaded.
+     * @return GameBoard The GameBoard made from the JSON string.
      */
     public GameBoard convertJSONtoGameBoard(String json) {
         // Parse board
         List<List<Tile<Item>>> board = new ArrayList<>();
         Player player = null;
         List<Robot> robots = new ArrayList<>();
+        List<MovableBox> moveableBoxes = new ArrayList<>();
     
         // Find the board section
         int boardStart = json.indexOf("\"board\": [");
@@ -171,8 +182,26 @@ public class ObjectMapper {
             for (int x = 0; x < cellStrings.length; x++) {
                 String cellCode = cellStrings[x].replace("\"", "").trim(); // Trim whitespaces
                 String[] parts = cellCode.split("-"); // Find the dash to indicate entity (Player or Robot)
-                Item item = createItemFromCode(parts[0]);
-    
+                Item item = null;
+                //Check for moveable box actor (Special case 1)
+                if (parts[0].equals("MB")) {
+                    moveableBoxes.add(new MovableBox(x, y));
+                }
+
+                //Check for crate actor (Special case 2)
+                else if (parts[0].equals("C")) {
+                    moveableBoxes.add(new Crate(x, y));
+                }
+
+                //Check for laser source (Special case 3)
+                else if(parts[0].startsWith("L->")){
+                    String direction = parts[0].substring(2);
+                    new LaserSource(returnDirection(direction));
+                }
+                
+                else{
+                    item = createItemFromCode(parts[0]);
+                }
                 // Check if the cell contains the player (-P)
                 if (parts.length > 1 && parts[1].equals("P")) {
                     player = new Player(new Location(x, y));
@@ -216,10 +245,15 @@ public class ObjectMapper {
         int height = board.size();
     
         return new GameBoardBuilder().addBoard(board).addBoardSize(width, height).addTimeLeft(timeLimit)
-                .addTreasure(totalTreasure).addLevel(levelNumber).addPlayer(player).addRobots(robots).build();
+                .addTreasure(totalTreasure).addLevel(levelNumber).addPlayer(player).addRobots(robots).addBoxes(moveableBoxes).build();
     }
 
-    // Helper method to extract values
+    /**
+     * helper method to extract values from a JSON string
+     * @param jsonString The JSON string to extract the value from
+     * @param key The key to search for
+     * @return String The value associated with the key
+     */
     private String extractValue(String jsonString, String key) {
         int keyStart = jsonString.indexOf(key);
         if (keyStart == -1) {
@@ -267,7 +301,12 @@ public class ObjectMapper {
         return actions;
     }
     
-    // Helper method to get a code for an item
+    /**
+     * Convert an item to a string code for saving to JSON.
+     * @author zhoudavi1 300652444
+     * @param item The item to be converted.
+     * @return String The string code for the item.
+     */
     public String gameItemCode(Item item) {
         // Get the base code from the item class name
         String itemClassName = item.getClass().getSimpleName();
@@ -276,6 +315,16 @@ public class ObjectMapper {
         if (baseCode == null) {
             throw new IllegalArgumentException("Unknown item: " + itemClassName);
         }
+
+        //Special case for OneWayTeleport
+        if (item instanceof OneWayTeleport tp) {
+            return baseCode + "(" + tp.destination().x() + "@" + tp.destination().y() + ")";
+        }
+
+        //Special case for LaserSource
+        //if (item instanceof LaserSource laserSource) {
+           // return baseCode + "->" + laserSource.direction();
+        //}
     
         // Add color code if the item has a color
         String colorCode = "";
@@ -289,7 +338,12 @@ public class ObjectMapper {
         return baseCode + colorCode;
     }
     
-    //Helper methdo to get color code
+    /**
+     * Get the color code for an item color.
+     * @author zhoudavi1 300652444
+     * @param color The color to get the code for.
+     * @return String The color code.
+     */
     private String getColorCode(ItemColor color) {
         // Map the ItemColor to the appropriate code
         return switch (color) {
@@ -299,24 +353,21 @@ public class ObjectMapper {
         };
     }
     
-
+    /**
+     * Create an item from a string code for loading from JSON.
+     * @author zhoudavi1 300652444
+     * @param code The string code to be converted.
+     * @param x The x-coordinate of the item.
+     * @param y The y-coordinate of the item.
+     * @return Item The item created from the code.
+     */
     private Item createItemFromCode(String code) {
         //Special case for TP as it takes a location
         if (code.startsWith("TP(")) {
+            System.out.println(code);
             String location = code.substring(3, code.indexOf(")"));
             Location l = locationMaker(location);
             return new OneWayTeleport(l);
-        }
-
-        //Special case 2 for laser creator
-        //else if(code.startsWith("L->")){
-            //String direction = code.substring(2);
-            //return new LaserCreator(returnDirection(direction));
-        //}
-
-        //Check for moveable box actor
-        if (code.equals("MB")) {
-            return new MovableBox(new Location(0, 0));
         }
 
         // Split the code into the main item and the optional color code
@@ -347,23 +398,41 @@ public class ObjectMapper {
         return constructor.apply(color);
     }
 
+    /**
+     * Create an default Info item for the board.
+     * @author zhoudavi1 300652444
+     * @return Item The Info item.
+     */
     private Item createInfo() {
         return new Info("Info");
     }
 
+    /**
+     * Create a location from a string code for loading from JSON.
+     * @author zhoudavi1 300652444
+     * @param location The string code to be converted.
+     * @return Location The location created from the code.
+     */
     public Location locationMaker(String location){
-        String[] coordinates = location.split(",");
+        String[] coordinates = location.split("@");
         int x = Integer.parseInt(coordinates[0]);
         int y = Integer.parseInt(coordinates[1]);
         return new Location(x, y);
     }
 
+    /**
+     * Create a direction from a string code for loading from JSON.
+     * @author zhoudavi1 300652444
+     * @param direction The string code to be converted.
+     * @return Direction The direction created from the code.
+     */
     public Direction returnDirection(String direction){
         return switch(direction){
             case "Left" -> Direction.LEFT;
             case "Right" -> Direction.RIGHT;
             case "Up" -> Direction.UP;
             case "Down" -> Direction.DOWN;
+            case "None" -> Direction.NONE;
             default -> throw new IllegalStateException("Unexpected value: " + direction);
         };
     }

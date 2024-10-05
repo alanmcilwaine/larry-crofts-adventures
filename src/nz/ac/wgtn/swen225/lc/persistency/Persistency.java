@@ -3,8 +3,8 @@ package nz.ac.wgtn.swen225.lc.persistency;
 import java.io.*;
 import java.util.List;
 import nz.ac.wgtn.swen225.lc.app.Command;
-import nz.ac.wgtn.swen225.lc.recorder.Recorder;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
+import nz.ac.wgtn.swen225.lc.recorder.Recorder;
 
 
 
@@ -71,6 +71,16 @@ public class Persistency{
         }
     }
 
+    /**
+     * Generates a unique filename by adding a number to the end of the filename.
+     * If the filename already exists, it will keep adding numbers until it finds a unique filename.
+     * For example, if filename is "level1.json" and it already exists, it will return "level1.1.json".
+     * If "level1.1.json" already exists, it will return "level1.2.json", and so on.
+     *
+     * @author zhoudavi1 300652444 
+     * @param filename The filename to be made unique.
+     * @return String A unique filename.
+     */
     public static String uniqueFilename(String filename){
         // check if the filename already exists
         File file = new File(filename);

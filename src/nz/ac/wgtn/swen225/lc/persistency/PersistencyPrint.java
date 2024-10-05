@@ -1,6 +1,8 @@
 package nz.ac.wgtn.swen225.lc.persistency;
 
-import nz.ac.wgtn.swen225.lc.app.Command;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.*;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
@@ -8,10 +10,6 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PersistencyPrint {
     public static void main(String[] args) throws IOException {
@@ -35,7 +33,7 @@ public class PersistencyPrint {
         board.get(1).get(3).item = new Key(ItemColor.RED);
         board.get(3).get(3).item = new LockedDoor(ItemColor.RED);
         board.get(2).get(2).item = new Info("Hello chap!");
-        board.get(2).get(4).item = new MovableBox(new Location(2, 4));
+        board.get(2).get(4).item = new OneWayTeleport(new Location(2, 4));
         
         //Treasure
         board.get(3).get(2).item = new Treasure();
