@@ -3,6 +3,9 @@ package nz.ac.wgtn.swen225.lc.domain;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * A logger for domain debugging and monitoring.
+ */
 public enum DomainLogger {
     LOGGER;
 
@@ -10,7 +13,7 @@ public enum DomainLogger {
 
     DomainLogger() {
         this.logger = Logger.getLogger("Domain");
-        //this.logger.setLevel(Level.OFF);
+        this.logger.setLevel(Level.OFF);
     }
 
     public Logger getLogger() {

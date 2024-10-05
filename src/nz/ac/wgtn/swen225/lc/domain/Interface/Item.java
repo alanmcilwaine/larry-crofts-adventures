@@ -4,6 +4,7 @@ import nz.ac.wgtn.swen225.lc.domain.Tile;
 
 /**
  * Item on top of tile.
+ * @author Yee Li, Maria Louisa Carla Parinas
  */
 public interface Item {
 

@@ -1,20 +1,28 @@
 package nz.ac.wgtn.swen225.lc.domain.Utilities;
 
+import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A game board builder.
+ * All entities on game board shall meet certain rules.
+ */
 public class GameBoardBuilder {
     private List<List<Tile<Item>>> board;
 
     private Player player;
 
-    private List<Robot> robots;
+    private List<Robot> robots = new ArrayList<>();
+
+    private List<MovableBox> boxes = new ArrayList<>();
 
     private int timeLeft = -1;
 
@@ -54,6 +62,12 @@ public class GameBoardBuilder {
         return this;
     }
 
+    public GameBoardBuilder addBoxes(List<MovableBox> boxes) {
+        Util.checkNull(boxes, String.format("%s is null.", "boxes"));
+        this.boxes = boxes;
+        return this;
+    }
+
     public GameBoardBuilder addTimeLeft(int timeLeft) {
         Util.checkNegative("Time Left", timeLeft);
         this.timeLeft = timeLeft;
@@ -81,6 +95,7 @@ public class GameBoardBuilder {
         return this;
     }
 
+
     public List<List<Tile<Item>>> getBoard() {
         return board;
     }
@@ -89,9 +104,9 @@ public class GameBoardBuilder {
         return player;
     }
 
-    public List<Robot> getRobots() {
-        return robots;
-    }
+    public List<Robot> getRobots() { return robots; }
+
+    public List<MovableBox> getBoxes() { return boxes; }
 
     public int getTimeLeft() {
         return timeLeft;

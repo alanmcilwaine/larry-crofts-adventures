@@ -10,6 +10,10 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import java.util.Collection;
 import java.util.logging.Level;
 
+/**
+ * Locked Exit on tile
+ * @author Yee Li
+ */
 public record LockedExit() implements Item, GameStateObserver {
     @Override
     public boolean blockActor(Actor actor) {

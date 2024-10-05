@@ -5,7 +5,16 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 
+/**
+ * Exit on tile
+ * @author Yee Li
+ */
 public record Exit() implements Item {
+
+    @Override
+    public boolean blockActor(Actor actor) {
+        return !(actor instanceof Player); // other entities cannot enter tile
+    }
 
     @Override
     public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {
