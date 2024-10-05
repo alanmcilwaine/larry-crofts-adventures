@@ -44,8 +44,11 @@ public class PersistencyPrint {
         Player player = new Player(new Location(1, 1));
         List<Robot> robots = new ArrayList<>();
         robots.add(new KillerRobot(2, 3));
+
+        List<MovableBox> boxes = new ArrayList<>();
+        boxes.add(new MovableBox(2, 1));
         
-        return new GameBoardBuilder().addBoard(board).addBoardSize(5, 5).addTimeLeft(120).addTreasure(1).addLevel(1).addPlayer(player).addRobots(robots).build();
+        return new GameBoardBuilder().addBoard(board).addBoardSize(5, 5).addTimeLeft(120).addTreasure(1).addLevel(1).addPlayer(player).addRobots(robots).addBoxes(boxes).build();
     }
 
     private static GameBoard testReadJSON() throws IOException{
