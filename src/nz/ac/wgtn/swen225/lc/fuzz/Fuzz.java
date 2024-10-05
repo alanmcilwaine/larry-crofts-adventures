@@ -13,7 +13,6 @@ import nz.ac.wgtn.swen225.lc.recorder.RecorderTests;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,16 +22,10 @@ public class Fuzz {
 
     public static void main(String[] arg){
 
-        //testAllJUnits();
         fuzzTest();
-    }
-
-    /**
-     * Calls all tests
-     */
-    @Test void runTests(){
         testAllJUnits();
     }
+
     /**
      * Uses reflection to find all @Test methods and run them in every test class
      */
@@ -50,14 +43,7 @@ public class Fuzz {
                     try {
                         m.invoke(pt);
                     } catch (IllegalAccessException | InvocationTargetException e) {
-                        // Unwrap the exception thrown by the test method
-                        Throwable cause = e.getCause();
-                        if (cause instanceof IOException) {
-                            System.err.println("Test failed due to IOException: " + cause.getMessage());
-                            cause.printStackTrace();
-                        } else {
-                            throw new RuntimeException(cause); // Rethrow the actual cause
-                        }
+                        throw new RuntimeException(e);
                     }
                 })
         );
@@ -75,9 +61,6 @@ public class Fuzz {
          * This runnable will override tick with our own implementation to test
          */
         Runnable appCreator = () -> new App(fuzzController){
-            {
-                fuzzController.setUpKeyChooser(this);
-            }
             public void tick(){
                 try {
                     fuzzController.randomizeInputs();
@@ -88,7 +71,6 @@ public class Fuzz {
                 }catch (Throwable t){
                     saveInputs(commands, domain.getGameState().level());
                     System.out.println("ERROR CAUGHT BY FUZZ: Was saved as level" + domain.getGameState().level() +"-recording");
-                    t.printStackTrace();
                     throw new Error(t);
                 }
             }
@@ -97,5 +79,27 @@ public class Fuzz {
 
         SwingUtilities.invokeLater(appCreator);
     }
+
+    /**
+     * Creates a fake controller that generates random inputs
+     */
+    static class FuzzController extends Controller {
+        void randomizeInputs(){
+            Action keyPressed = randomKey();
+            keyLogger.add(keyPressed);
+            actionsPressed.getOrDefault(keyPressed, ()->{}).run();
+
+
+            Action keyReleased = randomKey();
+            keyLogger.add(keyReleased);
+            actionsReleased.getOrDefault(keyReleased, ()->{}).run();
+        }
+
+        Action randomKey() {
+            return List.of(Action.Up, Action.Down, Action.Left, Action.Right).get((int) (Math.random() * 4));
+        }
+        List<Action> keyLogger = new ArrayList<>();
+    }
+
 
 }
