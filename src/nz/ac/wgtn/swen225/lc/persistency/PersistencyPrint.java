@@ -106,7 +106,7 @@ public class PersistencyPrint {
         System.out.println("Robot location matches: " + original.getGameState().robots().get(0).getLocation().equals(loadedState.getGameState().robots().get(0).getLocation()));
         System.out.println("Number of treasures matches: " + (original.getGameState().totalTreasure() == loadedState.getGameState().totalTreasure()));
         System.out.println("Number of boxes matches: " + (original.getGameState().boxes().size() == loadedState.getGameState().boxes().size()));
-        
+
         // Compare board
         boolean boardMatches = true;
         for (int y = 0; y < original.getGameState().board().size(); y++) {

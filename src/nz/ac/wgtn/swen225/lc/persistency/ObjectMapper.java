@@ -82,7 +82,7 @@ public class ObjectMapper {
             if (i < stringBoard.size() - 1) {
                 json.append(",\n"); // Comma between rows
             } else {
-                json.append("\n"); // No comma after the last row
+                json.append("\n"); //End of the board
             }
         }
         json.append("  ],\n");
@@ -102,8 +102,8 @@ public class ObjectMapper {
         int x = 0, y = 0;
         for (List<Tile<Item>> row : level.getGameState().board()) {
             for (Tile<Item> tile : row) {
-                if (tile.item instanceof Info) {
-                    info = (Info) tile.item;
+                if (tile.item instanceof Info info1) {
+                    info = info1;
                     x = row.indexOf(tile);
                     y = level.getBoard().indexOf(row);
                 }
@@ -190,17 +190,17 @@ public class ObjectMapper {
                 }
     
                 // Check if the cell contains a robot (-R)
-                if (parts.length > 1 && parts[1].equals("R")) {
+                else if (parts.length > 1 && parts[1].equals("R")) {
                     robots.add(new KillerRobot(x, y));
                 }
 
                 //Check for moveable box
-                if (parts.length > 1 && parts[1].equals("MB")) {
+                else if (parts.length > 1 && parts[1].equals("MB")) {
                     moveableBoxes.add(new MovableBox(x, y));
                 }
 
                 //Check for crate
-                if (parts.length > 1 && parts[1].equals("C")) {
+                else if (parts.length > 1 && parts[1].equals("C")) {
                     moveableBoxes.add(new Crate(x, y));
                 }
 

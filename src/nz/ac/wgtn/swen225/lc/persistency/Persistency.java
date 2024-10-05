@@ -137,7 +137,7 @@ public class Persistency{
             return level;
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+            throw new IllegalArgumentException("File not found");
         }
     }
 
