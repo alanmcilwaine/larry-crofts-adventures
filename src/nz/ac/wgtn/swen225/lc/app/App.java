@@ -24,9 +24,6 @@ public class App extends AppFrame implements AppInterface{
     private final UIPanel ui;
     private final Menu menu = new Menu(this);
 
-    // Colours for the UI
-    public static final Color FONT = new Color(31, 30, 25);
-
     // Window Dimensions
     public static final int WIDTH = 900;
     public static final int HEIGHT = 600;
@@ -41,7 +38,7 @@ public class App extends AppFrame implements AppInterface{
     public GameBoard initialDomain;
     public ImageImplement render;
 
-    public Timer tick = new Timer(TICK_RATE, (unused) -> tick());
+    public Timer tick = new GameTimer(this::tick);
 
     /**
      * App()
@@ -97,6 +94,12 @@ public class App extends AppFrame implements AppInterface{
      * at a separate tick rate so movement isn't sluggish.
      */
     public void tick(){
+        // Next level
+        if (domain.getGameState().player().isNextLevel()) {
+            domain = Persistency.loadGameBoard(domain.getGameState().level() + 1);
+            initialDomain = domain.copyOf();
+        }
+
         // Allow an input every Keys.INPUT_WAIT time
         Command input = Command.None;
         if (controller.movementWaitTime <= 0 && controller.currentCommand() != Command.None) {

@@ -83,7 +83,7 @@ public class UIPanel extends JPanel {
         IntStream.range(0, treasure.size())
                 .boxed()
                 .forEach(i -> {
-                    g.drawImage(Img.INSTANCE.getImgs(treasure.get(i).toString() + ".png"), 45 + (i * 60), 422, this);
+                    g.drawImage(Img.INSTANCE.resizeImage(Img.INSTANCE.getImgs(treasure.get(i).toString() + ".png"), 30, 30), 45 + (i * 60), 425, this);
                 });
     }
 }
