@@ -1,24 +1,25 @@
 package nz.ac.wgtn.swen225.lc.persistency;
 
 import java.io.IOException;
-import java.util.stream.Collectors;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.HashMap;
+import java.util.stream.Collectors;
 import nz.ac.wgtn.swen225.lc.app.Command;
-import nz.ac.wgtn.swen225.lc.domain.GameBoard;
-import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.*;
+import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
+import nz.ac.wgtn.swen225.lc.domain.Tile;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
 public class ObjectMapper {
-    static Map<String, String> gameItems = new HashMap<String, String>();
+    static final Map<String, String> gameItems = new HashMap<>();
     private static final Map<String, Function<ItemColor, Item>> itemConstructors = new HashMap<>(); 
 
     static {
@@ -40,6 +41,8 @@ public class ObjectMapper {
         gameItems.put("Treasure", "T");
         gameItems.put("UnLockedDoor", "UD");
         gameItems.put("Wall", "W");
+        gameItems.put("OneWayTeleport", "TP");
+        gameItems.put("MovableBox", "MB");
     }
 
     /**
@@ -283,7 +286,6 @@ public class ObjectMapper {
         } else if (item instanceof UnLockedDoor unlockedDoor) {
             colorCode = getColorCode(unlockedDoor.itemColor());
         }
-    
         return baseCode + colorCode;
     }
     
@@ -299,6 +301,24 @@ public class ObjectMapper {
     
 
     private Item createItemFromCode(String code) {
+        //Special case for TP as it takes a location
+        if (code.startsWith("TP(")) {
+            String location = code.substring(3, code.indexOf(")"));
+            Location l = locationMaker(location);
+            return new OneWayTeleport(l);
+        }
+
+        //Special case 2 for laser creator
+        //else if(code.startsWith("L->")){
+            //String direction = code.substring(2);
+            //return new LaserCreator(returnDirection(direction));
+        //}
+
+        //Check for moveable box actor
+        if (code.equals("MB")) {
+            return new MovableBox(new Location(0, 0));
+        }
+
         // Split the code into the main item and the optional color code
         String[] parts = code.split("#");
         String itemCode = parts[0];  // First part is the item code
@@ -312,9 +332,9 @@ public class ObjectMapper {
         // If there's a second part, interpret it as the color
         if (parts.length > 1) {
             switch (parts[1]) {
-                case "B": color = ItemColor.BLUE; break;
-                case "R": color = ItemColor.RED; break;
-                default: throw new IllegalArgumentException("Unknown color code: " + parts[1]);
+                case "B" -> color = ItemColor.BLUE;
+                case "R" -> color = ItemColor.RED;
+                default -> throw new IllegalArgumentException("Unknown color code: " + parts[1]);
             }
         }
 
@@ -329,6 +349,23 @@ public class ObjectMapper {
 
     private Item createInfo() {
         return new Info("Info");
+    }
+
+    public Location locationMaker(String location){
+        String[] coordinates = location.split(",");
+        int x = Integer.parseInt(coordinates[0]);
+        int y = Integer.parseInt(coordinates[1]);
+        return new Location(x, y);
+    }
+
+    public Direction returnDirection(String direction){
+        return switch(direction){
+            case "Left" -> Direction.LEFT;
+            case "Right" -> Direction.RIGHT;
+            case "Up" -> Direction.UP;
+            case "Down" -> Direction.DOWN;
+            default -> throw new IllegalStateException("Unexpected value: " + direction);
+        };
     }
 
     /**
