@@ -40,7 +40,7 @@ public enum Img{
        }
     }
 
-    public Image resizeImage(Image originalImage, int width, int height) {
+    public static Image resizeImage(Image originalImage, int width, int height) {
         return originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
     }
 
