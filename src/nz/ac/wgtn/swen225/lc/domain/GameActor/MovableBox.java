@@ -27,24 +27,8 @@ public class MovableBox implements Actor {
 
   @Override
   public void doMove(Direction direction, GameBoard gameBoard, Tile<Item> current, Tile<Item> next) {
-    // if can't be stepped on then leave function and not do anything
-    if (!next.canStepOn(this)) { return; }
-
     actOnTile(direction, gameBoard, current, next);
-
-    // free up the current one and occupy the next space.
-//    current.item = new NoItem();
-//    next.item = this;
   }
-
-//  @Override
-//  public boolean blockActor(Actor actor) {
-//    // if it's player, technically doesn't block since we can move it,
-//    return !(actor instanceof Player);
-//  }
-//
-//  @Override
-//  public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {}
 
   @Override
   public void updateActorLocation(Location location) {

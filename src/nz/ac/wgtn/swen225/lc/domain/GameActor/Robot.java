@@ -23,9 +23,8 @@ public abstract class Robot implements Actor {
   }
 
   @Override
-  public Direction getActorFacing() {
-    return robotFacing;
-  }
+  public Direction getActorFacing() { return robotFacing; }
+  public ActorPath getActorPath() { return actorPath; }
 
   @Override
   public void setActorFacing(Direction dir) { this.robotFacing = dir; }
@@ -33,14 +32,16 @@ public abstract class Robot implements Actor {
   public void setActorPath(ActorPath actorPath) { this.actorPath = actorPath; }
 
   public void update(GameBoard gameBoard) {
-    attemptMove(this.robotFacing, gameBoard);
+    if (!attemptMove(this.robotFacing, gameBoard)) {
+      this.robotFacing = actorPath.getDir2();
+      actorPath.switchDirection();
+    }
   }
 
   @Override
   public void doMove(Direction direction, GameBoard gameBoard, Tile<Item> current, Tile<Item> next) {
     // TODO make it have a deterministic pattern, using states probably
     actorPath.doMove(this, gameBoard, current, next);
-
   }
 
   @Override
