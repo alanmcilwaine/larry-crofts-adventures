@@ -73,6 +73,7 @@ public class PersistencyPrint {
         System.out.println("Number of robots matches: " + (originalState.getGameState().robots().size() == convertedBoard.getGameState().robots().size()));
         System.out.println("Robot location matches: " + originalState.getGameState().robots().get(0).getLocation().equals(convertedBoard.getGameState().robots().get(0).getLocation()));
         System.out.println("Number of treasures matches: " + (originalState.getGameState().totalTreasure() == convertedBoard.getGameState().totalTreasure()));
+        System.out.println("Number of boxes matches: " + (originalState.getGameState().boxes().size() == convertedBoard.getGameState().boxes().size()));
 
         // Compare board
         boolean boardMatches = true;
@@ -104,7 +105,8 @@ public class PersistencyPrint {
         System.out.println("Number of robots matches: " + (original.getGameState().robots().size() == loadedState.getGameState().robots().size()));
         System.out.println("Robot location matches: " + original.getGameState().robots().get(0).getLocation().equals(loadedState.getGameState().robots().get(0).getLocation()));
         System.out.println("Number of treasures matches: " + (original.getGameState().totalTreasure() == loadedState.getGameState().totalTreasure()));
-        
+        System.out.println("Number of boxes matches: " + (original.getGameState().boxes().size() == loadedState.getGameState().boxes().size()));
+
         // Compare board
         boolean boardMatches = true;
         for (int y = 0; y < original.getGameState().board().size(); y++) {

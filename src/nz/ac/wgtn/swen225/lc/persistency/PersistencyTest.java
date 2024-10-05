@@ -18,12 +18,10 @@ import java.util.List;
 
 public class PersistencyTest {
     private GameBoard originalState;
-    private ObjectMapper mapper;
 
     @BeforeEach
     public void setUp() {
         originalState = createSampleGameState();
-        mapper = new ObjectMapper();
     }
 
     private static GameBoard createSampleGameState() {
@@ -41,6 +39,7 @@ public class PersistencyTest {
         board.get(1).get(3).item = new Key(ItemColor.RED);
         board.get(3).get(3).item = new LockedDoor(ItemColor.RED);
         board.get(2).get(2).item = new Info("Hello chap!");
+        board.get(2).get(4).item = new OneWayTeleport(new Location(2, 4));
         
         //Treasure
         board.get(3).get(2).item = new Treasure();
@@ -51,12 +50,16 @@ public class PersistencyTest {
         Player player = new Player(new Location(1, 1));
         List<Robot> robots = new ArrayList<>();
         robots.add(new KillerRobot(2, 3));
-        
-        return new GameBoardBuilder().addBoard(board).addBoardSize(5, 5).addTimeLeft(120).addTreasure(1).addLevel(1).addPlayer(player).addRobots(robots).build();
+
+        List<MovableBox> boxes = new ArrayList<>();
+        boxes.add(new MovableBox(2, 1));
+
+        return new GameBoardBuilder().addBoard(board).addBoardSize(5, 5).addTimeLeft(120).addTreasure(1).addLevel(1).addPlayer(player).addRobots(robots).addBoxes(boxes).build();
     }
 
     @Test
     public void testReadJSON() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
         // Convert GameState to JSON
         String json = mapper.saveLeveltoFile(originalState);
 
@@ -70,6 +73,7 @@ public class PersistencyTest {
         assertEquals(originalState.getGameState().robots().size(), convertedBoard.getGameState().robots().size(), "Number of robots should match");
         assertEquals(originalState.getGameState().robots().get(0).getLocation(), convertedBoard.getGameState().robots().get(0).getLocation(), "Robot location should match");
         assertEquals(originalState.getGameState().totalTreasure(), convertedBoard.getGameState().totalTreasure(), "Number of treasures should match");
+        assertEquals(originalState.getGameState().boxes().size(), convertedBoard.getGameState().boxes().size(), "Number of boxes should match");
 
         // Compare board
         for (int y = 0; y < originalState.getGameState().board().size(); y++) {
