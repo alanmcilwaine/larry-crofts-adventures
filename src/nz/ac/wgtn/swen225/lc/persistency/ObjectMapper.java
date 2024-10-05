@@ -49,7 +49,7 @@ public class ObjectMapper {
         gameItems.put("MovableBox", "MB"); //Special case (has own creator)
         gameItems.put("Crate", "C"); //Special case (has own creator)
         gameItems.put("Tube", "Tu"); 
-        gameItems.put("LaserSource", "L"); //Special case (has own creator)
+        //gameItems.put("LaserSource", "L"); //Special case (has own creator)
         gameItems.put("Mirror", "M");
         gameItems.put("Button", "B");
         gameItems.put("LaserInput", "LI");
@@ -194,10 +194,10 @@ public class ObjectMapper {
                 }
 
                 //Check for laser source (Special case 3)
-                else if(parts[0].startsWith("L->")){
-                    String direction = parts[0].substring(2);
-                    new LaserSource(returnDirection(direction));
-                }
+                //else if(parts[0].startsWith("L->")){
+                    //String direction = parts[0].substring(2);
+                    //new LaserSource(returnDirection(direction));
+                //}
                 
                 else{
                     item = createItemFromCode(parts[0]);
