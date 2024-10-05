@@ -181,27 +181,9 @@ public class ObjectMapper {
     
             for (int x = 0; x < cellStrings.length; x++) {
                 String cellCode = cellStrings[x].replace("\"", "").trim(); // Trim whitespaces
-                String[] parts = cellCode.split("-"); // Find the dash to indicate entity (Player or Robot)
-                Item item = null;
-                //Check for moveable box actor (Special case 1)
-                if (parts[0].equals("MB")) {
-                    moveableBoxes.add(new MovableBox(x, y));
-                }
+                String[] parts = cellCode.split("-"); // Find the dash to indicate actors
+                Item item = createItemFromCode(parts[0]);
 
-                //Check for crate actor (Special case 2)
-                else if (parts[0].equals("C")) {
-                    moveableBoxes.add(new Crate(x, y));
-                }
-
-                //Check for laser source (Special case 3)
-                //else if(parts[0].startsWith("L->")){
-                    //String direction = parts[0].substring(2);
-                    //new LaserSource(returnDirection(direction));
-                //}
-                
-                else{
-                    item = createItemFromCode(parts[0]);
-                }
                 // Check if the cell contains the player (-P)
                 if (parts.length > 1 && parts[1].equals("P")) {
                     player = new Player(new Location(x, y));
@@ -211,6 +193,21 @@ public class ObjectMapper {
                 if (parts.length > 1 && parts[1].equals("R")) {
                     robots.add(new KillerRobot(x, y));
                 }
+
+                //Check for moveable box
+                if (parts.length > 1 && parts[1].equals("MB")) {
+                    moveableBoxes.add(new MovableBox(x, y));
+                }
+
+                //Check for crate
+                if (parts.length > 1 && parts[1].equals("C")) {
+                    moveableBoxes.add(new Crate(x, y));
+                }
+
+                //Check for laser source
+                //if (parts.length > 1 && parts[1].equals("L->")) {
+                    //String direction = parts[1].substring(2);
+                    //new LaserSource(returnDirection(direction));
     
                 row.add(new Tile<>(item, new Location(x, y))); // Add the item to the board row
             }
@@ -364,7 +361,6 @@ public class ObjectMapper {
     private Item createItemFromCode(String code) {
         //Special case for TP as it takes a location
         if (code.startsWith("TP(")) {
-            System.out.println(code);
             String location = code.substring(3, code.indexOf(")"));
             Location l = locationMaker(location);
             return new OneWayTeleport(l);
@@ -466,7 +462,18 @@ public class ObjectMapper {
             int robotY = robot.getLocation().y();
             stringBoard.get(robotY).set(robotX, stringBoard.get(robotY).get(robotX) + "-R");
         }
-    
+
+        //Boxes and Crates -MB or -C
+        for (MovableBox box : level.getGameState().boxes()) {
+            int boxX = box.getLocation().x();
+            int boxY = box.getLocation().y();
+            if (box instanceof Crate) {
+                stringBoard.get(boxY).set(boxX, stringBoard.get(boxY).get(boxX) + "-C");
+            } else {
+                stringBoard.get(boxY).set(boxX, stringBoard.get(boxY).get(boxX) + "-MB");
+            }
+        }
+
         return stringBoard;
     }
 }
