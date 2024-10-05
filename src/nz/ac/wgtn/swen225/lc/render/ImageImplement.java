@@ -15,9 +15,9 @@ public class ImageImplement{
     // App's jpanel called game in App
     private JPanel jpanel;
     public static final int IMAGE_SIZE = 70;
-    private static final int BUFFER_SIZE = 3;
-    private static final int xBorder = 230;
-    private static final int yBorder = 230;
+    private static final int BUFFER_SIZE = 5;
+    private static final int xBorder = 260;
+    private static final int yBorder = 260;
     private BackgroundImplement backgroundImplement;
     private InfoImplement info;
 
