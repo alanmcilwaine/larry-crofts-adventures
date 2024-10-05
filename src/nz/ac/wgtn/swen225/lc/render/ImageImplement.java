@@ -15,7 +15,9 @@ public class ImageImplement{
     // App's jpanel called game in App
     private JPanel jpanel;
     public static final int IMAGE_SIZE = 70;
-    private static final int BUFFER_SIZE = 5;
+    private static final int BUFFER_SIZE = 3;
+    private static final int xBorder = 230;
+    private static final int yBorder = 230;
     private BackgroundImplement backgroundImplement;
     private InfoImplement info;
 
@@ -98,8 +100,8 @@ public class ImageImplement{
     public void drawOneImage(String imageName, int x, int y, Graphics g){
 
         if(Math.abs(x) < BUFFER_SIZE && Math.abs(y) < BUFFER_SIZE) {
-            g.drawImage(Img.INSTANCE.getImgs(imageName + ".png"), (x + BUFFER_SIZE) * IMAGE_SIZE,
-                    (y + BUFFER_SIZE) * IMAGE_SIZE, jpanel);
+            g.drawImage(Img.INSTANCE.getImgs(imageName + ".png"), x * IMAGE_SIZE + xBorder,
+                    y * IMAGE_SIZE + yBorder, jpanel);
         }
     }
 

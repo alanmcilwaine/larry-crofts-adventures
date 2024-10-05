@@ -30,8 +30,8 @@ public class InfoImplement {
         Image image = ImageIO.read(new File("BackgroundImage/warning.png"));
         g.setFont(new Font("Monospaced", Font.BOLD, 35));
         g.setColor(new Color(255, 0, 0));
-        g.drawImage(image, 170, 110, null);
-        g.drawString(text, 170, 360);
+        g.drawImage(Img.resizeImage(image, 150, 150), 180, 360, null);
+        g.drawString(text, 160, 520);
 
     }
 
