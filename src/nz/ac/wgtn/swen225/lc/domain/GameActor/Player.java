@@ -77,13 +77,17 @@ public class Player implements Actor {
         if(Objects.isNull(this.gameBoard)) {
             this.gameBoard = gameBoard; // not ideal, but to support extended features.
         }
-        if (direction.equals(Direction.NONE)) return;
+        if (direction.equals(Direction.NONE) || isDead || nextLevel ) return;
 
         this.playerFacing = direction;
 
         GameBoard.domainLogger.log(Level.INFO, "Player is facing:" + playerFacing + " should try to move " + playerFacing);
 
-        if (!next.canStepOn(this) || next.item instanceof MovableBox m && !m.attemptMove(direction, gameBoard)) { return; }
+        MovableBox box = gameBoard.getGameState().boxes()
+                                    .stream().filter(b -> b.getLocation().equals(next.location))
+                                    .findFirst().orElseGet(() -> null);
+
+        if (!next.canStepOn(this) || box != null && !box.attemptMove(direction, gameBoard)) { return; }
         actOnTile(direction, gameBoard, current, next);
 
         GameBoard.domainLogger.log(Level.INFO, "Player is at:" + location + " after moving " + direction);

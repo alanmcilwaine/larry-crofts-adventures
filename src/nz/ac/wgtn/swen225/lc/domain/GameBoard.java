@@ -1,13 +1,16 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
 import nz.ac.wgtn.swen225.lc.domain.GameActor.KillerRobot;
+import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.Crate;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedExit;
 import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Util;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 
@@ -33,6 +36,8 @@ public class GameBoard {
 
     private final List<Robot> robots;
 
+    private final List<MovableBox> boxes;
+
     private final int timeLeft;
 
     private final int level;
@@ -47,6 +52,7 @@ public class GameBoard {
         this.board = builder.getBoard();
         this.player = builder.getPlayer();
         this.robots = builder.getRobots();
+        this.boxes = builder.getBoxes();
         this.timeLeft = builder.getTimeLeft();
         this.level = builder.getLevel();
         this.width = builder.getWidth();
@@ -86,6 +92,10 @@ public class GameBoard {
         robots.add(new KillerRobot(x, y));
     }
 
+    public void addBoxAtLocation(int x, int y) {
+        boxes.add(new MovableBox(x,y));
+    }
+
     /**
      * Moves all the robots in the level
      */
@@ -123,10 +133,16 @@ public class GameBoard {
                                         .map(r -> (Robot) new KillerRobot(r.getLocation().x(), r.getLocation().y()))
                                         .toList();
 
+        List<MovableBox> newBoxes = boxes.stream()
+                                            .map(b -> b instanceof Crate ?
+                                                    new Crate(b.getLocation().x(), b.getLocation().y()) :
+                                                    new MovableBox(b.getLocation().x(), b.getLocation().y()))
+                                            .toList();
+
         // make new board
         return new GameBoardBuilder().addBoard(newBoard).addBoardSize(width, height)
                                     .addLevel(level).addPlayer(new Player(player.getLocation()))
-                                    .addRobots(newRobots).addTimeLeft(timeLeft)
+                                    .addRobots(newRobots).addBoxes(newBoxes).addTimeLeft(timeLeft)
                                     .addTreasure(totalTreasure).build();
     }
 
@@ -136,7 +152,7 @@ public class GameBoard {
      * @return GameState
      */
     public GameState getGameState() {
-        return new GameState(board, player, robots, timeLeft, level, width, height, totalTreasure);
+        return new GameState(board, player, robots, boxes, timeLeft, level, width, height, totalTreasure);
     }
 
     //TODO

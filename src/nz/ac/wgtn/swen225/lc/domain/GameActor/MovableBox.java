@@ -10,11 +10,11 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
 import java.util.logging.Level;
 
-public class MovableBox implements Actor, Item {
+public class MovableBox implements Actor {
   private Location location;
   private Direction wallFacing = Direction.NONE; // set to none on initialization
 
-  public MovableBox(Location location) { this.location = location; }
+  public MovableBox(int x , int y) { this.location = new Location(x, y); }
 
   @Override
   public Location getLocation() { return this.location; }
@@ -33,18 +33,18 @@ public class MovableBox implements Actor, Item {
     actOnTile(direction, gameBoard, current, next);
 
     // free up the current one and occupy the next space.
-    current.item = new NoItem();
-    next.item = this;
+//    current.item = new NoItem();
+//    next.item = this;
   }
 
-  @Override
-  public boolean blockActor(Actor actor) {
-    // if it's player, technically doesn't block since we can move it,
-    return !(actor instanceof Player);
-  }
-
-  @Override
-  public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {}
+//  @Override
+//  public boolean blockActor(Actor actor) {
+//    // if it's player, technically doesn't block since we can move it,
+//    return !(actor instanceof Player);
+//  }
+//
+//  @Override
+//  public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {}
 
   @Override
   public void updateActorLocation(Location location) {

@@ -11,7 +11,7 @@ import java.util.Collection;
  * A game character that moves around.
  * @author Yee Li, Maria Louisa Carla Parinas
  */
-public interface Actor {
+public interface Actor  {
 
     /**
      * @return current location of Actor
