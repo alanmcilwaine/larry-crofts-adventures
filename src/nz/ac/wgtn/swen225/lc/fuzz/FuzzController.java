@@ -16,13 +16,17 @@ class FuzzController extends Controller {
      * For example releasing a key twice before ever pressing it.
      */
     private FuzzKeyChooser keyChooser;
+    int level;
+    App app;
 
     /**
      * Give the key chooser an app so that it can make smart decisions
      * @param app
      */
     void setUpKeyChooser(App app){
-        keyChooser = new FuzzKeyChooser(app);
+        this.app = app;
+        this.level = app.domain.getGameState().level();
+        this.keyChooser = new FuzzKeyChooser(app);
     }
     void randomizeInputs(){
         Action keyPressed = nextKey();
@@ -36,7 +40,20 @@ class FuzzController extends Controller {
     }
 
     Action nextKey() {
+        //Check to see if this last frame we have changed levels
+        changedLevel();
+
         return keyChooser.nextKey();
+    }
+
+    /**
+     * If the level is over we need a new keyChooser
+     */
+    void changedLevel(){
+        if(app.domain.getGameState().level() != level){
+            level = app.domain.getGameState().level();
+            this.keyChooser = new FuzzKeyChooser(app);
+        }
     }
     List<Action> keyLogger = new ArrayList<>();
 }

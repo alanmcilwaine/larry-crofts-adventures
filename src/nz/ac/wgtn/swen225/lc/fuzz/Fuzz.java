@@ -23,8 +23,8 @@ public class Fuzz {
 
     public static void main(String[] arg){
 
+        //testAllJUnits();
         fuzzTest();
-        testAllJUnits();
     }
 
     /**
@@ -88,6 +88,7 @@ public class Fuzz {
                 }catch (Throwable t){
                     saveInputs(commands, domain.getGameState().level());
                     System.out.println("ERROR CAUGHT BY FUZZ: Was saved as level" + domain.getGameState().level() +"-recording");
+                    t.printStackTrace();
                     throw new Error(t);
                 }
             }

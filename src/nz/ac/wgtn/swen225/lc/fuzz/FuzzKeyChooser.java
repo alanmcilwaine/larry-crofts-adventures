@@ -26,7 +26,7 @@ public class FuzzKeyChooser {
                 .stream()
                 .collect(Collectors.toMap(
                         a -> a,                // Key extractor (the Action itself)
-                        this::valueOfMove       // Value extractor (the weight of the action)
+                        a -> 10/valueOfMove(a) // inversely proportional to value of space
                 ));
 
         //Get a random action based on the probability
