@@ -7,15 +7,13 @@ public class GameTimer extends Timer {
         super(App.TICK_RATE, (unused) -> tick.run());
     }
 
-    /*
-    public static void delay(int delay, Runnable r){
-        delay -= App.TICK_RATE;
-        if (delay <= 0) {
-            r.run();
-            delay = initialDelay;
-        }
+    public void onExitTile(Runnable nextLevel){
+        this.stop();
+        Timer exitDelay = new Timer(2000, e -> {
+            nextLevel.run();
+            this.start();
+        });
+        exitDelay.setRepeats(false);
+        exitDelay.start();
     }
-    */
-
-
 }

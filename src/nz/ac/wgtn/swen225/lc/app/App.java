@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 import nz.ac.wgtn.swen225.lc.app.UI.AppFrame;
 import nz.ac.wgtn.swen225.lc.app.UI.Menu;
@@ -20,9 +21,9 @@ import nz.ac.wgtn.swen225.lc.render.ImageImplement;
  */
 public class App extends AppFrame implements AppInterface{
     // Window is made up of two main panels
-    private final GamePanel game; //Don't generate here as controller could be generated in constructor.
-    private final UIPanel ui;
-    private final Menu menu = new Menu(this);
+    private GamePanel game; //Don't generate here as controller could be generated in constructor.
+    private UIPanel ui;
+    private Menu menu = new Menu(this);
 
     // Window Dimensions
     public static final int WIDTH = 900;
@@ -38,7 +39,7 @@ public class App extends AppFrame implements AppInterface{
     public GameBoard initialDomain;
     public ImageImplement render;
 
-    public Timer tick = new GameTimer(this::tick);
+    public GameTimer tick = new GameTimer(this::tick);
 
     /**
      * App()
@@ -47,19 +48,31 @@ public class App extends AppFrame implements AppInterface{
     public App(){
         assert SwingUtilities.isEventDispatchThread();
         controller = new Controller(this);
-        game = new GamePanel(this);
+        game = makePanel();
         ui = new UIPanel(this);
         setupUI();
         startTick();
     }
 
+    /**
+     * Lets the FUZZ make their own controller.
+     * @param c Controller for user inputs
+     */
     public App(Controller c) {
         assert SwingUtilities.isEventDispatchThread();
         controller = c;
-        game = new GamePanel(this);
+        game = makePanel();
         ui = new UIPanel(this);
         setupUI();
         startTick();
+    }
+
+    /**
+     * makeGame()
+     * Builds the game panel, this is here so users can override the paintComponent
+     */
+    public GamePanel makePanel() {
+        return new GamePanel(this);
     }
 
     /**
@@ -75,7 +88,6 @@ public class App extends AppFrame implements AppInterface{
         game.setVisible(true);
     }
 
-
     /**
      * startTick()
      * Starts the main update loop for the program. Packages Domain, Renderer and Recorder should be used here.
@@ -84,7 +96,6 @@ public class App extends AppFrame implements AppInterface{
         domain = Persistency.loadGameBoard(1);
         initialDomain = Persistency.loadGameBoard(1);
         render = ImageImplement.getImageImplement(game);
-
         tick.start();
     }
 
@@ -96,8 +107,7 @@ public class App extends AppFrame implements AppInterface{
     public void tick(){
         // Next level
         if (domain.getGameState().player().isNextLevel()) {
-            domain = Persistency.loadGameBoard(domain.getGameState().level() + 1);
-            initialDomain = domain.copyOf();
+            tick.onExitTile(this::nextLevel);
         }
 
         // Allow an input every Keys.INPUT_WAIT time
@@ -115,6 +125,15 @@ public class App extends AppFrame implements AppInterface{
     }
 
     /**
+     * Goes to the next level in the game.
+     */
+    public void nextLevel() {
+        domain = Persistency.loadGameBoard(domain.getGameState().level() + 1);
+        initialDomain = domain.copyOf();
+        recorder.setCommands(List.of());
+    }
+
+    /**
      * Saves a list of inputs to a JSON file.
      * @param commands List of inputs.
      * @param level What level the inputs were made on.
@@ -126,8 +145,8 @@ public class App extends AppFrame implements AppInterface{
 
     @Override
     public void updateGraphics(){
-        ui.repaint();
-        game.repaint();
+        //ui.repaint();
+        //game.repaint();
     }
 
     @Override
@@ -155,7 +174,7 @@ public class App extends AppFrame implements AppInterface{
 
     @Override
     public String openFile(){
-        JFileChooser loader = new JFileChooser(new File(System.getProperty("user.dir")));
+        JFileChooser loader = new JFileChooser(new File(System.getProperty("user.dir") + "/src/nz/ac/wgtn/swen225/lc/persistency/levels"));
         if (loader.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             return loader.getSelectedFile().getPath();
         }
@@ -164,7 +183,7 @@ public class App extends AppFrame implements AppInterface{
 
     @Override
     public String saveFile() {
-        JFileChooser saver = new JFileChooser(new File(System.getProperty("user.dir")));
+        JFileChooser saver = new JFileChooser(new File(System.getProperty("user.dir") + "/src/nz/ac/wgtn/swen225/lc/persistency/levels"));
         if (saver.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             return saver.getSelectedFile().getPath();
         }
