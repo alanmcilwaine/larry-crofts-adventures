@@ -2,75 +2,72 @@ package nz.ac.wgtn.swen225.lc.fuzz;
 
 import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.app.Command;
-import nz.ac.wgtn.swen225.lc.app.Controller;
-import nz.ac.wgtn.swen225.lc.app.Action;
-import nz.ac.wgtn.swen225.lc.domain.DomainTest.GameItemTest;
-import nz.ac.wgtn.swen225.lc.domain.DomainTest.PlayerMoveTest;
-import nz.ac.wgtn.swen225.lc.domain.DomainTest.RobotMovementTest;
+import nz.ac.wgtn.swen225.lc.app.GamePanel;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
-import nz.ac.wgtn.swen225.lc.persistency.PersistencyTest;
-import nz.ac.wgtn.swen225.lc.recorder.RecorderTests;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 import javax.swing.*;
-import java.lang.reflect.InvocationTargetException;
+import java.awt.*;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Fuzz {
 
-    public static void main(String[] arg){
-
-        fuzzTest();
-        testAllJUnits();
+    @Test
+    @Timeout(62) // Only run test for 1 minute, if longer throw an error
+    void testLevel1(){
+        fuzzTest(1);
     }
-
-    /**
-     * Uses reflection to find all @Test methods and run them in every test class
-     */
-    static void testAllJUnits() {
-        List.of(
-                new RecorderTests(),
-                new PersistencyTest(),
-                new GameItemTest(),
-                new RobotMovementTest(),
-                new PlayerMoveTest()
-        ).forEach(pt -> Arrays.stream(pt.getClass().getDeclaredMethods())
-                .filter(m -> m.isAnnotationPresent(Test.class))
-                .forEach(m -> {
-                    m.setAccessible(true);
-                    try {
-                        m.invoke(pt);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-        );
+    @Test
+    @Timeout(62) // only run test for 1 minute, if longer throw an error
+    void testLevel2(){
+        fuzzTest(2);
     }
-
     /**
      * Creates an implementation of App that allows us to auto test our code
      */
-    static void fuzzTest(){
+    static void fuzzTest(int level){
         FuzzController fuzzController = new FuzzController();
         List<Command> commands = new ArrayList<>();
+        //Make game field accessable so that we can set it to something that does not draw.
+
         /**
          * Create a Runnable that creates the App
          *
          * This runnable will override tick with our own implementation to test
          */
         Runnable appCreator = () -> new App(fuzzController){
+            @Override
+            public GamePanel makeGame(){
+                return new GamePanel(this) {
+                    @Override
+                    protected void paintComponent(Graphics g) {/*DO NOTHING*/ }
+                };
+            }
+            {
+                fuzzController.setUpKeyChooser(this);
+                //Load level 2, 3 etc.
+                if(level != 1) {
+                    domain = Persistency.loadGameBoard(level);
+                    initialDomain = domain.copyOf();
+                }
+            }
             public void tick(){
+                //Reload level on finish
+                if (domain.getGameState().player().isNextLevel() || domain.getGameState().player().isDead()) {
+                    domain = initialDomain.copyOf();
+                }
                 try {
                     fuzzController.randomizeInputs();
                     commands.add(controller.currentCommand());
                     recorder.tick(controller.currentCommand());
                     giveInput(controller.currentCommand());
-                    updateGraphics();
                 }catch (Throwable t){
                     saveInputs(commands, domain.getGameState().level());
                     System.out.println("ERROR CAUGHT BY FUZZ: Was saved as level" + domain.getGameState().level() +"-recording");
+                    t.printStackTrace();
                     throw new Error(t);
                 }
             }
@@ -78,28 +75,13 @@ public class Fuzz {
 
 
         SwingUtilities.invokeLater(appCreator);
-    }
 
-    /**
-     * Creates a fake controller that generates random inputs
-     */
-    static class FuzzController extends Controller {
-        void randomizeInputs(){
-            Action keyPressed = randomKey();
-            keyLogger.add(keyPressed);
-            actionsPressed.getOrDefault(keyPressed, ()->{}).run();
-
-
-            Action keyReleased = randomKey();
-            keyLogger.add(keyReleased);
-            actionsReleased.getOrDefault(keyReleased, ()->{}).run();
+        // Sleep to keep the test running for a set duration
+        try {
+            Thread.sleep(60000); // Keep the test running for 60 seconds
+        } catch (InterruptedException e) {
+            System.out.println("Interruption: " + e);
         }
-
-        Action randomKey() {
-            return List.of(Action.Up, Action.Down, Action.Left, Action.Right).get((int) (Math.random() * 4));
-        }
-        List<Action> keyLogger = new ArrayList<>();
     }
-
 
 }
