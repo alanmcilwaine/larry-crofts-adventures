@@ -23,6 +23,8 @@ class GameRecorder implements Recorder{
      */
     int currentTick = -1;
 
+    protected static int tickTime = AppInterface.TICK_RATE;
+
     /**
      * Create a timer that will call _redo every App.TICK_RATE
      * @param app save the app provided to a field
@@ -39,6 +41,12 @@ class GameRecorder implements Recorder{
         assert !commands.isEmpty();
 
         this.commands = new ArrayList<>(commands);
+    }
+
+    @Override
+    public void setPlaybackSpeed(int tickTime) {
+        GameRecorder.tickTime = tickTime;
+        timer = new PlaybackTimer(this::redoFrame);
     }
 
     @Override

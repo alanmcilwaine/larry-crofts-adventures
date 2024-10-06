@@ -24,6 +24,13 @@ public interface Recorder {
     void setCommands(List<Command> commands);
 
     /**
+     * Sets the speed of the timer that replays the recording
+     *
+     * @param tickTime in millis
+     */
+    void setPlaybackSpeed(int tickTime);
+
+    /**
      * Get the current commands, so that we can pass them to persistence for saving
      *
      * @return all current commands, unmodifiable list
