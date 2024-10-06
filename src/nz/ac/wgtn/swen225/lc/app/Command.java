@@ -50,16 +50,11 @@ public enum Command{
      */
     public static Command generate(String command){
         return switch(command){
-            case "Left" -> Command.Left;
-            case "Right" -> Command.Right;
-            case "Up" -> Command.Up;
-            case "Down" -> Command.Down;
-            case "None" -> Command.None;
-            case "LEFT" -> Command.Left;
-            case "RIGHT" -> Command.Right;
-            case "UP" -> Command.Up;
-            case "DOWN" -> Command.Down;
-            case "NONE" -> Command.None;
+            case "Left", "LEFT" -> Command.Left;
+            case "Right", "RIGHT" -> Command.Right;
+            case "Up", "UP" -> Command.Up;
+            case "Down", "DOWN" -> Command.Down;
+            case "None", "NONE" -> Command.None;
             default -> throw new IllegalStateException("Unexpected value: " + command);
         };
     }

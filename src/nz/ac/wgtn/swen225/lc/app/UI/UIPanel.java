@@ -57,7 +57,6 @@ public class UIPanel extends JPanel {
 
         List.of(undo, redo, pause, play).forEach(this::add);
 
-
         level.setBounds(233, 35, App.WIDTH / 14, App.HEIGHT / 12);
         time.setBounds(58, 276, App.WIDTH / 14, App.HEIGHT / 12);
         chips.setBounds(218, 276, App.WIDTH / 14, App.HEIGHT / 12);
@@ -67,6 +66,14 @@ public class UIPanel extends JPanel {
             l.setForeground(FOREGROUND);
             add(l);
         });
+
+        JButton restart = new JButton("Restart");
+        restart.addActionListener((unused) -> {
+            app.tick.stop();
+            app.loadLevel(app.domain.getGameState().level());
+        });
+        restart.setBounds(0, 0, 100, 50);
+        add(restart);
     }
 
     @Override
@@ -74,7 +81,7 @@ public class UIPanel extends JPanel {
         GameState game = app.domain.getGameState();
         List<Item> treasure = game.player().getTreasure();
         level.setText(String.valueOf(game.level()));
-        time.setText(String.valueOf(game.timeLeft()));
+        time.setText(String.valueOf((int)App.time));
         chips.setText(String.valueOf(game.totalTreasure() - treasure.stream().filter(t -> t instanceof Treasure).count()));
 
         super.paintComponent(g);
@@ -83,7 +90,7 @@ public class UIPanel extends JPanel {
         IntStream.range(0, treasure.size())
                 .boxed()
                 .forEach(i -> {
-                    g.drawImage(Img.INSTANCE.resizeImage(Img.INSTANCE.getImgs(treasure.get(i).toString() + ".png"), 30, 30), 45 + (i * 60), 425, this);
+                    g.drawImage(Img.resizeImage(Img.INSTANCE.getImgs(treasure.get(i).toString() + ".png"), 30, 30), 45 + (i * 60), 425, this);
                 });
     }
 }
