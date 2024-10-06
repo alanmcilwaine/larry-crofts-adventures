@@ -160,17 +160,6 @@ public class GameBoard {
         //throw new IllegalArgumentException("Game Over"); // temporary
     }
 
-    /**
-     * Calls the next level GameBoard from Persistency.
-     * It uses the current board's level number and passes is it to Persistency's
-     * loadGameBoard method.
-     * @return returns a new GameBoard
-     */
-    public GameBoard nextLevel() {
-        int next = level + 1;
-        return Persistency.loadGameBoard(next);
-    }
-
     private static void attach(GameStateObserver ob) {
         obs.add(ob);
     }

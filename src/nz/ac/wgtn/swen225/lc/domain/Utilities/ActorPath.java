@@ -16,7 +16,7 @@ public enum ActorPath {
   UPDOWN(Direction.UP, Direction.DOWN),
   LEFTRIGHT(Direction.LEFT, Direction.RIGHT);
 
-  int DELAY = 20;
+  int DELAY = 10;
   int stepCount;
   Direction dir1;
   Direction dir2;
@@ -32,21 +32,23 @@ public enum ActorPath {
 
   public Direction getDir2() { return dir2; }
 
+  public void switchDirection() { d = d.equals(dir1) ? dir2 : dir1; }
+
+  // For testing lol
+  public void resetStepCount() { stepCount = 0; }
+
   public void doMove(Actor a, GameBoard b, Tile<Item> current, Tile<Item> next) {
     GameBoard.domainLogger.log(Level.INFO, "Robot is facing: " + a.getActorFacing());
 
-    if (next.canStepOn(a) && stepCount > DELAY) {
-      a.actOnTile(this.d, b, current, next);
+    if (stepCount > DELAY) {
+      if(next.canStepOn(a) && a.locationIsValid(next.location, b)) {
+        a.actOnTile(this.d, b, current, next);
+      } else {
+        switchDirection();
+        a.setActorFacing(d);
+      }
       stepCount = 0; // reset
     }
-
-    boolean test = next.canStepOn(a);
-    if (!next.canStepOn(a) && stepCount > DELAY) {
-      d = d.equals(dir1) ? dir2 : dir1;
-      a.setActorFacing(d);
-      return;
-    }
-
 
     stepCount++; // delay
 

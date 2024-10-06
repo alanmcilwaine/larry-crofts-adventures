@@ -1,5 +1,7 @@
 package nz.ac.wgtn.swen225.lc.domain.Interface;
 
+import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
+import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
@@ -37,6 +39,14 @@ public interface Actor  {
 
         var nextTile = findTileInSpecificLocation(gameBoard, nextLocation);
         var currentTile = findTileInSpecificLocation(gameBoard, this.getLocation());
+
+        MovableBox box = gameBoard.getGameState().boxes()
+                .stream().filter(b -> b.getLocation().equals(nextTile.location))
+                .findFirst().orElseGet(() -> null);
+
+        if (box != null && !box.attemptMove(direction, gameBoard)) { return false; }
+        if (!nextTile.canStepOn(this) && !(this instanceof Robot)) { return false; }
+
         doMove(direction, gameBoard, currentTile, nextTile);
         return true;
     }

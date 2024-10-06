@@ -13,6 +13,9 @@ import nz.ac.wgtn.swen225.lc.domain.Tile;
 public record Info(String info) implements Item {
 
     @Override
+    public boolean blockActor(Actor actor) { return !(actor instanceof Player); }
+
+    @Override
     public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {
         if (actor instanceof Player p) {
             p.setShowPlayerInfo(true);
