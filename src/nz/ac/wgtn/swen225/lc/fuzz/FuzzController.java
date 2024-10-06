@@ -16,6 +16,7 @@ class FuzzController extends Controller {
      * For example releasing a key twice before ever pressing it.
      */
     private FuzzKeyChooser keyChooser;
+    List<Action> keyLogger = new ArrayList<>();
     int level = -1;
     App app;
 
@@ -26,23 +27,37 @@ class FuzzController extends Controller {
     void setUpKeyChooser(App app){
         this.app = app;
         this.keyChooser = new FuzzKeyChooser(app);
+        changedLevel();
     }
+
+    /**
+     * Creates pseudo random inputs, based on keyChoosers desired keys.
+     */
     void randomizeInputs(){
         Action keyPressed = nextKey();
         keyLogger.add(keyPressed);
         actionsPressed.getOrDefault(keyPressed, ()->{}).run();
 
-
-        Action keyReleased = nextKey();
+        Action keyReleased = randomKey();
         keyLogger.add(keyReleased);
         actionsReleased.getOrDefault(keyReleased, ()->{}).run();
     }
 
+    /**
+     * The next key from our smart keyChooser
+     *
+     * @return Will be slightly random, but more likely to be a move that guides us somewhere new.
+     */
     Action nextKey() {
-        //Check to see if this last frame we have changed levels
-        changedLevel();
-
         return keyChooser.nextKey();
+    }
+
+    /**
+     * Purely random key. Will generate a random number between 0-4 end exclusive, then truncated to get a key between index 0-3
+     * @return The random key
+     */
+    Action randomKey(){
+        return List.of(Action.Up, Action.Down, Action.Left, Action.Right).get((int)(Math.random()*4));
     }
 
     /**
@@ -54,5 +69,4 @@ class FuzzController extends Controller {
             this.keyChooser = new FuzzKeyChooser(app);
         }
     }
-    List<Action> keyLogger = new ArrayList<>();
 }
