@@ -89,7 +89,5 @@ public interface Recorder {
      *
      * @return GameRecorder, which in turn creates a playback
      */
-    static Recorder create(AppInterface app){
-        return new GameRecorder(app);
-    }
+    static Recorder create(AppInterface app){return new GameRecorder(app);}
 }
