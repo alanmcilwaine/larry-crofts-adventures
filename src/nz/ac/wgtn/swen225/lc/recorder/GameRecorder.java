@@ -18,15 +18,15 @@ class GameRecorder implements Recorder{
 
     protected static int tickTime = AppInterface.TICK_RATE;
 
-    protected final ArrayDeque<Frame> completed = new ArrayDeque<>();
-    protected ArrayDeque<Frame> undone = new ArrayDeque<>();
+    protected final ArrayDeque<Command> completed = new ArrayDeque<>();
+    protected ArrayDeque<Command> undone = new ArrayDeque<>();
     /**
      * Create a timer that will call _redo every App.TICK_RATE
      * @param app save the app provided to a field
      */
     public GameRecorder(AppInterface app){
         this.app = app;
-        timer = new PlaybackTimer(this::redoFrame);
+        setPlaybackSpeed(tickTime);
     }
 
     /**
@@ -39,7 +39,7 @@ class GameRecorder implements Recorder{
 
         completed.clear();
         //First element in the list will be the top of the stack
-        undone = commands.stream().map(Frame::of).collect(Collectors.toCollection(ArrayDeque::new));
+        undone = new ArrayDeque<>(commands);
     }
 
     @Override
@@ -53,13 +53,12 @@ class GameRecorder implements Recorder{
         var copy = new ArrayList<>(completed);
         Collections.reverse(copy);
         return Stream.concat(copy.stream(),undone.stream())
-                .map(Frame::command)
                 .toList();
     }
 
     @Override
     public void tick(Command commandToSave) {
-        completed.push(Frame.of(commandToSave));
+        completed.push(commandToSave);
     }
 
     @Override
@@ -80,10 +79,10 @@ class GameRecorder implements Recorder{
      * @return The next command of the undone dequeue
      */
     Command nextCommand(){
-        Frame next = undone.pop();
+        Command next = undone.pop();
         completed.push(next);
 
-        return next.command();
+        return next;
     }
 
     /**
@@ -135,7 +134,7 @@ class GameRecorder implements Recorder{
         else  app.updateGraphics();
     }
     /**
-     * Plays the next frame, (compared to the next move)
+     * Plays the next Command, (compared to the next move)
      */
     protected void redoFrame(){
 
@@ -153,10 +152,10 @@ class GameRecorder implements Recorder{
      * For redoing finds the index of the last ACTUAL move, that way you don't have to spam the undo button
      * @return index of last move +1, so you can use it as range
      */
-    protected static int lastActualMove(ArrayDeque<Frame> completed) {
-        ArrayDeque<Frame> copy = completed.clone();
+    protected static int lastActualMove(ArrayDeque<Command> completed) {
+        ArrayDeque<Command> copy = completed.clone();
         while(!copy.isEmpty()){
-            if(copy.pop().command() != Command.None) break;
+            if(copy.pop() != Command.None) break;
         }
         return copy.size();
     }

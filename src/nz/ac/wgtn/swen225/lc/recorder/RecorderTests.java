@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +21,7 @@ public class RecorderTests {
         GameRecorder rq = new GameRecorder(mockApp());
         rq.setCommands(lis);
         //First command in the list is the first one we want to action
-        Assertions.assertEquals( rq.undone.peek().command(), Command.Up);
+        Assertions.assertEquals( rq.undone.peek(), Command.Up);
 
         rq.redoFrame();
         rq.redoFrame();
@@ -32,18 +31,18 @@ public class RecorderTests {
 
         assert rq.undone.isEmpty();
 
-        Assertions.assertEquals(rq.completed.peek().command(), Command.Right);
+        Assertions.assertEquals(rq.completed.peek(), Command.Right);
 
         Assertions.assertEquals( rq.getCommands(),lis);
 
         //Now we can start undoing
         rq._undo();
 
-        Assertions.assertEquals(rq.undone.peek().command(), Command.Right);
+        Assertions.assertEquals(rq.undone.peek(), Command.Right);
         Assertions.assertEquals( rq.getCommands(),lis);
 
         rq._undo();
-        Assertions.assertEquals(rq.undone.peek().command(), Command.Left);
+        Assertions.assertEquals(rq.undone.peek(), Command.Left);
 
         Assertions.assertEquals( rq.getCommands(),lis);
     }
@@ -56,12 +55,12 @@ public class RecorderTests {
         GameRecorder rq = new GameRecorder(mockApp());
         rq.setCommands(lis);
         //First command in the list is the first one we want to action
-        Assertions.assertEquals( rq.undone.peek().command(), Command.Up);
+        Assertions.assertEquals( rq.undone.peek(), Command.Up);
 
         rq.redoFrame();
-        assert rq.undone.peek().command() == Command.Left;
+        assert rq.undone.peek() == Command.Left;
 
-        assert rq.completed.peek().command() == Command.Up;
+        assert rq.completed.peek() == Command.Up;
 
         assert rq.getCommands().equals(lis);
     }
@@ -71,12 +70,12 @@ public class RecorderTests {
         GameRecorder rq = new GameRecorder(mockApp());
         rq.setCommands(lis);
         //First command in the list is the first one we want to action
-        Assertions.assertEquals( rq.undone.peek().command(), Command.None);
+        Assertions.assertEquals( rq.undone.peek(), Command.None);
 
         rq._redo();
-        Assertions.assertEquals( rq.undone.peek().command(), Command.Down);
+        Assertions.assertEquals( rq.undone.peek(), Command.Down);
 
-        Assertions.assertEquals( rq.completed.peek().command(), Command.Left);
+        Assertions.assertEquals( rq.completed.peek(), Command.Left);
 
         Assertions.assertEquals( rq.getCommands(),lis);
     }
@@ -86,7 +85,7 @@ public class RecorderTests {
         GameRecorder rq = new GameRecorder(mockApp());
         rq.setCommands(lis);
 
-        Assertions.assertEquals(rq.undone.peek().command(), Command.Up);
+        Assertions.assertEquals(rq.undone.peek(), Command.Up);
 
         rq.redoFrame();
         rq.redoFrame();
@@ -101,7 +100,7 @@ public class RecorderTests {
         Assertions.assertEquals(rq.getCommands().size(),lis.size());
         Assertions.assertTrue(rq.completed.isEmpty());
         Assertions.assertEquals(rq.undone.size(),  lis.size());
-        Assertions.assertEquals(rq.undone.peek().command(), Command.Up);
+        Assertions.assertEquals(rq.undone.peek(), Command.Up);
     }
     @Test void getCommandsTest(){
         var lis = List.of(Command.Up,Command.Left,Command.None,Command.Right, Command.Down);
@@ -120,16 +119,16 @@ public class RecorderTests {
     }
 
     @Test void lastActualMoveTest(){
-        var deque = new ArrayDeque<Frame>(); deque.push(Frame.of(Command.Up));deque.push(Frame.of(Command.Left));deque.push(Frame.of(Command.None));
+        var deque = new ArrayDeque<Command>(); deque.push((Command.Up));deque.push((Command.Left));deque.push((Command.None));
         assert GameRecorder.lastActualMove(deque) == 1 : GameRecorder.lastActualMove(deque);
 
-        deque = new ArrayDeque<>(); deque.push(Frame.of(Command.Up));deque.push(Frame.of(Command.Left));deque.push(Frame.of(Command.Down));
+        deque = new ArrayDeque<>(); deque.push((Command.Up));deque.push((Command.Left));deque.push((Command.Down));
         assert GameRecorder.lastActualMove(deque) == 2 : GameRecorder.lastActualMove(deque);
 
-        deque = new ArrayDeque<>(); deque.push(Frame.of(Command.Up));deque.push(Frame.of(Command.None));deque.push(Frame.of(Command.None));
+        deque = new ArrayDeque<>(); deque.push((Command.Up));deque.push((Command.None));deque.push((Command.None));
         assert GameRecorder.lastActualMove(deque) == 0 : GameRecorder.lastActualMove(deque);
 
-        deque = new ArrayDeque<>(); deque.push(Frame.of(Command.None));deque.push(Frame.of(Command.None));deque.push(Frame.of(Command.None));
+        deque = new ArrayDeque<>(); deque.push((Command.None));deque.push((Command.None));deque.push((Command.None));
         assert GameRecorder.lastActualMove(deque) == 0 : GameRecorder.lastActualMove(deque);
     }
    @Test
