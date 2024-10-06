@@ -7,13 +7,29 @@ public class GameTimer extends Timer {
         super(App.TICK_RATE, (unused) -> tick.run());
     }
 
+    /**
+     * Code to run when the player goes on an exit tile.
+     * @param nextLevel Runnable to go to the next level.
+     */
     public void onExitTile(Runnable nextLevel){
         this.stop();
-        Timer exitDelay = new Timer(2000, e -> {
+        Timer delay = new Timer(1000, e -> {
             nextLevel.run();
-            this.start();
         });
-        exitDelay.setRepeats(false);
-        exitDelay.start();
+        delay.setRepeats(false);
+        delay.start();
+    }
+
+    /**
+     * Code to run when the player dies
+     * @param death Runnable to restart the level.
+     */
+    public void onDeath(Runnable death) {
+        this.stop();
+        Timer delay = new Timer(1000, e -> {
+            death.run();
+        });
+        delay.setRepeats(false);
+        delay.start();
     }
 }

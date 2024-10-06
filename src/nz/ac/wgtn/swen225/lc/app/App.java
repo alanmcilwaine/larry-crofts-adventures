@@ -9,6 +9,7 @@ import java.util.Objects;
 import nz.ac.wgtn.swen225.lc.app.UI.AppFrame;
 import nz.ac.wgtn.swen225.lc.app.UI.Menu;
 import nz.ac.wgtn.swen225.lc.app.UI.UIPanel;
+import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 import nz.ac.wgtn.swen225.lc.recorder.Recorder;
@@ -31,6 +32,7 @@ public class App extends AppFrame implements AppInterface{
 
     // Tick rate
     public static final int TICK_RATE = 50;
+    public static double time;
 
     // Game Information
     public static Controller controller;
@@ -96,41 +98,75 @@ public class App extends AppFrame implements AppInterface{
         domain = Persistency.loadGameBoard(1);
         initialDomain = Persistency.loadGameBoard(1);
         render = ImageImplement.getImageImplement(game);
+        time = domain.getGameState().timeLeft();
         tick.start();
     }
 
     /**
-     * tick()
-     * Code inside tick() is called every 50ms. This is for updating player movement
-     * at a separate tick rate so movement isn't sluggish.
+     * Checks if the player is on the next level tile. If it is, we will pause the game
+     * and update domain to the next level.
      */
-    public void tick(){
-        // Next level
-        if (domain.getGameState().player().isNextLevel()) {
-            tick.onExitTile(this::nextLevel);
+    private void checkNextLevel() {
+        Player player = domain.getGameState().player();
+        if (player.isNextLevel()) {
+            tick.onExitTile(() -> loadLevel(domain.getGameState().level() + 1));
         }
+    }
 
-        // Allow an input every Keys.INPUT_WAIT time
+    /**
+     * Checks if the player has died. If it has, we respawn at the new level.
+     */
+    private void checkDeath() {
+        Player player = domain.getGameState().player();
+        if (player.isDead() || time <= 0) {
+            tick.onDeath(() -> loadLevel(domain.getGameState().level()));
+        }
+    }
+
+    /**
+     * Chooses the input to send to the game. We do this because an input is chosen
+     * every few ticks instead of every tick. Without this, holding down inputs will
+     * blast the player across the screen.
+     *
+     * @return Command as an input
+     */
+    private Command chooseInput() {
         Command input = Command.None;
         if (controller.movementWaitTime <= 0 && controller.currentCommand() != Command.None) {
             input = controller.currentCommand();
             controller.movementWaitTime = Keys.INPUT_WAIT;
         }
+        controller.movementWaitTime -= TICK_RATE;
+        return input;
+    }
 
+    /**
+     * tick()
+     * Code inside tick() is called every 50ms. This is what ticks the rest of the game.
+     */
+    public void tick(){
+        time -= ((double) TICK_RATE / 1000);
+
+        checkNextLevel();
+        checkDeath();
+
+        Command input = chooseInput();
         recorder.tick(input);
         giveInput(input);
         updateGraphics();
-
-        controller.movementWaitTime -= TICK_RATE;
     }
 
     /**
      * Goes to the next level in the game.
+     * @param level The level we go to.
      */
-    public void nextLevel() {
-        domain = Persistency.loadGameBoard(domain.getGameState().level() + 1);
+    public void loadLevel(int level) {
+        domain = Persistency.loadGameBoard(level);
         initialDomain = domain.copyOf();
         recorder.setCommands(List.of());
+        time = domain.getGameState().timeLeft();
+        game.requestFocusInWindow();
+        tick.start();
     }
 
     /**
@@ -142,11 +178,9 @@ public class App extends AppFrame implements AppInterface{
         Persistency.saveCommands(commands, level);
     }
 
-
     @Override
     public void updateGraphics(){
-        //ui.repaint();
-        //game.repaint();
+        ui.repaint();
     }
 
     @Override
