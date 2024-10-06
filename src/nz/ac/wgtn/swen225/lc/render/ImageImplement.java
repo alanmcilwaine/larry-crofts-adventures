@@ -48,6 +48,7 @@ public class ImageImplement{
         backgroundImplement.drawBackGround(jpanel, g);
         drawItemsTile(gameState, g);
         drawActors(gameState, g);
+        drawBoxes(gameState, g);
         info.locationMatch(gameState);
         WinLoseImplement.drawWinLose(gameState, g, jpanel);
 
@@ -106,9 +107,12 @@ public class ImageImplement{
         }
     }
 
-    public void drawBoxes(GameState gameState){
+    public void drawBoxes(GameState gameState, Graphics g){
         List<MovableBox> boxList = gameState.boxes();
-        boxList.forEach(box -> drawOne);
+        Player player = gameState.player();
+        boxList.forEach(box -> drawOneImage(box.toString(),
+                box.getLocation().x() - player.getLocation().x(),
+                box.getLocation().y() - player.getLocation().y(), g));
     }
 
 
