@@ -26,7 +26,7 @@ class GameRecorder implements Recorder{
      */
     public GameRecorder(AppInterface app){
         this.app = app;
-        setPlaybackSpeed(tickTime);
+        timer = new PlaybackTimer(this::redoFrame);
     }
 
     /**
@@ -44,8 +44,6 @@ class GameRecorder implements Recorder{
 
     @Override
     public void setPlaybackSpeed(int tickTime) {
-        assert tickTime > 0 : "Illegal value for tick time: " + tickTime;
-
         GameRecorder.tickTime = tickTime;
         timer = new PlaybackTimer(this::redoFrame);
     }
@@ -61,11 +59,19 @@ class GameRecorder implements Recorder{
 
     @Override
     public void tick(Command commandToSave) {
-        assert commandToSave != null;
-
         completed.push(Frame.of(commandToSave));
     }
 
+    @Override
+    public Action undo() {return (RecorderAction)(e) -> _undo();}
+    @Override
+    public Action redo() { return (RecorderAction) (e) -> _redo();}
+    @Override
+    public Action play() {return (RecorderAction) (e) -> _play();}
+    @Override
+    public Action pause() {return (RecorderAction) (e) -> _pause();}
+    @Override
+    public Action takeControl() {return (RecorderAction) (e) -> _takeControl();}
 
 
     /**
@@ -83,15 +89,25 @@ class GameRecorder implements Recorder{
     /**
      * Resets the game state back to initial game state by calling app.initialStateRevert()
      * Then calls app.giveInput() until we are 1 move before the previous move.
-     * Finally, redraws the graphics
+     * Finally redraws the graphics
      */
     protected void _undo(){
+
         if(completed.isEmpty()) return;
 
-        undoAll(); //Puts us back to initial state of the game
+        int lastMove = lastActualMove(completed);
 
-        IntStream.range(0, lastActualMove(completed))
-                .forEach(i -> app.giveInput(nextCommand()));
+
+        undoAll();
+
+        _pause();
+
+        //If no valid moves were made since the start then we do not have to redo anything.
+        if(lastMove != -1)
+            IntStream.range(0, lastMove).forEach(i -> {app.giveInput(nextCommand());});
+
+        app.updateGraphics();
+
     }
 
     /**
@@ -107,26 +123,35 @@ class GameRecorder implements Recorder{
      */
     protected void _redo(){
 
-        redoFrame();
+        if(undone.isEmpty()) return;//We have already redo'd as much as possible
+
+        Command next = nextCommand();
+
+        _pause();
+        app.giveInput(next);
 
         //call it recursively until we find a move
-        if(completed.peek().command() == Command.None) _redo();
+        if(next == Command.None) _redo();
+        else  app.updateGraphics();
     }
     /**
-     * Plays the next frame, (compared to the next move which might be multiple frames)
+     * Plays the next frame, (compared to the next move)
      */
     protected void redoFrame(){
+
 
         if(undone.isEmpty()) return;//We have already redo'd as much as possible
 
         Command next = nextCommand();
 
         app.giveInput(next);
+
+        app.updateGraphics();
     }
 
     /**
      * For redoing finds the index of the last ACTUAL move, that way you don't have to spam the undo button
-     * @return amount of moves to redo
+     * @return index of last move +1, so you can use it as range
      */
     protected static int lastActualMove(ArrayDeque<Frame> completed) {
         ArrayDeque<Frame> copy = completed.clone();
@@ -161,17 +186,4 @@ class GameRecorder implements Recorder{
         timer.stop();
         app.pauseTimer(false);
     }
-
-
-    //SIMPLE OVERRIDES TO DELEGATE
-    @Override
-    public Action undo() {return (RecorderAction)(e) -> _undo();}
-    @Override
-    public Action redo() { return (RecorderAction) (e) -> _redo();}
-    @Override
-    public Action play() {return (RecorderAction) (e) -> _play();}
-    @Override
-    public Action pause() {return (RecorderAction) (e) -> _pause();}
-    @Override
-    public Action takeControl() {return (RecorderAction) (e) -> _takeControl();}
 }

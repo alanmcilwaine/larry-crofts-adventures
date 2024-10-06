@@ -4,6 +4,8 @@ import nz.ac.wgtn.swen225.lc.app.Command;
 
 class Frame {
 
+
+
     private Command command;
     private Frame(Command command){
         this.command = command;
