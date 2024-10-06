@@ -76,11 +76,11 @@ class GameRecorder implements Recorder{
      * @return The last actual move
      */
     protected int undoAll(){
-        int last = lastActualMove(completed);
+        int redoNum = lastActualMove(completed);
         completed.iterator().forEachRemaining(undone::push);
         completed.clear();
         app.initialStateRevert();
-        return last;
+        return redoNum;
     }
 
     /**
@@ -93,7 +93,7 @@ class GameRecorder implements Recorder{
 
         app.giveInput(nextCommand());
 
-        return completed.peek() != Command.None;//Return if this was a success, or a None move
+        return completed.peek() != Command.None;//Return if this was a successful move
     }
 
     /**
@@ -109,8 +109,8 @@ class GameRecorder implements Recorder{
     }
 
     /**
-     * For redoing finds the index of the last ACTUAL move, that way you don't have to spam the undo button
-     * @return index of last move +1, so you can use it as range
+     * Tells us how many moves we need to redo to be the equivalent of undoing one ACTUAL move
+     * @return number of moves that should be redone to reach the last actual move we want to undo to
      */
     protected static int lastActualMove(ArrayDeque<Command> completed) {
         ArrayDeque<Command> copy = completed.clone();
@@ -119,7 +119,7 @@ class GameRecorder implements Recorder{
         }
         return copy.size();
     }
-    
+
     //================== DEFAULT LOGIC
     @Override
     public List<Command> getCommands() {
