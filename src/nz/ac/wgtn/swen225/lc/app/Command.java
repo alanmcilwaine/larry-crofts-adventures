@@ -55,6 +55,11 @@ public enum Command{
             case "Up" -> Command.Up;
             case "Down" -> Command.Down;
             case "None" -> Command.None;
+            case "LEFT" -> Command.Left;
+            case "RIGHT" -> Command.Right;
+            case "UP" -> Command.Up;
+            case "DOWN" -> Command.Down;
+            case "NONE" -> Command.None;
             default -> throw new IllegalStateException("Unexpected value: " + command);
         };
     }

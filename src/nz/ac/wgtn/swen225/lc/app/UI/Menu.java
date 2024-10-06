@@ -55,9 +55,9 @@ public class Menu extends JMenuBar {
         JMenuItem loadInputs = new JMenuItem("Load Inputs");
         saveInputs.addActionListener((unused) -> Persistency.saveCommands(a.recorder.getCommands(), a.domain.getGameState().level()));
         loadInputs.addActionListener((unused) -> {
-            String filename = a.saveFile();
+            String filename = a.openFile();
             if (!filename.isEmpty()){
-                Persistency.loadRecording(a.recorder, a.openFile());
+                Persistency.loadRecording(a.recorder, filename);
             }
         });
         List.of(saveInputs, loadInputs).forEach(input::add);
