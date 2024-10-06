@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MovableBoxTest {
 
-
   @Test
   public void boxPushOpen() {
     var gameboard = Mock.getGameBoard();
@@ -59,9 +58,13 @@ public class MovableBoxTest {
     assertEquals(new Location(0, 2), track.getLocation());
   }
 
+  // TODO : Add more tests for items
   @Test
   public void shouldNotPushIntoItems() {
 
   }
+
+  @Test
+  public void shouldNotPushIntoBox() {}
 
 }

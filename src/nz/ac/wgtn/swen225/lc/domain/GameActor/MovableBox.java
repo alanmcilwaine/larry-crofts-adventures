@@ -26,7 +26,22 @@ public class MovableBox implements Actor {
   public void setActorFacing(Direction d) { this.wallFacing = d; }
 
   @Override
+  public boolean attemptMove(Direction direction, GameBoard gameBoard) {
+
+    MovableBox box = gameBoard.getGameState().boxes()
+            .stream().filter(b -> b.location.equals(direction.act(location)))
+            .findFirst().orElse(null);
+
+    // if there is already a box then don't do anything
+    if (box != null) { return false; }
+    return Actor.super.attemptMove(direction, gameBoard);
+  }
+
+  @Override
   public void doMove(Direction direction, GameBoard gameBoard, Tile<Item> current, Tile<Item> next) {
+
+
+    // if there is another box then dont push
     actOnTile(direction, gameBoard, current, next);
   }
 
