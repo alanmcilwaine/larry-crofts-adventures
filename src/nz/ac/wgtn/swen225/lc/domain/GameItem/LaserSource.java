@@ -18,8 +18,9 @@ public class LaserSource implements Item {
     this.location = new Location(x, y);
   }
 
-
-
+  private void passLaser() {
+    //Tile<Item> next = this.direction.act(location);
+  }
 
   public Direction getDirection() { return direction; }
 
