@@ -48,19 +48,31 @@ public class App extends AppFrame implements AppInterface{
     public App(){
         assert SwingUtilities.isEventDispatchThread();
         controller = new Controller(this);
-        game = new GamePanel(this);
+        game = makePanel();
         ui = new UIPanel(this);
         setupUI();
         startTick();
     }
 
+    /**
+     * Lets the FUZZ make their own controller.
+     * @param c Controller for user inputs
+     */
     public App(Controller c) {
         assert SwingUtilities.isEventDispatchThread();
         controller = c;
-        game = new GamePanel(this);
+        game = makePanel();
         ui = new UIPanel(this);
         setupUI();
         startTick();
+    }
+
+    /**
+     * makeGame()
+     * Builds the game panel, this is here so users can override the paintComponent
+     */
+    public GamePanel makePanel() {
+        return new GamePanel(this);
     }
 
     /**
@@ -118,7 +130,7 @@ public class App extends AppFrame implements AppInterface{
     public void nextLevel() {
         domain = Persistency.loadGameBoard(domain.getGameState().level() + 1);
         initialDomain = domain.copyOf();
-        recorder = Recorder.create(this);
+        recorder.setCommands(List.of());
     }
 
     /**
