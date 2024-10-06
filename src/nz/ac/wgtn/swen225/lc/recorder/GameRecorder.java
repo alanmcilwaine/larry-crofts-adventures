@@ -39,6 +39,7 @@ class GameRecorder implements Recorder{
         assert !commands.isEmpty();
 
         this.commands = new ArrayList<>(commands);
+        this.currentTick = -1;
     }
 
     @Override
