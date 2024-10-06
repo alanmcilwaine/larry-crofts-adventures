@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen225.lc.render;
 
 
+import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.GameState;
@@ -103,6 +104,11 @@ public class ImageImplement{
             g.drawImage(Img.INSTANCE.getImgs(imageName + ".png"), x * IMAGE_SIZE + xBorder,
                     y * IMAGE_SIZE + yBorder, jpanel);
         }
+    }
+
+    public void drawBoxes(GameState gameState){
+        List<MovableBox> boxList = gameState.boxes();
+        boxList.forEach(box -> drawOne);
     }
 
 
