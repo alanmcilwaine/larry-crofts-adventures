@@ -1,11 +1,13 @@
 package nz.ac.wgtn.swen225.lc.recorder;
 
 import javax.swing.*;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import nz.ac.wgtn.swen225.lc.app.AppInterface;
 import nz.ac.wgtn.swen225.lc.app.Command;
@@ -13,18 +15,11 @@ import nz.ac.wgtn.swen225.lc.app.Command;
 class GameRecorder implements Recorder{
 
     AppInterface app; Timer timer;
-    /**
-     * A list of all the actions the player did and were recorded every frame
-     */
-    List<Command> commands = new ArrayList<>();
-    /**
-     * When replaying shows where we are currently looking
-     * -1 -> means no commands have been executed. 0 -> commands.get(0) has been executed
-     */
-    int currentTick = -1;
 
     protected static int tickTime = AppInterface.TICK_RATE;
 
+    protected final ArrayDeque<Frame> completed = new ArrayDeque<>();
+    protected ArrayDeque<Frame> undone = new ArrayDeque<>();
     /**
      * Create a timer that will call _redo every App.TICK_RATE
      * @param app save the app provided to a field
@@ -34,14 +29,17 @@ class GameRecorder implements Recorder{
         timer = new PlaybackTimer(this::redoFrame);
     }
 
-
+    /**
+     * First element in the list will be the top of the undo stack
+     */
     @Override
     public void setCommands(List<Command> commands) {
         assert commands != null;
         assert !commands.isEmpty();
 
-        this.commands = new ArrayList<>(commands);
-        this.currentTick = -1;
+        completed.clear();
+        //First element in the list will be the top of the stack
+        undone = commands.stream().map(Frame::of).collect(Collectors.toCollection(ArrayDeque::new));
     }
 
     @Override
@@ -52,13 +50,16 @@ class GameRecorder implements Recorder{
 
     @Override
     public List<Command> getCommands() {
-        return Collections.unmodifiableList(commands);
+        var copy = new ArrayList<>(completed);
+        Collections.reverse(copy);
+        return Stream.concat(copy.stream(),undone.stream())
+                .map(Frame::command)
+                .toList();
     }
 
     @Override
     public void tick(Command commandToSave) {
-        commands.add(commandToSave);
-        currentTick = commands.size()-1;
+        completed.push(Frame.of(commandToSave));
     }
 
     @Override
@@ -74,14 +75,15 @@ class GameRecorder implements Recorder{
 
 
     /**
-     * Increments currents ticks then returns that command
-     * (If currentTick == 0, commands.get(1) will play, as command 0 was already used)
-     * @return The next command. Throws assertion error if it is out of bounds.
+     * Switch the top element of undone onto the top element of completed
+     *
+     * @return The next command of the undone dequeue
      */
     Command nextCommand(){
-        assert currentTick < commands.size() : "Tried to get a command that is bigger than the commands size: " + currentTick;
-        //Increment the current tick, then get the command
-        return commands.get(++currentTick);
+        Frame next = undone.pop();
+        completed.push(next);
+
+        return next.command();
     }
 
     /**
@@ -90,45 +92,38 @@ class GameRecorder implements Recorder{
      * Finally redraws the graphics
      */
     protected void _undo(){
-        assert currentTick >= -1 : "Should never be less than zero";
 
-        int current = currentTick;
-        int lastMove = lastActualMove(current);
+        if(completed.isEmpty()) return;
+
+        int lastMove = lastActualMove(completed);
+
+
+        undoAll();
 
         _pause();
-        currentTick = -1;
-        app.initialStateRevert();
 
         //If no valid moves were made since the start then we do not have to redo anything.
         if(lastMove != -1)
-            IntStream.range(0, lastMove+1).forEach(i -> {app.giveInput(nextCommand());});
+            IntStream.range(0, lastMove).forEach(i -> {app.giveInput(nextCommand());});
 
         app.updateGraphics();
 
-        //Should have moved backwards at least 1 tick
-        assert currentTick <= lastMove : "expected <= " + (lastMove) + ", was " + currentTick;
     }
 
     /**
-     * For redoing finds the index of the last ACTUAL move, that way you don't have to spam the undo button
-     * @return index of last move +1, so you can use it as range
+     * Put all completed commands onto the undone stack, put the game state back to initial game state
      */
-    private int lastActualMove(int current) {
-        return IntStream.range(0, current)
-                .boxed()
-                .sorted(Collections.reverseOrder())
-                .filter(i -> commands.get(i) != Command.None)
-                .findFirst()
-                .orElse(-1);
+    protected void undoAll(){
+        completed.iterator().forEachRemaining(undone::push);
+        completed.clear();
+        app.initialStateRevert();
     }
     /**
      * Plays the next move. (If currentTick == 0, commands.get(1) will play, as command 0 was already used)
      */
     protected void _redo(){
 
-        assert currentTick < commands.size() : "Should never be bigger than commands";
-
-        if(currentTick == commands.size()-1) return;//We have already redo'd as much as possible
+        if(undone.isEmpty()) return;//We have already redo'd as much as possible
 
         Command next = nextCommand();
 
@@ -144,15 +139,26 @@ class GameRecorder implements Recorder{
      */
     protected void redoFrame(){
 
-        assert currentTick < commands.size() : "Should never be bigger than commands";
 
-        if(currentTick == commands.size()-1) return;//We have already redo'd as much as possible
+        if(undone.isEmpty()) return;//We have already redo'd as much as possible
 
         Command next = nextCommand();
 
         app.giveInput(next);
 
         app.updateGraphics();
+    }
+
+    /**
+     * For redoing finds the index of the last ACTUAL move, that way you don't have to spam the undo button
+     * @return index of last move +1, so you can use it as range
+     */
+    protected static int lastActualMove(ArrayDeque<Frame> completed) {
+        ArrayDeque<Frame> copy = completed.clone();
+        while(!copy.isEmpty()){
+            if(copy.pop().command() != Command.None) break;
+        }
+        return copy.size();
     }
 
     /**
@@ -176,7 +182,7 @@ class GameRecorder implements Recorder{
      */
     protected void _takeControl(){
         //Delete all actions after this point.
-        commands = commands.stream().limit(currentTick+1).collect(Collectors.toCollection(ArrayList::new));
+        undone.clear();
         timer.stop();
         app.pauseTimer(false);
     }
