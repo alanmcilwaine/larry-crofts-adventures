@@ -40,7 +40,7 @@ public class Fuzz {
          */
         Runnable appCreator = () -> new App(fuzzController){
             @Override
-            public GamePanel makeGame(){
+            public GamePanel makePanel(){
                 return new GamePanel(this) {
                     @Override
                     protected void paintComponent(Graphics g) {/*DO NOTHING*/ }
