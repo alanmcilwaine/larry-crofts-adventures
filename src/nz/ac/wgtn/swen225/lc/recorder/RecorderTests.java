@@ -1,3 +1,10 @@
+/**
+ * Holds manual tests that make sure individual methods are working as well as random tests,
+ * that randomize operations and make sure nothing breaks.
+ *
+ * @author John Rais raisjohn@ecs.vuw.ac.nz
+ * @version 2.5
+ */
 package nz.ac.wgtn.swen225.lc.recorder;
 
 import nz.ac.wgtn.swen225.lc.app.Command;

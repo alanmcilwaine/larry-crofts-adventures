@@ -1,3 +1,23 @@
+/**
+ * GameRecorder class implements the Recorder interface to manage game state recording and playback.
+ * It handles undo/redo operations, command storage, and playback control.
+ * Provides Action methods that you can put straight into buttons for clean and efficient UI for using the Recorder.
+ *
+ * <p>
+ * Usage Example:
+ * <pre>
+ *     undoButton.addActionListener(recorder.undo());
+ *     undoButton.addActionListener(recorder.redo());
+ *     undoButton.addActionListener(recorder.play());
+ *
+ *     //On tick
+ *     recorder.tick(userCommand);
+ * </pre>
+ * </p>
+ *
+ * @author John Rais raisjohn@ecs.vuw.ac.nz
+ * @version 3.0
+ */
 package nz.ac.wgtn.swen225.lc.recorder;
 
 import javax.swing.*;
@@ -12,10 +32,15 @@ import nz.ac.wgtn.swen225.lc.app.AppInterface;
 import nz.ac.wgtn.swen225.lc.app.Command;
 
 class GameRecorder implements Recorder{
+    /** Reference to the main application interface */
     private final AppInterface app;
+    /** Timer for controlling playback speed */
     private Timer timer;
+    /** Static variable to store the tick time for playback */
     protected static int tickTime = AppInterface.TICK_RATE;
+    /** Deque to store completed commands */
     protected final ArrayDeque<Command> completed = new ArrayDeque<>();
+    /** Deque to store undone commands for potential redo operations */
     protected ArrayDeque<Command> undone = new ArrayDeque<>();
 
     /**

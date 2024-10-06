@@ -1,3 +1,25 @@
+/**
+ * The Recorder interface defines the basic actions for saving, loading,
+ * and controlling the playback of recordings. Implementations of this
+ * interface provides mechanisms for undoing and redoing actions that
+ * were recorded in previous games as well as playing and pausing recordings.
+ * Saving to and loading from file is delegated to Persistence package.
+ *
+ * <p>
+ * Usage Example:
+ * <pre>
+ *     undoButton.addActionListener(recorder.undo());
+ *     undoButton.addActionListener(recorder.redo());
+ *     undoButton.addActionListener(recorder.play());
+ *
+ *     //On tick
+ *     recorder.tick(userCommand);
+ * </pre>
+ * </p>
+ *
+ * @author John Rais raisjohn@ecs.vuw.ac.nz
+ * @version 1.2
+ */
 package nz.ac.wgtn.swen225.lc.recorder;
 
 import javax.swing.*;
@@ -6,13 +28,6 @@ import java.util.List;
 import nz.ac.wgtn.swen225.lc.app.AppInterface;
 import nz.ac.wgtn.swen225.lc.app.Command;
 
-/**
- * The Recorder interface defines the basic actions for saving, loading,
- * and controlling the playback of recordings. Implementations of this
- * interface provides mechanisms for undoing and redoing actions that
- * were recorded in previous games as well as playing and pausing recordings.
- * Saving to and loading from file is delegated to Persistence package.
- */
 public interface Recorder {
 
     /**
