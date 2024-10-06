@@ -9,24 +9,30 @@ import org.junit.jupiter.api.Timeout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class Fuzz {
 
+    /**
+     * Test level 1 for 60 seconds
+     */
     @Test
     @Timeout(62) // Only run test for 1 minute, if longer throw an error
     void testLevel1(){
         fuzzTest(1);
     }
+
+    /**
+     * Test level 2 for 60 seconds
+     */
     @Test
     @Timeout(62) // only run test for 1 minute, if longer throw an error
-    void testLevel2(){
-        fuzzTest(2);
-    }
+    void testLevel2(){fuzzTest(2);}
+
     /**
-     * Creates an implementation of App that allows us to auto test our code
+     * Creates an implementation of App that allows us to auto test our code with randomly generated inputs
      */
     static void fuzzTest(int level){
         FuzzController fuzzController = new FuzzController();
@@ -39,6 +45,10 @@ public class Fuzz {
          * This runnable will override tick with our own implementation to test
          */
         Runnable appCreator = () -> new App(fuzzController){
+            /**
+             * Make a fake game panel, so that we don't waist time on drawing
+             * @return a game panel that does nothing
+             */
             @Override
             public GamePanel makePanel(){
                 return new GamePanel(this) {
@@ -46,6 +56,10 @@ public class Fuzz {
                     protected void paintComponent(Graphics g) {/*DO NOTHING*/ }
                 };
             }
+
+            /**
+             * Set up and load the correct level for this test.
+             */
             {
                 fuzzController.setUpKeyChooser(this);
                 //Load level 2, 3 etc.
@@ -54,6 +68,11 @@ public class Fuzz {
                     initialDomain = domain.copyOf();
                 }
             }
+
+            /**
+             * Override tick so that we can test quicker.
+             */
+            @Override
             public void tick(){
                 //Reload level on finish
                 if (domain.getGameState().player().isNextLevel() || domain.getGameState().player().isDead()) {
@@ -73,7 +92,7 @@ public class Fuzz {
             }
         };
 
-
+        //Open the app window
         SwingUtilities.invokeLater(appCreator);
 
         // Sleep to keep the test running for a set duration

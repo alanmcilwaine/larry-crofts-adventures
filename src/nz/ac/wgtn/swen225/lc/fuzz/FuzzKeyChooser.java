@@ -19,13 +19,20 @@ public class FuzzKeyChooser {
         board = createZeroMatrix(app);
     }
 
+    /**
+     * Uses a smart algorithm to get a slightly random next move.
+     * It will prioritize spaces that have not yet been moved to.
+     * It will prioritize spaces that the player can move to, that are not blocked.
+     *
+     * @return An Action representing our desired move
+     */
     Action nextKey() {
         //Assign the value to each action respectively
         var actions = List.of(Action.Up, Action.Down, Action.Left, Action.Right)
                 .stream()
                 .collect(Collectors.toMap(
                         a -> a,                // Key extractor (the Action itself)
-                        a -> 10/valueOfMove(a) // inversely proportional to value of space
+                        a -> 10/valueOfMove(a)  // inversely proportional to value of space
                 ));
 
         //Get a random action based on the probability
@@ -48,28 +55,48 @@ public class FuzzKeyChooser {
      * @return the value of the space we are considering moving to
      */
     float valueOfMove(Action action){
-        return value(app.domain.getGameState().player().getLocation().x() + move(action).x(),
-                app.domain.getGameState().player().getLocation().y() + move(action).y());
+
+        int y = playerLoc().y() + move(action).y();
+        int x = playerLoc().x() + move(action).x();
+
+        if(notValid(x,y)) return 1;
+
+        //Spend less time attempting to move onto walls
+        boolean canStepOn = app.domain.getBoard().get(y).get(x).canStepOn(app.domain.getGameState().player());
+
+        return value(x,y) + (canStepOn ? 0 : 1);
     }
+
+    /**
+     * Increase the value of the space we are attempting to move to, to show that we have already attempted that
+     * @param action The move we are attempting
+     * @param amount the amount to increase its value
+     */
     void increaseValue(Action action, float amount){
 
+        int y = playerLoc().y() + move(action).y();
+        int x = playerLoc().x() + move(action).x();
 
-        int y = app.domain.getGameState().player().getLocation().y() + move(action).y();
-        int x = app.domain.getGameState().player().getLocation().x() + move(action).x();
-
-        if(y >= board.size() || x >= board.get(0).size()) return;
+        if(notValid(x,y)) return;
 
         board.get(y).set(x, value(x,y) + amount);
     }
     float value(int x, int y){
-        if(y >= board.size() || x >= board.get(0).size()) return 1;
-
         return board.get(y).get(x);
     }
     Location move(Action a){
         return Command.generate(a.toString()).direction().act(new Location(0,0));
     }
 
+    /**
+     * Get the players location
+     */
+    Location playerLoc(){
+        return app.domain.getGameState().player().getLocation();
+    }
+    boolean notValid(int x, int y){
+        return y >= board.size() || x >= board.get(0).size();
+    }
     /**
      * Create a list of list of floats to store how well tested each space on our board is.
      * @param app the application, which we can get the board from
