@@ -5,6 +5,7 @@ import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Crate;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserSource;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedExit;
 import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
@@ -55,6 +56,11 @@ public class GameBoard {
         this.width = builder.getWidth();
         this.height = builder.getHeight();
         this.totalTreasure = builder.getTotalTreasure();
+
+        board.forEach(x -> x.forEach(y -> {
+            if (y.item instanceof LaserSource s) { s.setLaser(board); }
+        }));
+
         subscribeGameState(getLockedExit());
         playerMove(Direction.NONE, this);
     }
