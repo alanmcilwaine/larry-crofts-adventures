@@ -5,6 +5,7 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 
 /**
  * Wall on tile
+ *
  * @author Yee Li
  */
 public record Wall() implements Item {
@@ -14,6 +15,8 @@ public record Wall() implements Item {
     }
 
     @Override
-    public String toString() { return "Wall"; }
+    public String toString() {
+        return "Wall";
+    }
 
 }

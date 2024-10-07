@@ -10,11 +10,8 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
-import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Util;
-import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +20,7 @@ import java.util.logging.Logger;
 
 /**
  * The main game board
+ *
  * @author Yee Li, Maria Louisa Carla Parinas
  */
 public class GameBoard {
@@ -59,7 +57,7 @@ public class GameBoard {
         this.height = builder.getHeight();
         this.totalTreasure = builder.getTotalTreasure();
         var l = getLockedExit();
-        if(l != null){
+        if (l != null) {
             subscribeGameState(l);
         }
         playerMove(Direction.NONE, this);
@@ -81,23 +79,6 @@ public class GameBoard {
     private void playerMove(Direction direction, GameBoard gameBoard) {
         player.attemptMove(direction, gameBoard);
     }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public List<Robot> getRobots() {
-        return robots;
-    }
-
-    public List<MovableBox> getBoxes() {
-        return boxes;
-    }
-
 
     /**
      * Moves all the robots in the level
@@ -126,27 +107,27 @@ public class GameBoard {
      */
     public GameBoard copyOf() {
         List<List<Tile<Item>>> newBoard = board.stream().map(x -> x.stream()
-                                                            .map(y -> new Tile<>(y.item, y.location))
-                                                            .toList())
-                                                            .toList();
+                        .map(y -> new Tile<>(y.item, y.location))
+                        .toList())
+                .toList();
 
 
         // might have more types of robots in the future, could change this
         List<Robot> newRobots = robots.stream()
-                                        .map(r -> (Robot) new KillerRobot(r.getLocation().x(), r.getLocation().y()))
-                                        .toList();
+                .map(r -> (Robot) new KillerRobot(r.getLocation().x(), r.getLocation().y()))
+                .toList();
 
         List<MovableBox> newBoxes = boxes.stream()
-                                            .map(b -> b instanceof Crate ?
-                                                    new Crate(b.getLocation().x(), b.getLocation().y()) :
-                                                    new MovableBox(b.getLocation().x(), b.getLocation().y()))
-                                            .toList();
+                .map(b -> b instanceof Crate ?
+                        new Crate(b.getLocation().x(), b.getLocation().y()) :
+                        new MovableBox(b.getLocation().x(), b.getLocation().y()))
+                .toList();
 
         // make new board
         return new GameBoardBuilder().addBoard(newBoard).addBoardSize(width, height)
-                                    .addLevel(level).addPlayer(new Player(player.getLocation()))
-                                    .addRobots(newRobots).addBoxes(newBoxes).addTimeLeft(timeLeft)
-                                    .addTreasure(totalTreasure).build();
+                .addLevel(level).addPlayer(new Player(player.getLocation()))
+                .addRobots(newRobots).addBoxes(newBoxes).addTimeLeft(timeLeft)
+                .addTreasure(totalTreasure).build();
     }
 
     /**

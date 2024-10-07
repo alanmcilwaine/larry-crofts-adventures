@@ -3,19 +3,18 @@ package nz.ac.wgtn.swen225.lc.domain.GameActor;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
-import nz.ac.wgtn.swen225.lc.domain.Interface.TeleportItem;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 
 /**
  * Player on the board
+ *
  * @author Yee Li
  */
 public class Player implements Actor {
@@ -37,6 +36,7 @@ public class Player implements Actor {
     public GameBoard getGameBoard() {
         return gameBoard;
     }
+
     @Override
     public Location getLocation() {
         return location;
@@ -48,7 +48,9 @@ public class Player implements Actor {
     }
 
     @Override
-    public void setActorFacing(Direction direction) { this.playerFacing = direction; }
+    public void setActorFacing(Direction direction) {
+        this.playerFacing = direction;
+    }
 
     public List<Item> getTreasure() {
         return List.copyOf(treasure);
@@ -74,12 +76,12 @@ public class Player implements Actor {
 
     @Override
     public void doMove(Direction direction, GameBoard gameBoard, Tile<Item> current, Tile<Item> next) {
-        if(Objects.isNull(this.gameBoard)) {
+        if (Objects.isNull(this.gameBoard)) {
             this.gameBoard = gameBoard; // not ideal, but to support extended features.
         }
 
         // removed Direction.NONE because it doesn't do the checks if the robot goes on top
-        if (isDead || nextLevel ) return;
+        if (isDead || nextLevel) return;
 
         this.playerFacing = direction;
 
@@ -90,7 +92,7 @@ public class Player implements Actor {
         GameBoard.domainLogger.log(Level.INFO, "Player is at:" + location + " after moving " + direction);
 
         // check for game over
-        if(gameBoard.getGameState().robots().stream().anyMatch((x)->x.getLocation().equals(this.location))){
+        if (gameBoard.getGameState().robots().stream().anyMatch((x) -> x.getLocation().equals(this.location))) {
             die();
         }
     }
@@ -119,8 +121,12 @@ public class Player implements Actor {
     /**
      * Kills the player
      */
-    public void die() { isDead = true; }
+    public void die() {
+        isDead = true;
+    }
 
     @Override
-    public String toString() { return "Player"; }
+    public String toString() {
+        return "Player";
+    }
 }

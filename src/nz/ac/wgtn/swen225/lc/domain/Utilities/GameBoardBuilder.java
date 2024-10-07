@@ -14,6 +14,7 @@ import java.util.Map;
 /**
  * A game board builder.
  * All entities on game board shall meet certain rules.
+ *
  * @author Yee Li
  */
 public class GameBoardBuilder {
@@ -36,11 +37,11 @@ public class GameBoardBuilder {
     private int totalTreasure = -1;
 
     public GameBoard build() {
-        Util.checkNegative(Map.of("timeLeft",timeLeft,
-                "level",level,
-                 "width",width,
-                "height",height,
-                "totalTreasure",totalTreasure));
+        Util.checkNegative(Map.of("timeLeft", timeLeft,
+                "level", level,
+                "width", width,
+                "height", height,
+                "totalTreasure", totalTreasure));
         Util.checkNull(List.of(board, player));
         return new GameBoard(this);
     }
@@ -105,9 +106,13 @@ public class GameBoardBuilder {
         return player;
     }
 
-    public List<Robot> getRobots() { return robots; }
+    public List<Robot> getRobots() {
+        return robots;
+    }
 
-    public List<MovableBox> getBoxes() { return boxes; }
+    public List<MovableBox> getBoxes() {
+        return boxes;
+    }
 
     public int getTimeLeft() {
         return timeLeft;
