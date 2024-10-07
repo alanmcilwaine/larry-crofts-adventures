@@ -21,6 +21,7 @@ public class ImageImplement{
     private static final int yBorder = 260;
     private BackgroundImplement backgroundImplement;
     private InfoImplement info;
+    private SoundEffectImplement soundImplement;
 
 
     ImageImplement(JPanel jpanel) {
@@ -28,7 +29,8 @@ public class ImageImplement{
         this.jpanel.setDoubleBuffered(true);
         backgroundImplement = new BackgroundImplement();
         info = new InfoImplement(jpanel);
-        new SoundEffectImplement().playMusic();
+        soundImplement = new SoundEffectImplement();
+        new BackgroundSoundImplement().playMusic();
 
     }
 
@@ -45,11 +47,13 @@ public class ImageImplement{
      */
     public void drawImages(GameState gameState, Graphics g){
         info.fillAction(g, gameState);
+        soundImplement.fillAction(gameState);
         backgroundImplement.drawBackGround(jpanel, g);
         drawItemsTile(gameState, g);
         drawActors(gameState, g);
         drawBoxes(gameState, g);
         info.locationMatch(gameState);
+        soundImplement.locationMatch(gameState);
         WinLoseImplement.drawWinLose(gameState, g, jpanel);
 
 
