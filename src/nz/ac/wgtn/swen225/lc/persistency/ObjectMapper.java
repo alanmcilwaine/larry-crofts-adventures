@@ -189,7 +189,7 @@ public class ObjectMapper {
                 else if (parts.length > 1 && parts[1].startsWith("R")) {
                     KillerRobot robot = new KillerRobot(x, y);
                     //Check for path after =
-                    String path = parts[1].substring(2);
+                    String path = parts[1].substring(1);
                     robot.setActorPath(pathDefinining(path));
                     robots.add(robot);
                 }
