@@ -4,11 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
 
-import nz.ac.wgtn.swen225.lc.app.UI.AppFrame;
-import nz.ac.wgtn.swen225.lc.app.UI.Menu;
-import nz.ac.wgtn.swen225.lc.app.UI.UIPanel;
+import nz.ac.wgtn.swen225.lc.app.UI.Containers.AppFrame;
+import nz.ac.wgtn.swen225.lc.app.UI.Containers.GamePanel;
+import nz.ac.wgtn.swen225.lc.app.UI.Containers.Menu;
+import nz.ac.wgtn.swen225.lc.app.UI.Containers.UIPanel;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
@@ -147,13 +147,13 @@ public class App extends AppFrame implements AppInterface{
     public void tick(){
         time -= ((double) TICK_RATE / 1000);
 
-        checkNextLevel();
-        checkDeath();
-
         Command input = chooseInput();
         recorder.tick(input);
         giveInput(input);
         updateGraphics();
+
+        checkNextLevel();
+        checkDeath();
     }
 
     /**
@@ -204,8 +204,6 @@ public class App extends AppFrame implements AppInterface{
             tick.start();
             game.requestFocusInWindow();
         }
-        String status = tick.isRunning() ? "Pause" : "Resume";
-        ui.pause.setText(status);
     }
 
     @Override
