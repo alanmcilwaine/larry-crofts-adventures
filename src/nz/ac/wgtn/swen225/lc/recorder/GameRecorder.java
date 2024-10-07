@@ -138,11 +138,10 @@ class GameRecorder implements Recorder{
      * @return number of moves that should be redone to reach the last actual move we want to undo to
      */
     protected static int lastActualMove(ArrayDeque<Command> completed) {
-        ArrayDeque<Command> copy = completed.clone();
-        while(!copy.isEmpty()){
-            if(copy.pop() != Command.None) break;
-        }
-        return copy.size();
+        // Convert the deque to a stream and find the first non-None command
+        return (int) Math.max(completed.stream()
+                .dropWhile(cmd -> cmd == Command.None)
+                .count()-1, 0);
     }
 
     //================== DEFAULT LOGIC
@@ -185,5 +184,11 @@ class GameRecorder implements Recorder{
     public Action pause() {return RecorderAction.of(this::_pause);}
     @Override
     public Action takeControl() {return RecorderAction.of(this::_takeControl);}
+
+    @Override
+    public boolean canUndo() {return !completed.isEmpty();}
+
+    @Override
+    public boolean canRedo() {return !undone.isEmpty();}
 
 }
