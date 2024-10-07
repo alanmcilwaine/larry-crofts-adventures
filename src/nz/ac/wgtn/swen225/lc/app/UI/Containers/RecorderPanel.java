@@ -49,7 +49,6 @@ public class RecorderPanel extends JPanel implements UIElement {
         playbackSpeed.addChangeListener((e) -> {
             JSlider slider = (JSlider)e.getSource();
             if (!slider.getValueIsAdjusting()) {
-                System.out.println(App.TICK_RATE + (-1 * slider.getValue()));
                 app.recorder.setPlaybackSpeed(App.TICK_RATE + (-1 * slider.getValue()));
             }
         });
