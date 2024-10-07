@@ -11,8 +11,12 @@ public class BackgroundImplement {
     private ImageIcon gifImage;
 
     public BackgroundImplement() {
+        try {
+            gifImage = new ImageIcon(getClass().getResource("/BackgroundImage/bc.gif"));
 
-        gifImage = new ImageIcon(getClass().getResource("/BackgroundImage/bc.gif"));
+        } catch (RuntimeException e){
+            throw new Error("Failed to load background: " + gifImage.getImage());
+        }
     }
 
 
