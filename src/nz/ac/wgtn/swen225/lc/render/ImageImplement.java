@@ -27,7 +27,7 @@ public class ImageImplement{
         this.jpanel = jpanel;
         this.jpanel.setDoubleBuffered(true);
         backgroundImplement = new BackgroundImplement();
-        info = new InfoImplement();
+        info = new InfoImplement(jpanel);
         new SoundEffectImplement().playMusic();
 
     }
