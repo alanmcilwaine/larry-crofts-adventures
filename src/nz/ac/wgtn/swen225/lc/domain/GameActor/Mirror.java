@@ -6,23 +6,19 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Orientation;
 
-public class Mirror implements Item {
-
+public class Mirror extends MovableBox {
   Orientation orientation;
 
-  public Mirror(Orientation orientation) {
+  public Mirror(Orientation orientation, int x, int y) {
+    super(x, y);
     this.orientation = orientation;
   }
-
-  public Mirror() {}
 
   public Orientation getOrientation() { return orientation; }
 
   public Location reflectLaser(Laser laser) {
     Direction dir = laser.getDirection();
-
-    //temporary
-    return orientation.reflectLaser(dir, new Location(1, 1)) ;
+    return orientation.reflectLaser(dir, getLocation()) ;
   }
 
   @Override

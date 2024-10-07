@@ -34,7 +34,7 @@ public class Laser implements Item {
   public Direction getDirection() { return direction; }
 
   public void passLaser(Supplier<Item> itemSupplier) {
-    if (targetTile != null && !(targetTile.item instanceof Wall)) {
+    if (targetTile != null && !(targetTile.item instanceof Wall) ) {
       targetTile.item = itemSupplier.get();
       childLaser.passLaser(itemSupplier);
     }
