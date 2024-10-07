@@ -100,6 +100,18 @@ public interface Recorder {
     Action takeControl();
 
     /**
+     * Can you undo? Checks to see if the stack of commands are empty.
+     *
+     * @return if you are able to undo
+     */
+    boolean canUndo();
+    /**
+     * Can you redo? Checks to see if the stack of undos are empty.
+     *
+     * @return if you are able to redo
+     */
+    boolean canRedo();
+    /**
      * Supplies a Recorder (GameRecorder)
      *
      * @return GameRecorder, which in turn creates a playback
