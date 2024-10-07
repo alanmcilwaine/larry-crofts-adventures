@@ -6,4 +6,9 @@ public class Tube implements Item {
 
   @Override
   public String toString() { return "Tube"; }
+
+  @Override
+  public Item makeNew() {
+    return new Tube();
+  }
 }

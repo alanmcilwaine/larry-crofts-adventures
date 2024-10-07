@@ -17,7 +17,7 @@ public enum ActorPath {
   UPDOWN(Direction.UP, Direction.DOWN),
   LEFTRIGHT(Direction.LEFT, Direction.RIGHT);
 
-  int DELAY = 1;
+  int DELAY = 5;
   int stepCount;
   Direction dir1;
   Direction dir2;
@@ -48,13 +48,14 @@ public enum ActorPath {
             .stream().filter(bx-> bx.getLocation().equals(next.location))
             .findFirst().orElse(null);
 
-
-      if(next.canStepOn(a) && a.locationIsValid(next.location, b)) {
+    if (stepCount > DELAY) {
+      if (next.canStepOn(a) && a.locationIsValid(next.location, b)) {
         a.actOnTile(this.d, b, current, next);
       } else {
         switchDirection(a);
       }
       stepCount = 0; // reset
+    }
 
     stepCount++; // delay
 

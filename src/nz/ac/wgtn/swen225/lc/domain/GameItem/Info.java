@@ -33,4 +33,7 @@ public record Info(String info) implements Item {
     public String toString() {
         return "Info";
     }
+
+    @Override
+    public Item makeNew() { return new Info(info); }
 }

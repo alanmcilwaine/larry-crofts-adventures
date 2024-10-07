@@ -45,7 +45,8 @@ public record OneWayTeleport(Location destination) implements TeleportItem {
     }
 
     @Override
-    public String toString() {
-        return "OneWayTeleport";
-    }
+    public String toString() { return "OneWayTeleport"; }
+
+    @Override
+    public Item makeNew() { return new OneWayTeleport(destination); }
 }

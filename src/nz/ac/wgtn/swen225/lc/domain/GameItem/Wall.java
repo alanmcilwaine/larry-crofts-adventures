@@ -16,4 +16,6 @@ public record Wall() implements Item {
     @Override
     public String toString() { return "Wall"; }
 
+    @Override
+    public Item makeNew() { return new Wall(); }
 }

@@ -21,4 +21,6 @@ public record Treasure() implements Item {
     @Override
     public String toString() { return "Treasure"; }
 
+    @Override
+    public Item makeNew() { return new Treasure(); }
 }

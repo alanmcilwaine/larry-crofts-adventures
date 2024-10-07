@@ -67,4 +67,8 @@ public class LaserSource implements Togglabble {
   @Override
   public String toString() { return "LaserSource"; }
 
+  @Override
+  public Item makeNew() {
+    return new LaserSource(direction, laserToggle, location.x(), location.y());
+  }
 }

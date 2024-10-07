@@ -47,4 +47,7 @@ public record LockedExit() implements Item, GameStateObserver {
 
     @Override
     public String toString() { return "LockedExit"; }
+
+  @Override
+  public Item makeNew() { return new LockedExit(); }
 }

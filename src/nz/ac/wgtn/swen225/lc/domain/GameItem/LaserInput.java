@@ -13,4 +13,7 @@ public class LaserInput implements Item {
 
   @Override
   public String toString() { return "LaserInput"; }
+
+  @Override
+  public Item makeNew() { return new LaserInput(); }
 }

@@ -26,4 +26,10 @@ public class Mirror implements Item {
 //
 //  @Override
 //  public String toString() { return "Mirror"; }
+
+
+  @Override
+  public Item makeNew() {
+    return new Mirror();
+  }
 }

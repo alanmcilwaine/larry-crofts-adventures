@@ -148,7 +148,7 @@ public class GameBoard {
 
         for(int x = l.x() - 1; x <= l.x() + 1; x++) {
             for(int y = l.y() - 1; y <= l.y() + 1; y++) {
-                ls.add(board.get(x).get(y));
+                ls.add(board.get(y).get(x));
             }
         }
         return ls;
@@ -161,7 +161,7 @@ public class GameBoard {
      */
     public GameBoard copyOf() {
         List<List<Tile<Item>>> newBoard = board.stream().map(x -> x.stream()
-                                                            .map(y -> new Tile<>(y.item, y.location))
+                                                            .map(y -> new Tile<>(y.item.makeNew(), y.location))
                                                             .toList())
                                                             .toList();
 
