@@ -1,4 +1,6 @@
 package nz.ac.wgtn.swen225.lc.domain.DomainTest;
+import nz.ac.wgtn.swen225.lc.domain.GameActor.KillerRobot;
+import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
@@ -10,6 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static nz.ac.wgtn.swen225.lc.domain.DomainTest.Mock.addBoxAtLocation;
+import static nz.ac.wgtn.swen225.lc.domain.DomainTest.Mock.addRobotAtLocation;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -29,7 +33,7 @@ public class RobotMovementTest {
     GameBoard gameBoard = Mock.getGameBoard();
 
     Player player = gameBoard.getGameState().player();
-    gameBoard.addRobotAtLocation(3,5);
+    addRobotAtLocation(gameBoard.getRobots(), 3,5);
     List<Robot> robots = gameBoard.getGameState().robots();
     Robot track = robots.getFirst();
 
@@ -63,7 +67,7 @@ public class RobotMovementTest {
     GameBoard gameBoard = Mock.getGameBoard();
 
     Player player = gameBoard.getGameState().player();
-    gameBoard.addRobotAtLocation(0,0);
+    addBoxAtLocation(gameBoard.getBoxes(),0,0);
     List<Robot> robots = gameBoard.getGameState().robots();
     Robot track = robots.getFirst();
 

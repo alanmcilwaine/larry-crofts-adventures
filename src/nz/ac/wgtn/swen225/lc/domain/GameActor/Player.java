@@ -92,7 +92,6 @@ public class Player implements Actor {
         // check for game over
         if(gameBoard.getGameState().robots().stream().anyMatch((x)->x.getLocation().equals(this.location))){
             die();
-            gameBoard.onGameOver();
         }
     }
 

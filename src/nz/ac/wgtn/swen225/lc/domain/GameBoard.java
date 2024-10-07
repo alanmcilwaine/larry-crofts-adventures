@@ -90,14 +90,14 @@ public class GameBoard {
         return height;
     }
 
-    //TODO this is for testing?
-    public void addRobotAtLocation(int x, int y) {
-        robots.add(new KillerRobot(x, y));
+    public List<Robot> getRobots() {
+        return robots;
     }
 
-    public void addBoxAtLocation(int x, int y) {
-        boxes.add(new MovableBox(x,y));
+    public List<MovableBox> getBoxes() {
+        return boxes;
     }
+
 
     /**
      * Moves all the robots in the level
@@ -156,11 +156,6 @@ public class GameBoard {
      */
     public GameState getGameState() {
         return new GameState(board, player, robots, boxes, timeLeft, level, width, height, totalTreasure);
-    }
-
-    //TODO
-    public void onGameOver() {
-        //throw new IllegalArgumentException("Game Over"); // temporary
     }
 
     private static void attach(GameStateObserver ob) {

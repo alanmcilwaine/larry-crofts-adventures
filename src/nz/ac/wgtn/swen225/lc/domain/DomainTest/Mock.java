@@ -1,5 +1,6 @@
 package nz.ac.wgtn.swen225.lc.domain.DomainTest;
 
+import nz.ac.wgtn.swen225.lc.domain.GameActor.KillerRobot;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
@@ -64,6 +65,13 @@ public class Mock {
      */
     public static Player getPlayer(Location location) {
         return new Player(location);
+    }
+
+    public static void addRobotAtLocation(List<Robot> robots, int x, int y) {
+        robots.add(new KillerRobot(x, y));
+    }
+    public static void addBoxAtLocation(List<MovableBox> boxes, int x, int y) {
+        boxes.add(new MovableBox(x,y));
     }
 
     /**

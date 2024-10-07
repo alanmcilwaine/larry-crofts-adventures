@@ -14,7 +14,8 @@ public class MovableBoxTest {
   @Test
   public void boxPushOpen() {
     var gameboard = Mock.getGameBoard();
-    gameboard.addBoxAtLocation(2, 2);
+    Mock.addBoxAtLocation(gameboard.getBoxes(),2,2);
+
     List<MovableBox> boxes = gameboard.getGameState().boxes();
     MovableBox track = boxes.getFirst();
     var player = gameboard.getGameState().player();
@@ -40,7 +41,8 @@ public class MovableBoxTest {
   @Test
   public void boxPushBlocked() {
     var gameboard = Mock.getGameBoard();
-    gameboard.addBoxAtLocation(2 ,2);
+    Mock.addBoxAtLocation(gameboard.getBoxes(),2,2);
+
     List<MovableBox> boxes = gameboard.getGameState().boxes();
     MovableBox track = boxes.getFirst();
     var player = gameboard.getGameState().player();
