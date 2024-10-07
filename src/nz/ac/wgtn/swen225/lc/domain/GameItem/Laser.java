@@ -34,7 +34,7 @@ public class Laser implements Item {
   public Direction getDirection() { return direction; }
 
   public void passLaser(Supplier<Item> itemSupplier) {
-    if (targetTile != null) {
+    if (targetTile != null && !(targetTile.item instanceof Wall)) {
       targetTile.item = itemSupplier.get();
       childLaser.passLaser(itemSupplier);
     }
@@ -52,6 +52,12 @@ public class Laser implements Item {
       tile.item = new NoItem();
       passLaser(NoItem::new);
     }
+  }
+
+  @Override
+  public <T extends Item> void onExit(Actor actor, Tile<T> tile) {
+    tile.item = childLaser;
+    passLaser(() -> childLaser);
   }
 
   @Override

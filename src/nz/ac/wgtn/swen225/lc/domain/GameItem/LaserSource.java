@@ -10,8 +10,13 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * An item that produces a line of lasers.
+ *
+ * @author Carla Parinas
+ */
 public class LaserSource implements Item {
-
+// TODO: FIX THIS UP
   private Location location; // needs to set the laser somewhere
   private Direction direction; // has a direction but it should not move as well as blocks all actors
   private boolean laserToggle = false; // auto set to false
