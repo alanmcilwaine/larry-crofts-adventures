@@ -27,7 +27,6 @@ public class MovableBox implements Actor {
 
   @Override
   public boolean attemptMove(Direction direction, GameBoard gameBoard) {
-
     MovableBox box = gameBoard.getGameState().boxes()
             .stream().filter(b -> b.location.equals(direction.act(location)))
             .findFirst().orElse(null);

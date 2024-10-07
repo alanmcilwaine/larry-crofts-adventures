@@ -39,8 +39,7 @@ public abstract class Robot implements Actor {
 
   public void update(GameBoard gameBoard) {
     if (!attemptMove(this.robotFacing, gameBoard)) {
-      this.robotFacing = actorPath.getDir2();
-      actorPath.switchDirection();
+      actorPath.switchDirection(this);
     }
   }
 

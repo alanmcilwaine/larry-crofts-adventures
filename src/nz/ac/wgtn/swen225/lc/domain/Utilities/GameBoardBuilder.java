@@ -4,6 +4,7 @@ import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserSource;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 
@@ -23,6 +24,8 @@ public class GameBoardBuilder {
     private List<Robot> robots = new ArrayList<>();
 
     private List<MovableBox> boxes = new ArrayList<>();
+
+    private List<LaserSource> laserSources = new ArrayList<>();
 
     private int timeLeft = -1;
 
@@ -68,6 +71,12 @@ public class GameBoardBuilder {
         return this;
     }
 
+    public GameBoardBuilder addLaserSources(List<LaserSource> laserSources) {
+        Util.checkNull(laserSources, String.format("%s is null.", "laserSources"));
+        this.laserSources = laserSources;
+        return this;
+    }
+
     public GameBoardBuilder addTimeLeft(int timeLeft) {
         Util.checkNegative("Time Left", timeLeft);
         this.timeLeft = timeLeft;
@@ -107,6 +116,8 @@ public class GameBoardBuilder {
     public List<Robot> getRobots() { return robots; }
 
     public List<MovableBox> getBoxes() { return boxes; }
+
+    public List<LaserSource> getLaserSources() { return laserSources; }
 
     public int getTimeLeft() {
         return timeLeft;
