@@ -20,9 +20,7 @@ public class Button implements Item {
     // Robots should not press the button but MovableBoxes can
     if (actor instanceof Robot) { return; }
     isPressed = !isPressed; // switch it
-  }
 
-  private void update() {
 
   }
 

@@ -20,12 +20,12 @@ public class Laser implements Item {
   Location target;
   Laser childLaser;
 
-  public Laser(GameBoard gameBoard, Direction direction, Location location) {
+  public Laser(List<List<Tile<Item>>> gameBoard, Direction direction, Location location) {
     this.direction = direction;
     target = direction.act(location);
 
-    if(target.x() < gameBoard.getWidth() && target.y() < gameBoard.getHeight()) {
-      targetTile = gameBoard.getBoard().get(target.x()).get(target.y());
+    if(target.x() < gameBoard.size() && target.y() < gameBoard.size()) {
+      targetTile = gameBoard.get(target.x()).get(target.y());
       childLaser = new Laser(gameBoard, direction, target);
       passLaser(() -> childLaser);
     }

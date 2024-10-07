@@ -19,23 +19,29 @@ public class LaserSource implements Item {
 // TODO: FIX THIS UP
   private Location location; // needs to set the laser somewhere
   private Direction direction; // has a direction but it should not move as well as blocks all actors
-  private boolean laserToggle = false; // auto set to false
+  private Location target;
+  private boolean laserToggle = true; // auto set to false
   private Laser childLaser;
 
-  public LaserSource(GameBoard gameBoard, Direction direction, boolean toggle, int x,
+  public LaserSource(Direction direction, boolean toggle, int x,
                      int y) {
     this.direction = direction;
     this.location = new Location(x, y);
     this.laserToggle = toggle;
-    Location target = this.direction.act(location);
+    target = this.direction.act(location);
+  }
+
+  public void setLaser(List<List<Tile<Item>>> gameBoard) {
     this.childLaser = new Laser(gameBoard, direction, target);
-    passLaser(gameBoard.getBoard(), target);
+    passLaser(gameBoard, target);
   }
 
   private void passLaser(List<List<Tile<Item>>> board, Location next) {
     if (!laserToggle) { return; }
     board.get(next.x()).get(next.y()).item = childLaser;
   }
+
+  public Direction getDirection() { return direction; }
 
   public void setLaserToggle() {
     laserToggle = !laserToggle;
