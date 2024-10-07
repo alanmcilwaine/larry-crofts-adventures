@@ -7,9 +7,7 @@ import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.*;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
-import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
-import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
-import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.*;
 
 public class PersistencyPrint {
     public static void main(String[] args) throws IOException {
@@ -33,7 +31,7 @@ public class PersistencyPrint {
         board.get(1).get(3).item = new Key(ItemColor.RED);
         board.get(3).get(3).item = new LockedDoor(ItemColor.RED);
         board.get(2).get(2).item = new Info("Hello chap!");
-        board.get(2).get(4).item = new OneWayTeleport(new Location(2, 4));
+        board.get(2).get(4).item = new LaserSource(Direction.UP, true, 2, 4);
         
         //Treasure
         board.get(3).get(2).item = new Treasure();
@@ -43,10 +41,13 @@ public class PersistencyPrint {
 
         Player player = new Player(new Location(1, 1));
         List<Robot> robots = new ArrayList<>();
-        robots.add(new KillerRobot(2, 3));
+        KillerRobot r = new KillerRobot(2, 3);
+        r.setActorPath(ActorPath.UPDOWN);
+        robots.add(r);
 
         List<MovableBox> boxes = new ArrayList<>();
         boxes.add(new MovableBox(2, 1));
+        boxes.add(new Mirror(Orientation.BOTTOMLEFTFACING, 2,4));
         
         return new GameBoardBuilder().addBoard(board).addBoardSize(5, 5).addTimeLeft(120).addTreasure(1).addLevel(1).addPlayer(player).addRobots(robots).addBoxes(boxes).build();
     }
