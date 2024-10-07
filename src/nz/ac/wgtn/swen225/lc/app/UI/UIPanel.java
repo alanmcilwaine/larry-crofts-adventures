@@ -50,9 +50,17 @@ public class UIPanel extends JPanel {
 
         undo.addActionListener(app.recorder.undo());
         redo.addActionListener(app.recorder.redo());
+        undo.addActionListener((unused) -> {
+            undo.setEnabled(app.recorder.canUndo());
+            redo.setEnabled(app.recorder.canRedo());
+        });
+        redo.addActionListener((unused) -> {
+            redo.setEnabled(app.recorder.canRedo());
+            undo.setEnabled(app.recorder.canUndo());
+        });
         play.setEnabled(false);
-        undo.setEnabled(false);
-        redo.setEnabled(false);
+        undo.setEnabled(app.recorder.canUndo());
+        redo.setEnabled(app.recorder.canRedo());
         play.addActionListener(app.recorder.play());
         pause.addActionListener((unused) -> {
             app.pauseTimer(app.tick.isRunning());
