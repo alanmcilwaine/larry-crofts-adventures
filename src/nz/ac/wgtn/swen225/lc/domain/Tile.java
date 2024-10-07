@@ -10,6 +10,7 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.Util;
  * Base Tile on game board.
  *
  * @param <T> item
+ * @author Yee Li
  */
 public class Tile<T extends Item> {
 

@@ -182,7 +182,7 @@ public class GameBoard {
                 .filter(item -> item instanceof LockedExit)
                 .map(item -> (LockedExit) item)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Map must have a locked exit."));
+                .orElse(null);
     }
 }
 
