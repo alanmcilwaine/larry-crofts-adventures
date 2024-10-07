@@ -147,7 +147,7 @@ public class GameBoard {
         obs.remove(ob);
     }
 
-    public static <T extends GameStateObserver> void subscribeGameState(T observer) {
+    private static <T extends GameStateObserver> void subscribeGameState(T observer) {
         attach(observer);
     }
 

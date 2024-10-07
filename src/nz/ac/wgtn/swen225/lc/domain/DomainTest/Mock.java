@@ -41,6 +41,7 @@ public class Mock {
      * such as robots and additional features.
      *
      * @return mocked game board
+     * @author Yee Li
      */
     public static GameBoard getGameBoard() {
         return constructGameBoard();

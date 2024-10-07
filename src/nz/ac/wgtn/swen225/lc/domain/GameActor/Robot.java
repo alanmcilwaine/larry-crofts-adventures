@@ -8,6 +8,10 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.ActorPath;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
+/**
+ * An abstract class for robot.
+ * @author Yee Li, Carla
+ */
 public abstract class Robot implements Actor {
     private Location location;
     private ActorPath actorPath = ActorPath.LEFTRIGHT;
