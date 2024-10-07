@@ -48,11 +48,16 @@ public class UIPanel extends JPanel {
 
         undo.addActionListener(app.recorder.undo());
         redo.addActionListener(app.recorder.redo());
+        play.setEnabled(false);
+        undo.setEnabled(false);
+        redo.setEnabled(false);
         play.addActionListener(app.recorder.play());
         pause.addActionListener((unused) -> {
             app.pauseTimer(app.tick.isRunning());
-            String text = app.tick.isRunning() ? "Pause" : "Resume";
-            pause.setText(text);
+            undo.setEnabled(!app.tick.isRunning());
+            redo.setEnabled(!app.tick.isRunning());
+            play.setEnabled(!app.tick.isRunning());
+            pause.setText(app.tick.isRunning() ? "Pause" : "Resume");
         });
 
         List.of(undo, redo, pause, play).forEach(this::add);
