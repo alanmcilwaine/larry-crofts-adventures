@@ -70,6 +70,7 @@ public class InfoImplement {
         if(action != null){
             action.run();
         }
+        locationActionMap.clear();
 
     }
 
