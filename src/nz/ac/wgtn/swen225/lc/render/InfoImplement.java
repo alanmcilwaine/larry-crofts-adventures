@@ -16,11 +16,21 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 public class InfoImplement {
+    JTextArea textArea = new JTextArea();
+    JPanel jPanel;
 
     private Map<Location, Runnable> locationActionMap = new HashMap<>();
 
-    public InfoImplement() {
-
+    public InfoImplement(JPanel jPanel) {
+        this.jPanel = jPanel;
+        textArea.setFont(new Font("Monospaced", Font.BOLD, 35));
+        textArea.setForeground(Color.RED);
+        textArea.setBackground(Color.BLACK);
+        textArea.setBounds(0, 400, 580, 130);
+        textArea.setEditable(false);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        jPanel.setLayout(null);
 
 
         // Add more levels and hints as needed
@@ -28,15 +38,16 @@ public class InfoImplement {
 
     public void showInfo(Graphics g, String text) throws IOException {
         Image image = ImageIO.read(new File("BackgroundImage/warning.png"));
-        g.setFont(new Font("Monospaced", Font.BOLD, 35));
-        g.setColor(new Color(255, 0, 0));
-        g.drawImage(Img.resizeImage(image, 150, 150), 180, 360, null);
-        g.drawString(text, 160, 520);
+        g.drawImage(Img.resizeImage(image, 130, 150), 185, 260, null);
+        textArea.setText(text);
+        textArea.setVisible(true);
+        jPanel.add(textArea);
 
     }
 
 
     public void fillAction(Graphics g, GameState gameState){
+        textArea.setVisible(false);
         gameState.board().forEach(listTile ->
                 listTile.stream()
                         .filter(tile -> tile.item instanceof Info)
@@ -59,6 +70,7 @@ public class InfoImplement {
         if(action != null){
             action.run();
         }
+
     }
 
 }
