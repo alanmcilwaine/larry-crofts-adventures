@@ -58,7 +58,10 @@ public class GameBoard {
         this.width = builder.getWidth();
         this.height = builder.getHeight();
         this.totalTreasure = builder.getTotalTreasure();
-        subscribeGameState(getLockedExit());
+        var l = getLockedExit();
+        if(l != null){
+            subscribeGameState(l);
+        }
         playerMove(Direction.NONE, this);
     }
 
@@ -197,7 +200,7 @@ public class GameBoard {
                 .filter(item -> item instanceof LockedExit)
                 .map(item -> (LockedExit) item)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Map must have a locked exit."));
+                .orElse(null);
     }
 }
 
