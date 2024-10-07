@@ -178,6 +178,8 @@ public class App extends AppFrame implements AppInterface{
         Persistency.saveCommands(commands, level);
     }
 
+    // OVERRIDES-------------------------
+
     @Override
     public void updateGraphics(){
         ui.repaint();

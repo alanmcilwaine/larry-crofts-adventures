@@ -9,7 +9,9 @@ import nz.ac.wgtn.swen225.lc.render.Img;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * UIPanel --- JPanel extension which holds the UI elements to the right side of the screen.
@@ -88,14 +90,17 @@ public class UIPanel extends JPanel {
         level.setText(String.valueOf(game.level()));
         time.setText(String.valueOf((int)App.time));
         chips.setText(String.valueOf(game.totalTreasure() - treasure.stream().filter(t -> t instanceof Treasure).count()));
-
         super.paintComponent(g);
         g.drawImage(backgroundImage, 0, 0, this);
-
         IntStream.range(0, treasure.size())
-                .boxed()
-                .forEach(i -> {
-                    g.drawImage(Img.resizeImage(Img.INSTANCE.getImgs(treasure.get(i).toString() + ".png"), 30, 30), 45 + (i * 60), 425, this);
-                });
+            .boxed()
+            .forEach(i -> {
+                g.drawImage(
+                    Img.resizeImage(Img.INSTANCE.getImgs(treasure.get(i).toString() + ".png"), 30, 30),
+                    45 + ((i % 4) * 60),
+                    425 + ((i / 4) * 55),
+                    this
+                );
+            });
     }
 }
