@@ -7,7 +7,11 @@ import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.GameState;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
+
+import java.io.IOException;
 import java.util.List;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 
@@ -23,6 +27,9 @@ public class ImageImplement{
     private InfoImplement info;
     private SoundEffectImplement soundImplement;
 
+    // Flags to track if win or lose music has been played
+    private boolean winMusicPlayed = false;
+    private boolean loseMusicPlayed = false;
 
     ImageImplement(JPanel jpanel) {
         this.jpanel = jpanel;
@@ -31,22 +38,21 @@ public class ImageImplement{
         info = new InfoImplement(jpanel);
         soundImplement = new SoundEffectImplement();
         new BackgroundSoundImplement().playMusic();
-
     }
 
     /**
-     * factory method getting the ImageImplement instance.
+     * Factory method getting the ImageImplement instance.
      */
-    public static ImageImplement getImageImplement(JPanel jpanel){
+    public static ImageImplement getImageImplement(JPanel jpanel) {
         return new ImageImplement(jpanel);
     }
 
-
     /**
-     * draw the image in each game board to the jpanel.
+     * Draw the image in each game board to the jpanel.
      */
-    public void drawImages(GameState gameState, Graphics g){
+    public void drawImages(GameState gameState, Graphics g) {
         info.fillAction(g, gameState);
+
         soundImplement.fillAction(gameState);
         backgroundImplement.drawBackGround(jpanel, g);
         drawItemsTile(gameState, g);
@@ -54,9 +60,9 @@ public class ImageImplement{
         drawBoxes(gameState, g);
         info.locationMatch(gameState);
         soundImplement.locationMatch(gameState);
-        WinLoseImplement.drawWinLose(gameState, g, jpanel);
+        new WinLoseImplement().drawWinLose(gameState, g, jpanel);
 
-
+        new WinLoseImplement().allMusicPlayed(gameState);
     }
 
     /**

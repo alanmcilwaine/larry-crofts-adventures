@@ -1,7 +1,10 @@
 package nz.ac.wgtn.swen225.lc.render;
 
+import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.Button;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.Key;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedDoor;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.Treasure;
 import nz.ac.wgtn.swen225.lc.domain.GameState;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
@@ -13,7 +16,6 @@ import java.util.Map;
 
 public class SoundEffectImplement {
     private Map<Location, Runnable> SoundActionMap = new HashMap<>();
-    private Clip clip;
 
     public void collectKeySound(String type) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
 
@@ -46,6 +48,8 @@ public class SoundEffectImplement {
     public void fillAction(GameState gameState){
         eachFillAction(gameState, Key.class);
         eachFillAction(gameState, LockedDoor.class);
+        eachFillAction(gameState, Treasure.class);
+        eachFillAction(gameState, Button.class);
     }
 
     public void locationMatch(GameState gameState){
