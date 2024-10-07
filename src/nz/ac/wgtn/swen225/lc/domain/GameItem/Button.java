@@ -20,15 +20,14 @@ public class Button implements Item {
     // Robots should not press the button but MovableBoxes can
     if (actor instanceof Robot) { return; }
     isPressed = !isPressed; // switch it
-    update();
   }
 
   private void update() {
-    if (isPressed) { }
+
   }
 
   @Override
   public String toString() {
-    return isPressed ? "ButtonPressed" : "Button";
+    return isPressed ? "PressedButton" : "Button";
   }
 }
