@@ -23,7 +23,7 @@ import nz.ac.wgtn.swen225.lc.render.ImageImplement;
 public class App extends AppFrame implements AppInterface{
     // Window is made up of two main panels
     private GamePanel game; //Don't generate here as controller could be generated in constructor.
-    private UIPanel ui;
+    public UIPanel ui;
     private Menu menu = new Menu(this);
 
     // Window Dimensions
