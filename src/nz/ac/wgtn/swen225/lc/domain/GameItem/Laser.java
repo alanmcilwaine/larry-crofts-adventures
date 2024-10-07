@@ -1,34 +1,65 @@
 package nz.ac.wgtn.swen225.lc.domain.GameItem;
 
+import nz.ac.wgtn.swen225.lc.domain.GameActor.Crate;
+import nz.ac.wgtn.swen225.lc.domain.GameActor.Mirror;
+import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
+import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 public class Laser implements Item {
-// TODO should this be an actor as well ? it's behaviour is interesting
+  Direction direction;
+  Tile<Item> targetTile;
+  Location target;
+  Laser childLaser;
 
-    Direction direction;
+  public Laser(List<List<Tile<Item>>> gameBoard, Direction direction, Location location) {
+    this.direction = direction;
+    target = direction.act(location);
 
-    public Laser(Direction direction) {
-        this.direction = direction;
+    if(target.x() < gameBoard.size() && target.y() < gameBoard.size()) {
+      targetTile = gameBoard.get(target.x()).get(target.y());
+      childLaser = new Laser(gameBoard, direction, target);
+      passLaser(() -> childLaser);
     }
+  }
 
-    @Override
-    public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {
-        // if player then die and if crate then disappear
+  public Direction getDirection() { return direction; }
 
-        if (actor instanceof Player p) {
-            p.die();
-        }
-        if (actor instanceof Crate) {
-            tile.item = new NoItem();
-        }
+  public void passLaser(Supplier<Item> itemSupplier) {
+    if (targetTile != null && !(targetTile.item instanceof Wall) ) {
+      targetTile.item = itemSupplier.get();
+      childLaser.passLaser(itemSupplier);
     }
+  }
 
-    @Override
-    public String toString() {
-        return "Laser";
+  @Override
+  public boolean blockActor(Actor actor) { return false; }
+
+  @Override
+  public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {
+    // if player then die and if crate then disappear
+
+    if (actor instanceof Player p) { p.die(); }
+    if (actor instanceof MovableBox m) {
+      tile.item = new NoItem();
+      passLaser(NoItem::new);
     }
+  }
+
+  @Override
+  public <T extends Item> void onExit(Actor actor, Tile<T> tile) {
+    tile.item = childLaser;
+    passLaser(() -> childLaser);
+  }
+
+  @Override
+  public String toString() { return "Laser"; }
 }

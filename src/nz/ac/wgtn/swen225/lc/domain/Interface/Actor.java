@@ -44,7 +44,7 @@ public interface Actor {
 
         MovableBox box = gameBoard.getGameState().boxes()
                 .stream().filter(b -> b.getLocation().equals(nextTile.location))
-                .findFirst().orElseGet(() -> null);
+                .findFirst().orElse(null);
 
         if (box != null && !box.attemptMove(direction, gameBoard)) {
             return false;

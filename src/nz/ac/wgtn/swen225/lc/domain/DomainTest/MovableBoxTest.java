@@ -21,23 +21,23 @@ public class MovableBoxTest {
         MovableBox track = boxes.getFirst();
         var player = gameboard.getGameState().player();
 
-        // assert correct spawn
-        assertEquals(new Location(2, 2), track.getLocation());
+    // assert correct spawn
+    assertEquals(new Location(2 ,2), track.getLocation());
 
-        gameboard.action(Direction.DOWN);
-        gameboard.action(Direction.DOWN);
-        gameboard.action(Direction.LEFT);
+    gameboard.action(Direction.DOWN);
+    gameboard.action(Direction.DOWN);
+    gameboard.action(Direction.LEFT);
 
-        //at this point the left of the player should have a movable box
-        gameboard.action(Direction.LEFT);
-        //assertEquals(player.findTileInSpecificLocation(gameboard, new Location(1, 2)).item, new MovableBox(new Location(1, 2)))
-        assertEquals(new Location(2, 2), player.getLocation());
-        assertEquals(new Location(1, 2), track.getLocation());
+    //at this point the left of the player should have a movable box
+    gameboard.action(Direction.LEFT);
+    //assertEquals(player.findTileInSpecificLocation(gameboard, new Location(1, 2)).item, new MovableBox(new Location(1, 2)))
+    assertEquals(new Location(2, 2), player.getLocation());
+    assertEquals(new Location(1, 2), track.getLocation());
 
-        gameboard.action(Direction.LEFT);
-        assertEquals(new Location(1, 2), player.getLocation());
-        assertEquals(new Location(0, 2), track.getLocation());
-    }
+    gameboard.action(Direction.LEFT);
+    assertEquals(new Location(1, 2), player.getLocation());
+    assertEquals(new Location(0, 2), track.getLocation());
+  }
 
     @Test
     public void boxPushBlocked() {
@@ -48,23 +48,27 @@ public class MovableBoxTest {
         MovableBox track = boxes.getFirst();
         var player = gameboard.getGameState().player();
 
-        gameboard.action(Direction.DOWN);
-        gameboard.action(Direction.DOWN);
-        gameboard.action(Direction.LEFT);
+    gameboard.action(Direction.DOWN);
+    gameboard.action(Direction.DOWN);
+    gameboard.action(Direction.LEFT);
 
-        //at this point the left of the player should have a movable box
-        gameboard.action(Direction.LEFT);
-        gameboard.action(Direction.LEFT);
-        gameboard.action(Direction.LEFT);
+    //at this point the left of the player should have a movable box
+    gameboard.action(Direction.LEFT);
+    gameboard.action(Direction.LEFT);
+    gameboard.action(Direction.LEFT);
 
-        // player should still be at same position
-        assertEquals(new Location(1, 2), player.getLocation());
-        assertEquals(new Location(0, 2), track.getLocation());
-    }
+    // player should still be at same position
+    assertEquals(new Location(1, 2), player.getLocation());
+    assertEquals(new Location(0, 2), track.getLocation());
+  }
 
-    @Test
-    public void shouldNotPushIntoItems() {
+  // TODO : Add more tests for items
+  @Test
+  public void shouldNotPushIntoItems() {
 
-    }
+  }
+
+  @Test
+  public void shouldNotPushIntoBox() {}
 
 }

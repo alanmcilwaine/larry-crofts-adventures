@@ -6,6 +6,7 @@ package nz.ac.wgtn.swen225.lc.domain.Utilities;
  *
  * @param x horizontal position
  * @param y vertical position
+ * @author Carla Parinas
  */
 public record Location(int x, int y) {
 

@@ -1,19 +1,31 @@
 package nz.ac.wgtn.swen225.lc.domain.GameItem;
 
+import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 
 public class Button implements Item {
-    boolean isPressed = false;
+  boolean isPressed = false;
+  Item attached;
 
-    @Override
-    public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {
-        isPressed = !isPressed; // switch it
-    }
+  public Button(Item attached) {
+    this.attached = attached;
+  }
 
-    @Override
-    public String toString() {
-        return isPressed ? "ButtonPressed" : "Button";
-    }
+  public Button() {}
+
+  @Override
+  public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {
+    // Robots should not press the button but MovableBoxes can
+    if (actor instanceof Robot) { return; }
+    isPressed = !isPressed; // switch it
+
+
+  }
+
+  @Override
+  public String toString() {
+    return isPressed ? "PressedButton" : "Button";
+  }
 }

@@ -1,10 +1,19 @@
+/**
+ * Holds manual tests that make sure individual methods are working as well as random tests,
+ * that randomize operations and make sure nothing breaks.
+ *
+ * @author John Rais raisjohn@ecs.vuw.ac.nz
+ * @version 2.5
+ */
 package nz.ac.wgtn.swen225.lc.recorder;
 
 import nz.ac.wgtn.swen225.lc.app.Command;
 import nz.ac.wgtn.swen225.lc.app.AppInterface;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
+import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,6 +21,123 @@ import java.util.stream.IntStream;
 
 public class RecorderTests {
 
+
+    @Test void undoTest(){
+        var lis = List.of(Command.Up,Command.Left,Command.None,Command.Right);
+
+        GameRecorder rq = new GameRecorder(mockApp());
+        rq.setCommands(lis);
+        //First command in the list is the first one we want to action
+        Assertions.assertEquals( rq.undone.peek(), Command.Up);
+
+        rq.redoFrame();
+        rq.redoFrame();
+        rq.redoFrame();
+        rq.redoFrame();
+        rq.redoFrame();
+
+        assert rq.undone.isEmpty();
+
+        Assertions.assertEquals(rq.completed.peek(), Command.Right);
+
+        Assertions.assertEquals( rq.getCommands(),lis);
+
+        //Now we can start undoing
+        rq._undo();
+
+        Assertions.assertEquals(rq.undone.peek(), Command.Right);
+        Assertions.assertEquals( rq.getCommands(),lis);
+
+        rq._undo();
+        Assertions.assertEquals(rq.undone.peek(), Command.Left);
+
+        Assertions.assertEquals( rq.getCommands(),lis);
+    }
+    /**
+     * First element in the list should be the top of the undo stack
+     */
+    @Test void redoTest(){
+        var lis = List.of(Command.Up,Command.Left,Command.None,Command.Right);
+
+        GameRecorder rq = new GameRecorder(mockApp());
+        rq.setCommands(lis);
+        //First command in the list is the first one we want to action
+        Assertions.assertEquals( rq.undone.peek(), Command.Up);
+
+        rq.redoFrame();
+        assert rq.undone.peek() == Command.Left;
+
+        assert rq.completed.peek() == Command.Up;
+
+        assert rq.getCommands().equals(lis);
+    }
+    @Test void redoMultipleTest(){
+        var lis = List.of(Command.None,Command.Left,Command.Down,Command.Right);
+
+        GameRecorder rq = new GameRecorder(mockApp());
+        rq.setCommands(lis);
+        //First command in the list is the first one we want to action
+        Assertions.assertEquals( rq.undone.peek(), Command.None);
+
+        rq._redo();
+        Assertions.assertEquals( rq.undone.peek(), Command.Down);
+
+        Assertions.assertEquals( rq.completed.peek(), Command.Left);
+
+        Assertions.assertEquals( rq.getCommands(),lis);
+    }
+    @Test void undoAllTest(){
+        var lis = List.of(Command.Up,Command.Left,Command.None,Command.Right);
+
+        GameRecorder rq = new GameRecorder(mockApp());
+        rq.setCommands(lis);
+
+        Assertions.assertEquals(rq.undone.peek(), Command.Up);
+
+        rq.redoFrame();
+        rq.redoFrame();
+        rq.redoFrame();
+        rq.redoFrame();
+
+        Assertions.assertEquals(rq.completed.size(), lis.size());
+        Assertions.assertTrue(rq.undone.isEmpty());
+
+        rq.undoAll();
+
+        Assertions.assertEquals(rq.getCommands().size(),lis.size());
+        Assertions.assertTrue(rq.completed.isEmpty());
+        Assertions.assertEquals(rq.undone.size(),  lis.size());
+        Assertions.assertEquals(rq.undone.peek(), Command.Up);
+    }
+    @Test void getCommandsTest(){
+        var lis = List.of(Command.Up,Command.Left,Command.None,Command.Right, Command.Down);
+
+        GameRecorder rq = new GameRecorder(mockApp());
+
+        rq.setCommands(lis);
+
+        rq.completed.push(rq.undone.pop());
+
+        Assertions.assertEquals( lis,rq.getCommands());
+
+        rq.completed.push(rq.undone.pop());
+
+        Assertions.assertEquals( lis,rq.getCommands());
+    }
+
+    @Test void lastActualMoveTest(){
+        var deque = new ArrayDeque<Command>(); deque.push((Command.Up));deque.push((Command.Left));deque.push((Command.None));
+        assert GameRecorder.lastActualMove(deque) == 1 : GameRecorder.lastActualMove(deque);
+
+        deque = new ArrayDeque<>(); deque.push((Command.Up));deque.push((Command.Left));deque.push((Command.Down));
+        assert GameRecorder.lastActualMove(deque) == 2 : GameRecorder.lastActualMove(deque);
+
+        deque = new ArrayDeque<>(); deque.push((Command.Up));deque.push((Command.None));deque.push((Command.None));
+        assert GameRecorder.lastActualMove(deque) == 0 : GameRecorder.lastActualMove(deque);
+
+        deque = new ArrayDeque<>(); deque.push((Command.None));deque.push((Command.None));deque.push((Command.None));
+        assert GameRecorder.lastActualMove(deque) == 0 : GameRecorder.lastActualMove(deque);
+    }
    @Test
    void testRecorder(){
         IntStream.range(0,1000).forEach( i -> cornerCaseRedoZeroCommands());
@@ -36,13 +162,13 @@ public class RecorderTests {
         GameRecorder recorder = mockRecorder(app);
         int com = 50;
         recorder.setCommands(randomCommands(com));
-        System.out.println(recorder.commands+"\n");
+        System.out.println(recorder.getCommands()+"\n");
         //-1 since has not moved yet
-        assert recorder.currentTick == -1 : "Expected -1, was " + recorder.currentTick;
+        assert (recorder.completed.size()-1) == -1 : "Expected -1, was " + (recorder.completed.size()-1);
 
         recorder.takeControl();
 
-        assert recorder.commands.size() == 0 : "Instead of 0, had : " + recorder.commands.size();
+        assert recorder.getCommands().size() == 0 : "Instead of 0, had : " + recorder.getCommands().size();
 
         //Should do nothing and not throw errors
         recorder.undo();
@@ -57,39 +183,36 @@ public class RecorderTests {
 
         recorder.tick(randomCommands(1).get(0));
         String[][] s2 = deepclone(app.state);
-        assert recorder.currentTick == 0;
-        System.out.println("S2:" + recorder.commands.get(recorder.currentTick) + "\n" + toPrint(app.state));
+        assert (recorder.completed.size()-1) == 0;
 
         recorder.tick(randomCommands(1).get(0));
         String[][] s3 = deepclone(app.state);
-        assert recorder.currentTick == 1;
-        System.out.println("S3:" + recorder.commands.get(recorder.currentTick) + "\n" + toPrint(app.state));
+        assert (recorder.completed.size()-1) == 1;
 
         recorder.tick(randomCommands(1).get(0));
         String[][] s4 = deepclone(app.state);
-        assert recorder.currentTick == 2;
-        System.out.println("S4:" + recorder.commands.get(recorder.currentTick) + "\n" + toPrint(app.state));
+        assert (recorder.completed.size()-1) == 2;
 
-        assert recorder.commands.size() == 3;
+        assert recorder.getCommands().size() == 3;
 
         //SEE IF IT BEHAVES AS EXPECTED WHILE UNDOING AND REDOING
         recorder.undo();
-        assert recorder.currentTick == 1; assertArrays(app.state,s3);
+        assert (recorder.completed.size()-1) == 1; assertArrays(app.state,s3);
 
         recorder.undo();
-        assert recorder.currentTick == 0; assertArrays(app.state,s2);
+        assert (recorder.completed.size()-1) == 0; assertArrays(app.state,s2);
 
         recorder.undo();
-        assert recorder.currentTick == -1; assertArrays(app.state,s1);
+        assert (recorder.completed.size()-1) == -1; assertArrays(app.state,s1);
         //======
         recorder.redo();
-        assert recorder.currentTick == 0; assertArrays(app.state,s2);
+        assert (recorder.completed.size()-1) == 0; assertArrays(app.state,s2);
 
         recorder.redo();
-        assert recorder.currentTick == 1; assertArrays(app.state,s3);
+        assert (recorder.completed.size()-1) == 1; assertArrays(app.state,s3);
 
         recorder.redo();
-        assert recorder.currentTick == 2; assertArrays(app.state,s4);
+        assert (recorder.completed.size()-1) == 2; assertArrays(app.state,s4);
 
     }
     @Test void fuzzActions(){
@@ -118,37 +241,39 @@ public class RecorderTests {
     @Test void testManual(){
         MockApp app = mockApp();
         GameRecorder recorder = mockRecorder(app);
-        recorder.setCommands(List.of(Command.Up,Command.Down,Command.Up,Command.Left,Command.None,Command.Up));
+        recorder.setCommands(List.of(Command.Left,Command.Right,Command.Up,Command.Down,Command.Up,Command.Down));
         //Go to the last command
         IntStream.range(0,6).forEach(i ->recorder.redo());
 
-        assert recorder.currentTick == 5 : "Tick was " + recorder.currentTick;
+        assert (recorder.completed.size()-1) == 5 : "Tick was " + (recorder.completed.size()-1);
         assertArrays(app.state,new String[][]{
-                {"P", "_", "_"},
                 {"_", "_", "_"},
-                {"_", "_", "_"}});
+                {"_", "_", "_"},
+                {"_", "P", "_"}});
 
         recorder.undo();
+        assert (recorder.completed.size()-1) == 4 : "Tick was " + (recorder.completed.size()-1);
+        assert (recorder.undone.size()) == 1 : "Undone was " + (recorder.undone.size());
 
         assertArrays(app.state,new String[][]{
                 {"_", "_", "_"},
-                {"P", "_", "_"},
-                {"_", "_", "_"}});
-
-        recorder.undo();
-        recorder.redo();
-
-        assertArrays(app.state,new String[][]{
-                {"_", "_", "_"},
-                {"P", "_", "_"},
+                {"_", "P", "_"},
                 {"_", "_", "_"}});
 
         recorder.undo();
         recorder.redo();
-        assert recorder.currentTick == 3 : "Tick was " + recorder.currentTick;
+
         assertArrays(app.state,new String[][]{
                 {"_", "_", "_"},
-                {"P", "_", "_"},
+                {"_", "P", "_"},
+                {"_", "_", "_"}});
+
+        recorder.undo();
+        recorder.redo();
+        assert (recorder.completed.size()) == 5 : "Tick was " + (recorder.completed.size());
+        assertArrays(app.state,new String[][]{
+                {"_", "_", "_"},
+                {"_", "P", "_"},
                 {"_", "_", "_"}});
     }
 

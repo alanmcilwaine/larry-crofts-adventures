@@ -4,7 +4,8 @@ import nz.ac.wgtn.swen225.lc.domain.GameActor.KillerRobot;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
-import nz.ac.wgtn.swen225.lc.domain.GameItem.Crate;
+import nz.ac.wgtn.swen225.lc.domain.GameActor.Crate;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserSource;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedExit;
 import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
@@ -20,7 +21,6 @@ import java.util.logging.Logger;
 
 /**
  * The main game board
- *
  * @author Yee Li, Maria Louisa Carla Parinas
  */
 public class GameBoard {
@@ -60,6 +60,12 @@ public class GameBoard {
         if (l != null) {
             subscribeGameState(l);
         }
+
+        board.forEach(x -> x.forEach(y -> {
+            if (y.item instanceof LaserSource s) { s.setLaser(board); }
+        }));
+
+        subscribeGameState(getLockedExit());
         playerMove(Direction.NONE, this);
     }
 
@@ -107,27 +113,27 @@ public class GameBoard {
      */
     public GameBoard copyOf() {
         List<List<Tile<Item>>> newBoard = board.stream().map(x -> x.stream()
-                        .map(y -> new Tile<>(y.item, y.location))
-                        .toList())
-                .toList();
+                                                            .map(y -> new Tile<>(y.item, y.location))
+                                                            .toList())
+                                                            .toList();
 
 
         // might have more types of robots in the future, could change this
         List<Robot> newRobots = robots.stream()
-                .map(r -> (Robot) new KillerRobot(r.getLocation().x(), r.getLocation().y()))
-                .toList();
+                                        .map(r -> (Robot) new KillerRobot(r.getLocation().x(), r.getLocation().y()))
+                                        .toList();
 
         List<MovableBox> newBoxes = boxes.stream()
-                .map(b -> b instanceof Crate ?
-                        new Crate(b.getLocation().x(), b.getLocation().y()) :
-                        new MovableBox(b.getLocation().x(), b.getLocation().y()))
-                .toList();
+                                            .map(b -> b instanceof Crate ?
+                                                    new Crate(b.getLocation().x(), b.getLocation().y()) :
+                                                    new MovableBox(b.getLocation().x(), b.getLocation().y()))
+                                            .toList();
 
         // make new board
         return new GameBoardBuilder().addBoard(newBoard).addBoardSize(width, height)
-                .addLevel(level).addPlayer(new Player(player.getLocation()))
-                .addRobots(newRobots).addBoxes(newBoxes).addTimeLeft(timeLeft)
-                .addTreasure(totalTreasure).build();
+                                    .addLevel(level).addPlayer(new Player(player.getLocation()))
+                                    .addRobots(newRobots).addBoxes(newBoxes).addTimeLeft(timeLeft)
+                                    .addTreasure(totalTreasure).build();
     }
 
     /**
@@ -176,7 +182,7 @@ public class GameBoard {
                 .filter(item -> item instanceof LockedExit)
                 .map(item -> (LockedExit) item)
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new IllegalArgumentException("Map must have a locked exit."));
     }
 }
 

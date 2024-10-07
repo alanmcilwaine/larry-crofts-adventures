@@ -1,0 +1,19 @@
+{
+  "board": [
+    ["W", "W", "W", "W", "W"],
+    ["W", "F-P", "F-MB", "K#R", "W"],
+    ["W", "F", "I", "F", "TP(2@4)"],
+    ["W", "F", "T-R", "LD#R", "LX"],
+    ["W", "W", "W", "W", "W"]
+  ],
+  "level": {
+    "number": 1,
+    "Time Limit": 120,
+    "Total Treasure": 1
+  },
+  "info": {
+    "info": "Hello chap!",
+    "x": 2,
+    "y": 2
+  }
+}
