@@ -31,7 +31,6 @@ public class ObjectMapper {
         itemConstructors.put("T", color -> new Treasure());
         itemConstructors.put("UD", UnLockedDoor::new);
         itemConstructors.put("W", color -> new Wall());
-        itemConstructors.put("M", color -> new Mirror());
         itemConstructors.put("Tu", color -> new Tube());
         itemConstructors.put("B", color -> new Button());
         itemConstructors.put("LI", color -> new LaserInput());
