@@ -7,6 +7,7 @@ import nz.ac.wgtn.swen225.lc.domain.Tile;
 
 /**
  * Exit on tile
+ *
  * @author Yee Li
  */
 public record Exit() implements Item {
@@ -24,12 +25,7 @@ public record Exit() implements Item {
     }
 
     @Override
-    public <T extends Item> void onExit(Actor actor, Tile<T> tile) {
-        if (actor instanceof Player p) {
-            p.setNextLevel(false);
-        }
+    public String toString() {
+        return "Exit";
     }
-
-    @Override
-    public String toString() { return "Exit"; }
 }

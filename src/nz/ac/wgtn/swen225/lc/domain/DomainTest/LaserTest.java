@@ -17,7 +17,7 @@ public class LaserTest {
   public void testRightFacing() {
     var gameboard = Mock.getGameBoard();
     var player = gameboard.getGameState().player();
-    gameboard.getBoard().get(0).get(5).item = new LaserSource(gameboard, Direction.RIGHT, true, 0 ,5);
+    gameboard.getBoard().get(0).get(5).item = new LaserSource(Direction.RIGHT, true, 0 ,5);
     ;
     System.out.println(gameboard.getBoard().get(1).get(5).item.toString());
 
@@ -34,14 +34,14 @@ public class LaserTest {
     System.out.println(player.getLocation());
     assertEquals(player.isDead(), true);
 
-    gameboard.addBoxAtLocation(5 ,2);
+    gameboard.getGameState().boxes().add(new MovableBox(5,2));
   }
 
   @Test
   public void testMovableBoxReset() {
     var gameboard = Mock.getGameBoard();
     var player = gameboard.getGameState().player();
-    gameboard.getBoard().get(0).get(5).item = new LaserSource(gameboard, Direction.RIGHT, true, 0, 5);
+    gameboard.getBoard().get(0).get(5).item = new LaserSource(Direction.RIGHT, true, 0, 5);
     ;
     System.out.println(gameboard.getBoard().get(1).get(5).item.toString());
 
@@ -57,7 +57,7 @@ public class LaserTest {
     gameboard.action(Direction.DOWN);
     gameboard.action(Direction.LEFT);
 
-    gameboard.addBoxAtLocation(4,2);
+    gameboard.getGameState().boxes().add(new MovableBox(4,2));
     gameboard.action(Direction.RIGHT);
     gameboard.action(Direction.RIGHT);
 

@@ -1,6 +1,5 @@
 package nz.ac.wgtn.swen225.lc.domain.DomainTest;
 
-import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
@@ -59,6 +58,7 @@ public class Mock {
 
     /**
      * Get player at provided location.
+     *
      * @param location location
      * @return Player at specific location.
      */
@@ -68,6 +68,7 @@ public class Mock {
 
     /**
      * Construct a 6x6 game board for testing purpose.
+     *
      * @return game board.
      */
     private static GameBoard constructGameBoard() {
@@ -83,7 +84,7 @@ public class Mock {
         List<List<Tile<Item>>> tiles = constructTiles();
         addItemToTile(tiles);
 
-        return new GameBoardBuilder().addBoard(tiles).addBoardSize(width,height).addTimeLeft(timeLeft)
+        return new GameBoardBuilder().addBoard(tiles).addBoardSize(width, height).addTimeLeft(timeLeft)
                 .addTreasure(1).addLevel(level).addPlayer(p).addRobots(robots).build();
     }
 

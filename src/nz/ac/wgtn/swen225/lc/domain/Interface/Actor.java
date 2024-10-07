@@ -11,9 +11,10 @@ import java.util.Collection;
 
 /**
  * A game character that moves around.
+ *
  * @author Yee Li, Maria Louisa Carla Parinas
  */
-public interface Actor  {
+public interface Actor {
 
     /**
      * @return current location of Actor
@@ -24,6 +25,7 @@ public interface Actor  {
      * @return current Direction the Actor is facing
      */
     Direction getActorFacing();
+
     void setActorFacing(Direction d);
 
 
@@ -44,8 +46,12 @@ public interface Actor  {
                 .stream().filter(b -> b.getLocation().equals(nextTile.location))
                 .findFirst().orElse(null);
 
-        if (box != null && !box.attemptMove(direction, gameBoard)) { return false; }
-        if (!nextTile.canStepOn(this) && !(this instanceof Robot)) { return false; }
+        if (box != null && !box.attemptMove(direction, gameBoard)) {
+            return false;
+        }
+        if (!nextTile.canStepOn(this) && !(this instanceof Robot)) {
+            return false;
+        }
 
         doMove(direction, gameBoard, currentTile, nextTile);
         return true;
@@ -53,6 +59,7 @@ public interface Actor  {
 
     /**
      * Performs the move of the actor
+     *
      * @param direction direction actor is facing
      * @param gameBoard game board of current level
      */
@@ -61,40 +68,43 @@ public interface Actor  {
     default void actOnTile(Direction dir, GameBoard gameBoard, Tile<Item> current, Tile<Item> next) {
         current.onExit(this);
         next.onEntry(this);
-        if(!(next.item instanceof TeleportItem)) {
+        if (!(next.item instanceof TeleportItem)) {
             updateActorLocation(next.location);
         }
     }
 
     /**
      * Updates current actor's location to new location
+     *
      * @param location new location to update with
      */
     void updateActorLocation(Location location);
 
     /**
      * Finds the tile in the specified location
-     * @param gameBoard current gameBoard
+     *
+     * @param gameBoard      current gameBoard
      * @param targetLocation location to find
      * @return tile in that location
      */
     default Tile<Item> findTileInSpecificLocation(GameBoard gameBoard, Location targetLocation) {
         return gameBoard.getGameState().board().stream()
                 .flatMap(Collection::stream)
-                .filter(x->x.location.equals(targetLocation))
+                .filter(x -> x.location.equals(targetLocation))
                 .toList()
                 .getFirst();
     }
 
     /**
      * Checks if the given location is not out of bounds
-     * @param location location to check
+     *
+     * @param location  location to check
      * @param gameBoard current GameBoard
      * @return true if it's valid, false if not
      */
     default boolean locationIsValid(Location location, GameBoard gameBoard) {
-        return location.x() >= 0 && location.x() < gameBoard.getWidth() &&
-                location.y() >= 0 && location.y() < gameBoard.getHeight();
+        return location.x() >= 0 && location.x() < gameBoard.getGameState().width() &&
+               location.y() >= 0 && location.y() < gameBoard.getGameState().height();
     }
 
 }

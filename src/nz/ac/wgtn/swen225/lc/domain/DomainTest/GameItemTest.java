@@ -3,6 +3,7 @@ package nz.ac.wgtn.swen225.lc.domain.DomainTest;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
+import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * All standard game item tests plus
  * Oneway teleport item tests.
+ *
  * @author Yee Li
  */
 public class GameItemTest {
@@ -27,6 +29,7 @@ public class GameItemTest {
     public void wallWillBlockPlayerMove() {
         var tile = new Tile<>(new Wall(), testLocation);
 
+        assertEquals("Wall", tile.item.toString());
         assertFalse(tile.canStepOn(Mock.getPlayer()));
     }
 
@@ -46,6 +49,7 @@ public class GameItemTest {
         var tile = new Tile<>(key, testLocation);
         var player = Mock.getPlayer();
 
+        assertEquals("KeyRed", tile.item.toString());
         assertTrue(tile.canStepOn(Mock.getPlayer()));
         assertInstanceOf(Key.class, tile.item);
 
@@ -61,6 +65,7 @@ public class GameItemTest {
     public void playerCanMoveToFreeTile() {
         var tile = new Tile<>(new NoItem(), testLocation);
 
+        assertEquals("Tile", tile.item.toString());
         assertTrue(tile.canStepOn(Mock.getPlayer()));
         assertDoesNotThrow(() -> tile.onEntry(Mock.getPlayer()));
     }
@@ -72,6 +77,7 @@ public class GameItemTest {
         var tile = new Tile<>(treasure, testLocation);
         var player = Mock.getPlayer();
 
+        assertEquals("Treasure", tile.item.toString());
         assertTrue(tile.canStepOn(player));
         assertInstanceOf(Treasure.class, tile.item);
 
@@ -90,6 +96,7 @@ public class GameItemTest {
         var tile = new Tile<>(lockedDoor, testLocation);
         var player = Mock.getPlayer();
 
+        assertEquals("LockedDoorBlue", tile.item.toString());
         assertFalse(tile.canStepOn(player));
     }
 
@@ -140,6 +147,7 @@ public class GameItemTest {
         var tile = new Tile<>(unLockedDoor, testLocation);
         var player = Mock.getPlayer();
 
+        assertEquals("UnlockedDoor", tile.item.toString());
         assertTrue(tile.canStepOn(player));
     }
 
@@ -150,6 +158,7 @@ public class GameItemTest {
         var tile = new Tile<>(lockedExit, testLocation);
         var player = Mock.getPlayer();
 
+        assertEquals("LockedExit", tile.item.toString());
         assertFalse(tile.canStepOn(player));
     }
 
@@ -190,6 +199,7 @@ public class GameItemTest {
         var player = Mock.getPlayer();
 
         tile.onEntry(player);
+        assertEquals("Exit", tile.item.toString());
         assertTrue(player.isNextLevel());
     }
 
@@ -217,6 +227,7 @@ public class GameItemTest {
         assertFalse(player.isShowPlayerInfo());
         tile.onEntry(player);
         assertTrue(player.isShowPlayerInfo());
+        assertEquals("Info", tile.item.toString());
     }
 
     /*
@@ -226,7 +237,7 @@ public class GameItemTest {
     public void teleportWillTransferPlayerToValidTile() {
         //Arrange
         var gameboard = Mock.getGameBoard();
-        var destination = new Location(5,0);
+        var destination = new Location(5, 0);
         var player = gameboard.getGameState().player();
         gameboard.getBoard().get(5).get(4).item = new OneWayTeleport(destination);
 
@@ -234,13 +245,14 @@ public class GameItemTest {
         gameboard.action(Direction.UP);
         //Assert
         assertEquals(player.getLocation(), destination);
+        assertEquals("OneWayTeleport", gameboard.getBoard().get(5).get(4).item.toString());
     }
 
     @Test
     public void teleportWillNotTransferPlayerToInvalidTile() {
         //Arrange
         var gameboard = Mock.getGameBoard();
-        var destination = new Location(5,0);
+        var destination = new Location(5, 0);
         var player = gameboard.getGameState().player();
 
         gameboard.getBoard().get(5).get(4).item = new OneWayTeleport(destination);
@@ -249,21 +261,21 @@ public class GameItemTest {
         //Act
         gameboard.action(Direction.UP);
         //Assert
-        assertEquals(player.getLocation(), new Location(4,5));
+        assertEquals(player.getLocation(), new Location(4, 5));
     }
 
     @Test
     public void teleportMeetGeneralRules() {
         //Arrange
         var gameboard = Mock.getGameBoard();
-        var destination = new Location(5,0);
+        var destination = new Location(5, 0);
         var player = gameboard.getGameState().player();
         gameboard.getBoard().get(5).get(4).item = new OneWayTeleport(destination);
         gameboard.getBoard().get(0).get(5).item = new LockedDoor(ItemColor.RED);
         //Act
         gameboard.action(Direction.UP);
         //Assert, player can't be teleported to locked door.
-        assertEquals(player.getLocation(), new Location(4,5));
+        assertEquals(player.getLocation(), new Location(4, 5));
 
         //player can't be teleported to locked exit.
         var destination2 = new Location(3, 0);
@@ -271,7 +283,7 @@ public class GameItemTest {
         gameboard.action(Direction.DOWN);
         gameboard.action(Direction.UP);
 
-        assertEquals(player.getLocation(), new Location(4,5));
+        assertEquals(player.getLocation(), new Location(4, 5));
 
 
         //Player can be teleported to locked door if it has key.
@@ -287,29 +299,38 @@ public class GameItemTest {
     public void teleportShouldNotGoInfinite() {
         //Arrange, loop teleport
         var gameboard = Mock.getGameBoard();
-        var destination1 = new Location(0,5);
-        var destination2 = new Location(4,5);
+        var destination1 = new Location(0, 5);
+        var destination2 = new Location(4, 5);
         var player = gameboard.getGameState().player();
 
         gameboard.getBoard().get(5).get(0).item = new OneWayTeleport(destination2);
         gameboard.getBoard().get(5).get(4).item = new OneWayTeleport(destination1);
 
-        assertThrows(IllegalArgumentException.class, ()->gameboard.action(Direction.UP));
+        assertThrows(IllegalArgumentException.class, () -> gameboard.action(Direction.UP));
     }
 
     @Test
     public void relayTeleport() {
         //Arrange, relay teleport
         var gameboard = Mock.getGameBoard();
-        var destination1 = new Location(0,5);
-        var destination2 = new Location(3,5);
+        var destination1 = new Location(0, 5);
+        var destination2 = new Location(3, 5);
         var player = gameboard.getGameState().player();
 
         gameboard.getBoard().get(5).get(0).item = new OneWayTeleport(destination2);
         gameboard.getBoard().get(5).get(4).item = new OneWayTeleport(destination1);
 
-        assertEquals(player.getLocation(), new Location(4,4));
+        assertEquals(player.getLocation(), new Location(4, 4));
         gameboard.action(Direction.UP);
-        assertEquals(player.getLocation(), new Location(3,5));
+        assertEquals(player.getLocation(), new Location(3, 5));
+    }
+
+    @Test
+    public void itemDefaultTest() {
+        var wall = new Wall();
+        var tile = new Tile<>(wall, testLocation);
+        var player = Mock.getPlayer();
+
+        assertThrows(IllegalStateException.class, ()->wall.onTouch(player,tile));
     }
 }

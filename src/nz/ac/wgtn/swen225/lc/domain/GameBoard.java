@@ -56,6 +56,10 @@ public class GameBoard {
         this.width = builder.getWidth();
         this.height = builder.getHeight();
         this.totalTreasure = builder.getTotalTreasure();
+        var l = getLockedExit();
+        if (l != null) {
+            subscribeGameState(l);
+        }
 
         board.forEach(x -> x.forEach(y -> {
             if (y.item instanceof LaserSource s) { s.setLaser(board); }
@@ -80,23 +84,6 @@ public class GameBoard {
 
     private void playerMove(Direction direction, GameBoard gameBoard) {
         player.attemptMove(direction, gameBoard);
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    //TODO this is for testing?
-    public void addRobotAtLocation(int x, int y) {
-        robots.add(new KillerRobot(x, y));
-    }
-
-    public void addBoxAtLocation(int x, int y) {
-        boxes.add(new MovableBox(x,y));
     }
 
     /**
@@ -158,11 +145,6 @@ public class GameBoard {
         return new GameState(board, player, robots, boxes, timeLeft, level, width, height, totalTreasure);
     }
 
-    //TODO
-    public void onGameOver() {
-        //throw new IllegalArgumentException("Game Over"); // temporary
-    }
-
     private static void attach(GameStateObserver ob) {
         obs.add(ob);
     }
@@ -171,7 +153,7 @@ public class GameBoard {
         obs.remove(ob);
     }
 
-    public static <T extends GameStateObserver> void subscribeGameState(T observer) {
+    private static <T extends GameStateObserver> void subscribeGameState(T observer) {
         attach(observer);
     }
 

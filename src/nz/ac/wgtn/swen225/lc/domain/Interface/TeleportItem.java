@@ -4,8 +4,9 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
 /**
  * Teleport like item interface
+ *
  * @author Yee Li
  */
-public interface TeleportItem extends Item{
+public interface TeleportItem extends Item {
     Location destination();
 }

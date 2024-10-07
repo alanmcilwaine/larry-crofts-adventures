@@ -10,6 +10,7 @@ import java.util.Optional;
 
 /**
  * Locked door on tile
+ *
  * @author Yee Li
  */
 public record LockedDoor(ItemColor itemColor) implements Item {
@@ -39,5 +40,7 @@ public record LockedDoor(ItemColor itemColor) implements Item {
     }
 
     @Override
-    public String toString() { return "LockedDoor" + itemColor.toString(); }
+    public String toString() {
+        return "LockedDoor" + itemColor.toString();
+    }
 }

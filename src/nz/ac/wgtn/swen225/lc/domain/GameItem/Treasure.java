@@ -7,6 +7,7 @@ import nz.ac.wgtn.swen225.lc.domain.Tile;
 
 /**
  * Treasure on tile
+ *
  * @author Yee Li
  */
 public record Treasure() implements Item {
@@ -19,6 +20,8 @@ public record Treasure() implements Item {
     }
 
     @Override
-    public String toString() { return "Treasure"; }
+    public String toString() {
+        return "Treasure";
+    }
 
 }
