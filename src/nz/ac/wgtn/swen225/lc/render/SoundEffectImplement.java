@@ -38,7 +38,7 @@ public class SoundEffectImplement {
                                 try {
                                     collectKeySound(type.getSimpleName());  // Play sound for Key
                                 } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-                                    throw new RuntimeException("No such sound effect for item: " + i);
+                                    throw new RuntimeException("No such sound effect for item: " + i.getItemOnTile());
                                 }
                             });
                         })
@@ -50,6 +50,7 @@ public class SoundEffectImplement {
         eachFillAction(gameState, LockedDoor.class);
         eachFillAction(gameState, Treasure.class);
         eachFillAction(gameState, Button.class);
+
     }
 
     public void locationMatch(GameState gameState){
