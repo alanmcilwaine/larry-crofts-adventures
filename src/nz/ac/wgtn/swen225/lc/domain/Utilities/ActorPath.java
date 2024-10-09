@@ -44,7 +44,7 @@ public enum ActorPath {
     GameBoard.domainLogger.log(Level.INFO, "Robot is facing: " + a.getActorFacing());
 
     MovableBox box = b.getGameState().boxes()
-            .stream().filter(bx-> bx.getLocation().equals(next.location))
+            .stream().filter(bx -> bx.getLocation().equals(next.location))
             .findFirst().orElse(null);
 
     if (stepCount > DELAY) {
@@ -55,39 +55,41 @@ public enum ActorPath {
       }
       stepCount = 0; // reset
     }
-
-    public Direction getDir1() {
-        return dir1;
-    }
-
-    public Direction getDir2() {
-        return dir2;
-    }
-
-    public void switchDirection() {
-        d = d.equals(dir1) ? dir2 : dir1;
-    }
-
-    // For testing lol
-    public void resetStepCount() {
-        stepCount = 0;
-    }
-
-    public void doMove(Actor a, GameBoard b, Tile<Item> current, Tile<Item> next) {
-        GameBoard.domainLogger.log(Level.INFO, "Robot is facing: " + a.getActorFacing());
-
-        if (stepCount > DELAY) {
-            if (next.canStepOn(a) && a.locationIsValid(next.location, b)) {
-                a.actOnTile(this.d, b, current, next);
-            } else {
-                switchDirection();
-                a.setActorFacing(d);
-            }
-            stepCount = 0; // reset
-        }
-
-        stepCount++; // delay
-
-        GameBoard.domainLogger.log(Level.INFO, "Robot is now at:" + a.getLocation());
-    }
+    stepCount++;
+  }
+//
+//    public Direction getDir1() {
+//        return dir1;
+//    }
+//
+//    public Direction getDir2() {
+//        return dir2;
+//    }
+//
+//    public void switchDirection() {
+//        d = d.equals(dir1) ? dir2 : dir1;
+//    }
+//
+//    // For testing lol
+//    public void resetStepCount() {
+//        stepCount = 0;
+//    }
+//
+//    public void doMove(Actor a, GameBoard b, Tile<Item> current, Tile<Item> next) {
+//        GameBoard.domainLogger.log(Level.INFO, "Robot is facing: " + a.getActorFacing());
+//
+//        if (stepCount > DELAY) {
+//            if (next.canStepOn(a) && a.locationIsValid(next.location, b)) {
+//                a.actOnTile(this.d, b, current, next);
+//            } else {
+//                switchDirection();
+//                a.setActorFacing(d);
+//            }
+//            stepCount = 0; // reset
+//        }
+//
+//        stepCount++; // delay
+//
+//        GameBoard.domainLogger.log(Level.INFO, "Robot is now at:" + a.getLocation());
+//    }
 }

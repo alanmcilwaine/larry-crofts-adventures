@@ -87,6 +87,8 @@ public class GameBoard {
         robotsMove();
         playerMove(direction, this);
         notifyObservers();
+
+        board.forEach(x -> x.forEach(y -> y.item.tick()));
     }
 
     private void playerMove(Direction direction, GameBoard gameBoard) {

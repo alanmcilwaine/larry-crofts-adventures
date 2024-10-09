@@ -14,8 +14,7 @@ import java.util.List;
 public class Button implements Item {
   boolean isPressed = false;
   List<Tile<Item>> surroundingTiles = null;
-  boolean isBig = true;
-
+  boolean isBig = false;
 
   public void setBig(boolean big) { isBig = big; }
   public boolean isBig() { return isBig; }
@@ -30,6 +29,7 @@ public class Button implements Item {
   public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {
     // Robots should not press the button but MovableBoxes can
     if (actor instanceof Robot) { return; }
+
     if (isBig && !(actor instanceof MovableBox)) { return; }
     isPressed = true; // set true
     surroundingTiles.forEach(t -> {
