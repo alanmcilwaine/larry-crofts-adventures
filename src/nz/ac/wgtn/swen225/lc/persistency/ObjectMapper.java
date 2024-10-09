@@ -49,7 +49,6 @@ public class ObjectMapper {
         gameItems.put("Mirror", "M"); //Special case (has own creator)
         gameItems.put("Button", "B");
         gameItems.put("LaserInput", "LI");
-        gameItems.put("Laser", "L"); //We ignore em
     }
 
     /**
@@ -320,10 +319,6 @@ public class ObjectMapper {
     
         if (baseCode == null) {
             throw new IllegalArgumentException("Unknown item: " + itemClassName);
-        }
-
-        if(baseCode.equals("L")){
-            return "F"; //Ignore lasers
         }
 
         //Special case for OneWayTeleport
