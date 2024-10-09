@@ -14,11 +14,10 @@ public class Persistency{
     public static String path = "src/nz/ac/wgtn/swen225/lc/persistency/levels/";
 
     /**
-     * Saves the given GameState object as a JSON format to a file.
+     * Saves the given GameBoard object as a JSON format to a file.
      *
      * @author zhoudavi1 300652444
-     * @param filename The name of the file to save the GameState to.
-     * @param level The GameState object to be saved.
+     * @param level The GameBoard object to be saved.
      */
     public static void saveGameBoard(GameBoard level){
         // convert level to JSON format
@@ -30,7 +29,32 @@ public class Persistency{
         }
         //Write JSON string to file
         
-        String filename = path + "level" + level.getGameState().level() + ".json";    
+        String filename = path + "level" + level.getGameState().level() + ".json";
+        File file = new File(filename);
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(json);
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Saves the progress if they exit mid-level.
+     * @author zhoudavi1 300652444
+     * @param level The GameBoard object to be saved.
+     */
+    public static void saveProgress(GameBoard level){
+        // convert level to JSON format
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            json = mapper.saveLeveltoFile(level);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //Write JSON string to file
+        String filename = path + "save.json";
         File file = new File(filename);
         try {
             FileWriter fileWriter = new FileWriter(file);
@@ -74,8 +98,8 @@ public class Persistency{
     /**
      * Generates a unique filename by adding a number to the end of the filename.
      * If the filename already exists, it will keep adding numbers until it finds a unique filename.
-     * For example, if filename is "level1.json" and it already exists, it will return "level1.1.json".
-     * If "level1.1.json" already exists, it will return "level1.2.json", and so on.
+     * For example if filename is "level1.json" and it already exists, it will return "level1.1.json".
+     * If "level1.1.json" already exists it will return "level1.2.json" and so on.
      *
      * @author zhoudavi1 300652444 
      * @param filename The filename to be made unique.
@@ -97,10 +121,10 @@ public class Persistency{
     }
 
     /**
-     * Loads a GameState object from a level number.
+     * Loads a GameBoard object from a level number.
      *
      * @author zhoudavi1 300652444
-     * @param level The level of the file to load the GameBoard from.
+     * @param levelNum The level number of the file to load the GameBoard from.
      * @return GameBoard Loading GameBoard from a file.
      */
     public static GameBoard loadGameBoard(int levelNum){
@@ -111,10 +135,10 @@ public class Persistency{
     }
 
         /**
-     * Loads a GameState object from a level number.
+     * Loads a GameBoard object from a level number.
      *
      * @author zhoudavi1 300652444
-     * @param level The level of the file to load the GameBoard from.
+     * @param filename The file path to load the GameBoard from.
      * @return GameBoard Loading GameBoard from a file.
      */
     public static GameBoard loadwithFilePath(String filename){
@@ -145,7 +169,7 @@ public class Persistency{
      * Loads a recording of actions from a file.
      *
      * @author zhoudavi1 300652444
-     * @param filename The name of the file which to load gameBoard from
+     * @param filename The file path which to load recording from
      * @return List<Action> Loading list of actions from a file.
      */
     public static GameBoard loadRecording(Recorder r, String filename){

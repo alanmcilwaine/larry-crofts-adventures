@@ -52,9 +52,9 @@ public class ObjectMapper {
     }
 
     /**
-     * Saves the given GameState object as a JSON format to a file.
+     * Saves the given GameBoard object as a JSON format to a file.
      * @author zhoudavi1 300652444
-     * @param level
+     * @param level The GameBoard object to be saved.
      * @return String The JSON string to be saved.
      * @throws IOException
      */
@@ -120,7 +120,7 @@ public class ObjectMapper {
     /**
      * Saves the given list of actions as a JSON format to a file.
      * @author zhoudavi1 300652444
-     * @param actions
+     * @param actions The list of actions to be saved.
      * @return String The JSON string to be saved.
      * @throws IOException
      */
@@ -401,7 +401,7 @@ public class ObjectMapper {
     }
 
     /**
-     * Create an default Info item for the board.
+     * Create a default Info item for the board.
      * @author zhoudavi1 300652444
      * @return Item The Info item.
      */
