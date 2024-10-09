@@ -104,15 +104,15 @@ public class GameBoard {
     }
 
     //TODO this is for testing?
-    public void addRobotAtLocation(int x, int y) {
+    public void addRobot(int x, int y) {
         robots.add(new KillerRobot(x, y));
     }
 
-    public void addBoxAtLocation(MovableBox box) {
+    public void addBox(MovableBox box) {
         boxes.add(box);
     }
 
-    public void addLaserSourceAtLocation(LaserSource ls) {
+    public void addLaserSource(LaserSource ls) {
         laserSources.add(ls);
     }
 
@@ -189,10 +189,14 @@ public class GameBoard {
                                                     new MovableBox(b.getLocation().x(), b.getLocation().y()))
                                             .toList();
 
+        List<LaserSource> newLasers = laserSources.stream()
+                .map(ls -> (LaserSource) ls.makeNew()).toList();
+
         // make new board
         return new GameBoardBuilder().addBoard(newBoard).addBoardSize(width, height)
                                     .addLevel(level).addPlayer(new Player(player.getLocation()))
-                                    .addRobots(newRobots).addBoxes(newBoxes).addTimeLeft(timeLeft)
+                                    .addRobots(newRobots).addBoxes(newBoxes).addLaserSources(newLasers)
+                                    .addTimeLeft(timeLeft)
                                     .addTreasure(totalTreasure).build();
     }
 
@@ -202,7 +206,7 @@ public class GameBoard {
      * @return GameState
      */
     public GameState getGameState() {
-        return new GameState(board, player, robots, boxes, timeLeft, level, width, height, totalTreasure);
+        return new GameState(board, player, robots, boxes, laserSources, timeLeft, level, width, height, totalTreasure);
     }
 
     private static void attach(GameStateObserver ob) {

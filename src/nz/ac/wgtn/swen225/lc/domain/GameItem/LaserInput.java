@@ -3,7 +3,7 @@ package nz.ac.wgtn.swen225.lc.domain.GameItem;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 
-public class LaserInput implements Item {
+public class LaserInput extends Button {
     boolean isHitByLaser = false;
 
     @Override
@@ -11,10 +11,9 @@ public class LaserInput implements Item {
         return true;
     }
 
+   @Override
+   public String toString() { return "LaserInput"; }
 
-  @Override
-  public String toString() { return "LaserInput"; }
-
-  @Override
-  public Item makeNew() { return new LaserInput(); }
+   @Override
+   public Item makeNew() { return new LaserInput(); }
 }
