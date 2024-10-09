@@ -40,4 +40,6 @@ public interface Item {
      */
     default <T extends Item> void onExit(Actor actor, Tile<T> tile) {
     }
+
+     Item makeNew();
 }

@@ -31,6 +31,8 @@ public class Laser implements Item {
     }
   }
 
+  public Laser() {}
+
   public Direction getDirection() { return direction; }
 
   public void passLaser(Supplier<Item> itemSupplier) {
@@ -62,4 +64,7 @@ public class Laser implements Item {
 
   @Override
   public String toString() { return "Laser"; }
+
+  @Override
+  public Item makeNew() { return new Laser(); }
 }

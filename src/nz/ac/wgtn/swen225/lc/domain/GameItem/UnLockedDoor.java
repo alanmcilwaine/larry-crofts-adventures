@@ -16,7 +16,10 @@ public record UnLockedDoor(ItemColor itemColor) implements Item {
     }
 
     @Override
-    public String toString() {
-        return "UnlockedDoor";
+    public String toString() { return "UnlockedDoor"; }
+
+    @Override
+    public Item makeNew() {
+        return new UnLockedDoor(itemColor);
     }
 }

@@ -16,7 +16,8 @@ public record NoItem() implements Item {
     }
 
     @Override
-    public String toString() {
-        return "Tile";
-    }
+    public String toString() { return "Tile"; }
+
+    @Override
+    public Item makeNew() { return new NoItem(); }
 }

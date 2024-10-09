@@ -5,19 +5,25 @@ import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Crate;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.Button;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserSource;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedDoor;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedExit;
 import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Util;
 
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 /**
  * The main game board
@@ -33,6 +39,8 @@ public class GameBoard {
     private final Player player;
 
     private final List<Robot> robots;
+
+    private final List<LaserSource> laserSources;
 
     private final List<MovableBox> boxes;
 
@@ -51,6 +59,7 @@ public class GameBoard {
         this.player = builder.getPlayer();
         this.robots = builder.getRobots();
         this.boxes = builder.getBoxes();
+        this.laserSources = builder.getLaserSources();
         this.timeLeft = builder.getTimeLeft();
         this.level = builder.getLevel();
         this.width = builder.getWidth();
@@ -61,10 +70,7 @@ public class GameBoard {
             subscribeGameState(l);
         }
 
-        board.forEach(x -> x.forEach(y -> {
-            if (y.item instanceof LaserSource s) { s.setLaser(board); }
-        }));
-
+        configureButtons();
         subscribeGameState(getLockedExit());
         playerMove(Direction.NONE, this);
     }
@@ -77,6 +83,7 @@ public class GameBoard {
     public void action(Direction direction) {
         Util.checkNull(direction, "Direction is null");
 
+        activateLasers();
         robotsMove();
         playerMove(direction, this);
         notifyObservers();
@@ -84,6 +91,27 @@ public class GameBoard {
 
     private void playerMove(Direction direction, GameBoard gameBoard) {
         player.attemptMove(direction, gameBoard);
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    //TODO this is for testing?
+    public void addRobotAtLocation(int x, int y) {
+        robots.add(new KillerRobot(x, y));
+    }
+
+    public void addBoxAtLocation(int x, int y) {
+        boxes.add(new MovableBox(x,y));
+    }
+
+    public void addLaserSourceAtLocation(LaserSource ls) {
+        laserSources.add(ls);
     }
 
     /**
@@ -96,6 +124,10 @@ public class GameBoard {
         robots.forEach(r -> r.update(this));
     }
 
+    private void activateLasers() {
+        laserSources.forEach(ls -> ls.updateLasers(this));
+    }
+
     /**
      * Get the board
      *
@@ -105,6 +137,32 @@ public class GameBoard {
         return Collections.unmodifiableList(board);
     }
 
+    public Tile<Item> itemOnTile(Location target) {
+        return board.stream()
+                .flatMap(Collection::stream)
+                .filter(x->x.location.equals(target))
+                .toList()
+                .getFirst();
+    }
+
+    private void configureButtons() {
+        board.forEach(x -> x.forEach(y -> {
+            if (y.item instanceof Button b) {
+                b.attachTiles(surroundingTilesAt(y.location));
+            }
+        }));
+    }
+
+    private List<Tile<Item>> surroundingTilesAt(Location l) {
+        List<Tile<Item>> ls = new ArrayList<>();
+
+        for(int x = l.x() - 1; x <= l.x() + 1; x++) {
+            for(int y = l.y() - 1; y <= l.y() + 1; y++) {
+                ls.add(board.get(y).get(x));
+            }
+        }
+        return ls;
+    }
 
     /**
      * Gives a deep copy of a given gameState
@@ -113,7 +171,7 @@ public class GameBoard {
      */
     public GameBoard copyOf() {
         List<List<Tile<Item>>> newBoard = board.stream().map(x -> x.stream()
-                                                            .map(y -> new Tile<>(y.item, y.location))
+                                                            .map(y -> new Tile<>(y.item.makeNew(), y.location))
                                                             .toList())
                                                             .toList();
 
