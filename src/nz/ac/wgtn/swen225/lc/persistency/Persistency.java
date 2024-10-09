@@ -30,7 +30,6 @@ public class Persistency{
         //Write JSON string to file
         
         String filename = path + "level" + level.getGameState().level() + ".json";
-        filename = uniqueFilename(filename);
         File file = new File(filename);
         try {
             FileWriter fileWriter = new FileWriter(file);
