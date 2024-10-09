@@ -65,6 +65,10 @@ public class GameBoard {
         this.width = builder.getWidth();
         this.height = builder.getHeight();
         this.totalTreasure = builder.getTotalTreasure();
+        var l = getLockedExit();
+        if (l != null) {
+            subscribeGameState(l);
+        }
 
         configureButtons();
         subscribeGameState(getLockedExit());
@@ -199,11 +203,6 @@ public class GameBoard {
         return new GameState(board, player, robots, boxes, timeLeft, level, width, height, totalTreasure);
     }
 
-    //TODO
-    public void onGameOver() {
-        //throw new IllegalArgumentException("Game Over"); // temporary
-    }
-
     private static void attach(GameStateObserver ob) {
         obs.add(ob);
     }
@@ -212,7 +211,7 @@ public class GameBoard {
         obs.remove(ob);
     }
 
-    public static <T extends GameStateObserver> void subscribeGameState(T observer) {
+    private static <T extends GameStateObserver> void subscribeGameState(T observer) {
         attach(observer);
     }
 
@@ -241,7 +240,7 @@ public class GameBoard {
                 .filter(item -> item instanceof LockedExit)
                 .map(item -> (LockedExit) item)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Map must have a locked exit."));
+                .orElse(null);
     }
 }
 

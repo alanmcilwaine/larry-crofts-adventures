@@ -1,7 +1,7 @@
-package nz.ac.wgtn.swen225.lc.app.UI;
+package nz.ac.wgtn.swen225.lc.app.UI.Containers;
 
 import javax.swing.*;
-import java.awt.*;
+
 import nz.ac.wgtn.swen225.lc.app.App;
 
 public class AppFrame extends JFrame{

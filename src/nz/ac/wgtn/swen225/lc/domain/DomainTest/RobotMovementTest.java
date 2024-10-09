@@ -1,9 +1,9 @@
 package nz.ac.wgtn.swen225.lc.domain.DomainTest;
+
+import nz.ac.wgtn.swen225.lc.domain.GameActor.KillerRobot;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
-import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
-import nz.ac.wgtn.swen225.lc.domain.Utilities.ActorPath;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 import org.junit.jupiter.api.Test;
@@ -11,27 +11,27 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RobotMovementTest {
 
-  public void advanceOneDelay(GameBoard gameBoard, Location expected, Robot track) {
-    for(int i = 0 ; i < 12 ; i++) {
-      gameBoard.action(Direction.NONE);
+    public void advanceOneDelay(GameBoard gameBoard, Location expected, Robot track) {
+        for (int i = 0; i < 12; i++) {
+            gameBoard.action(Direction.NONE);
+        }
+        assertEquals(expected, track.getLocation());
     }
-    assertEquals(expected, track.getLocation());
-  }
 
-  // TODO: FIX THESE TESTS
+    // TODO: FIX THESE TESTS
 
-  @Test
-  public void robotBasicMovement() {
-    GameBoard gameBoard = Mock.getGameBoard();
+    @Test
+    public void robotBasicMovement() {
+        GameBoard gameBoard = Mock.getGameBoard();
 
-    Player player = gameBoard.getGameState().player();
-    gameBoard.addRobotAtLocation(3,5);
-    List<Robot> robots = gameBoard.getGameState().robots();
-    Robot track = robots.getFirst();
+        Player player = gameBoard.getGameState().player();
+        gameBoard.getGameState().robots().add(new KillerRobot(3, 5));
+
+        List<Robot> robots = gameBoard.getGameState().robots();
+        Robot track = robots.getFirst();
 
     // Robot should not go out of bounds
     track.setActorFacing(Direction.DOWN);
@@ -92,7 +92,7 @@ public class RobotMovementTest {
     GameBoard gameBoard = Mock.getGameBoard();
 
     Player player = gameBoard.getGameState().player();
-    gameBoard.addRobotAtLocation(4,2);
+    gameBoard.getGameState().robots().add(new KillerRobot(4,2));
     List<Robot> robots = gameBoard.getGameState().robots();
     Robot track = robots.getFirst();
 
@@ -132,6 +132,7 @@ public class RobotMovementTest {
 //    } catch (IllegalArgumentException e) {
 //      ; // pass for now
 //    }
+//
 //  }
 
 }

@@ -12,6 +12,7 @@ import java.util.logging.Level;
 
 /**
  * Locked Exit on tile
+ *
  * @author Yee Li
  */
 public record LockedExit() implements Item, GameStateObserver {

@@ -8,6 +8,7 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 
 /**
  * Key on tile
+ *
  * @author Yee Li
  */
 public record Key(ItemColor itemColor) implements Item {

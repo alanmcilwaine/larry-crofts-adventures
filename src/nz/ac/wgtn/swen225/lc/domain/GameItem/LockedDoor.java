@@ -11,6 +11,7 @@ import java.util.Optional;
 
 /**
  * Locked door on tile
+ *
  * @author Yee Li
  */
 public record LockedDoor(ItemColor itemColor) implements Togglabble {
