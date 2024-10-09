@@ -61,10 +61,10 @@ public class RecorderPanel extends JPanel implements UIElement {
     }
 
     public void updateButtons(boolean isRunning) {
-        undo.setEnabled(!isRunning && app.recorder.canUndo());
-        redo.setEnabled(!isRunning && app.recorder.canRedo());
-        play.setEnabled(!isRunning);
-        playbackSpeed.setEnabled(!isRunning);
+        undo.setVisible(!isRunning && app.recorder.canUndo());
+        redo.setVisible(!isRunning && app.recorder.canRedo());
+        play.setVisible(!isRunning && app.recorder.canRedo());
+        playbackSpeed.setVisible(!isRunning && app.recorder.canRedo());
         pause.setIcon(app.tick.isRunning() ? Icons.Pause.icon() : Icons.Resume.icon());
     }
 
