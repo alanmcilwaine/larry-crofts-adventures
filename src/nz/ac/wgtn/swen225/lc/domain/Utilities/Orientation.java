@@ -1,6 +1,6 @@
 package nz.ac.wgtn.swen225.lc.domain.Utilities;
 
-import nz.ac.wgtn.swen225.lc.domain.GameItem.Laser;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserSource;
 
 public enum Orientation {
   TOPRIGHTFACING(Direction.DOWN, Direction.UP, Direction.LEFT, Direction.RIGHT),
@@ -11,13 +11,16 @@ public enum Orientation {
   Direction faceTwo;
 
   /**
-   * Returns a location that the reflected laser would go to
-   * @param direction Direction of the laser
-   * @param location Location of the current laser
-   * @return new reflected location
+   * Changes the direction of the source's laser
    */
-  public Location reflectLaser(Direction direction, Location location) {
-    return direction.equals(one) ? faceOne.act(location) : faceTwo.act((location));
+  public void reflectLaser(LaserSource source) {
+    if (source.getDirection().equals(faceOne)) {
+      source.currentDirection = faceOne;
+      source.target = faceOne.act(source.target);
+    } else {
+      source.currentDirection = faceTwo;
+      source.target = faceTwo.act(source.target);
+    }
   }
 
   Orientation(Direction one, Direction faceOne, Direction two, Direction faceTwo) {

@@ -106,6 +106,10 @@ public class GameBoard {
         boxes.add(new MovableBox(x,y));
     }
 
+    public void addLaserSourceAtLocation(LaserSource ls) {
+        laserSources.add(ls);
+    }
+
     /**
      * Moves all the robots in the level
      */
@@ -116,7 +120,9 @@ public class GameBoard {
         robots.forEach(r -> r.update(this));
     }
 
-    private void activateLasers() { laserSources.forEach(ls -> ls.updateLasers(this));}
+    private void activateLasers() {
+        laserSources.forEach(ls -> ls.updateLasers(this));
+    }
 
     /**
      * Get the board
