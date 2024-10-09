@@ -9,18 +9,23 @@ public enum Orientation {
   Direction faceOne;
   Direction two;
   Direction faceTwo;
+  String lastUsedDir;
 
   /**
    * Changes the direction of the source's laser
    */
   public void reflectLaser(LaserSource source) {
-    if (source.getDirection().equals(faceOne)) {
-      source.currentDirection = faceOne;
-      source.target = faceOne.act(source.target);
-    } else {
+    lastUsedDir = source.getDirection().toString();
+    if (lastUsedDir.equals(faceOne)) {
       source.currentDirection = faceTwo;
       source.target = faceTwo.act(source.target);
+      lastUsedDir += faceTwo.toString();
+    } else {
+      source.currentDirection = faceOne;
+      source.target = faceOne.act(source.target);
+      lastUsedDir += faceTwo.toString();
     }
+    System.out.println("break");
   }
 
   Orientation(Direction one, Direction faceOne, Direction two, Direction faceTwo) {

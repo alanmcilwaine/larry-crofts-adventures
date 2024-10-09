@@ -108,8 +108,8 @@ public class GameBoard {
         robots.add(new KillerRobot(x, y));
     }
 
-    public void addBoxAtLocation(int x, int y) {
-        boxes.add(new MovableBox(x,y));
+    public void addBoxAtLocation(MovableBox box) {
+        boxes.add(box);
     }
 
     public void addLaserSourceAtLocation(LaserSource ls) {
