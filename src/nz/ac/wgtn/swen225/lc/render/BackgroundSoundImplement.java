@@ -19,7 +19,7 @@ public class BackgroundSoundImplement {
 
             clip.open(audioStream);
 
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
+            //clip.loop(Clip.LOOP_CONTINUOUSLY);
 
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             throw new RuntimeException("No such music");
