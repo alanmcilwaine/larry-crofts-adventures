@@ -17,7 +17,7 @@ public class Mirror extends MovableBox {
     this.orientation = orientation;
   }
 
-//  public Orientation getOrientation() { return orientation; }
+  public Orientation getOrientation() { return orientation; }
 
   public void reflectLaser(LaserSource source) {
     orientation.reflectLaser(source);
