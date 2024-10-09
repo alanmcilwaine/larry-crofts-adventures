@@ -30,8 +30,8 @@ public class PersistencyPrint {
         // Add some items to the board
         board.get(1).get(3).item = new Key(ItemColor.RED);
         board.get(3).get(3).item = new LockedDoor(ItemColor.RED);
-        board.get(2).get(2).item = new Info("Hello chap!");
-        board.get(2).get(4).item = new LaserSource(Direction.UP, true, 2, 4);
+        //board.get(2).get(2).item = new Info("Hello chap!");
+        board.get(2).get(2).item = new LaserSource(Direction.UP, true, 2, 2);
         
         //Treasure
         board.get(3).get(2).item = new Treasure();

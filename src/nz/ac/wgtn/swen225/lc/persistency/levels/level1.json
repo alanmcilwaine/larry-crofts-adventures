@@ -1,8 +1,8 @@
 {
   "board": [
-    ["W", "W", "W", "W", "W"],
+    ["I", "W", "W", "W", "W"],
     ["W", "F-P", "F-MB", "K#R", "W"],
-    ["W", "F", "I", "F", "Tu"],
+    ["W", "F", "F", "F", "W"],
     ["W", "F", "T-R=1", "LD#R", "LX"],
     ["W", "W", "W-M=L", "W", "W"]
   ],
@@ -12,8 +12,8 @@
     "Total Treasure": 1
   },
   "info": {
-    "info": "Hello chap!",
-    "x": 2,
-    "y": 2
+    "info": "Null",
+    "x": 0,
+    "y": 0
   }
 }
