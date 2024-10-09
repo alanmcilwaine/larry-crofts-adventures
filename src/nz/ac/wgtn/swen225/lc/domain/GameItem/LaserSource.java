@@ -1,6 +1,8 @@
 package nz.ac.wgtn.swen225.lc.domain.GameItem;
 
+import nz.ac.wgtn.swen225.lc.domain.GameActor.Crate;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Mirror;
+import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
@@ -28,7 +30,6 @@ public class LaserSource implements Togglabble {
   private boolean laserToggle = true; // auto set to false
   private Map<Location, String> lasers = new HashMap<>();
 
-
   public Location target;
   public Direction currentDirection;
 
@@ -38,11 +39,10 @@ public class LaserSource implements Togglabble {
     this.location = new Location(x, y);
     this.laserToggle = toggle;
 
-    setOrientation();
   }
 
   private void setOrientation()  {
-    switch (direction) {
+    switch (currentDirection) {
       case UP, DOWN -> orientation = "vertical";
       case LEFT, RIGHT -> orientation = "horizontal";
     }
@@ -53,26 +53,29 @@ public class LaserSource implements Togglabble {
     currentDirection = direction;
     target = direction.act(location);
 
+    Item targetItem = gameBoard.itemOnTile(target).item;
+
     while(target != null &&
             target.x() >= 0 && target.x() < gameBoard.getWidth() &&
-            target.y() >= 0 && target.y() < gameBoard.getHeight()
-          && gameBoard.itemOnTile(target).item instanceof NoItem) {
+            target.y() >= 0 && target.y() < gameBoard.getHeight() &&
+            targetItem.equals(new NoItem())) {
 
-      Item targetItem = gameBoard.itemOnTile(target).item;
-      if (targetItem instanceof Mirror m) {
-        m.reflectLaser(this);
+      MovableBox box = gameBoard.getGameState().boxes()
+              .stream().filter(b -> b.getLocation().equals(target))
+              .findFirst().orElse(null);
+
+      if (box != null) {
+        if (box instanceof Mirror m) {
+          lasers.put(target, orientation);
+          m.reflectLaser(this);
+        }
+        if (box instanceof Crate c)  { c.explode(gameBoard.itemOnTile(target)); }
       }
 
-      setOrientation();
-      lasers.put(target, orientation);
-      target = direction.act(target);
+        setOrientation();
+        lasers.put(target, orientation);
+        target = currentDirection.act(target);
     }
-    //lasers.add();
-  }
-
-  private void passLaser(List<List<Tile<Item>>> board, Location next) {
-    if (!laserToggle) { return; }
-    //board.get(next.x()).get(next.y()).item = childLaser;
   }
 
   public Direction getDirection() { return direction; }

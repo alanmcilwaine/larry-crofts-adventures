@@ -22,8 +22,12 @@ public class Mirror extends MovableBox {
   public void reflectLaser(LaserSource source) {
     orientation.reflectLaser(source);
   }
-//
-//  @Override
-//  public String toString() { return "Mirror"; }
+
+//  public String getLaserReflect() {
+//    orientation.reflectLaser();
+//  }
+
+  @Override
+  public String toString() { return "Mirror"; }
 
 }

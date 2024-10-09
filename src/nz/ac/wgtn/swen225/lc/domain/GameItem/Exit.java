@@ -30,8 +30,5 @@ public record Exit() implements Item {
     }
 
     @Override
-    public String toString() { return "Exit"; }
-
-    @Override
     public Item makeNew() { return new Exit(); }
 }

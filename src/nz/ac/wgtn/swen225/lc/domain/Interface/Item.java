@@ -38,8 +38,10 @@ public interface Item {
      * @param tile  Tile to update
      * @param <T>   extends Item
      */
-    default <T extends Item> void onExit(Actor actor, Tile<T> tile) {
-    }
+    default <T extends Item> void onExit(Actor actor, Tile<T> tile) {}
 
-     Item makeNew();
+    default void tick() {}
+
+    Item makeNew();
+
 }
