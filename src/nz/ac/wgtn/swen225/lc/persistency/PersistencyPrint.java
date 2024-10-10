@@ -11,12 +11,12 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.*;
 
 public class PersistencyPrint {
     public static void main(String[] args) throws IOException {
-        GameBoard gameBoard = testReadJSON();
-        testLoadGameBoard(gameBoard);
+        GameBoard gameState = testReadJSON();
+        testLoadGameState(gameState);
         testUniqueFilename();
     }
 
-    private static GameBoard createSampleGameBoard() {
+    private static GameBoard createSampleGameState() {
         List<List<Tile<Item>>> board = new ArrayList<>();
         for (int y = 0; y < 5; y++) {
             List<Tile<Item>> row = new ArrayList<>();
@@ -40,7 +40,6 @@ public class PersistencyPrint {
         board.get(3).get(4).item = new LockedExit();
 
         Player player = new Player(new Location(1, 1));
-        player.addTreasure(new Key(ItemColor.RED));
         List<Robot> robots = new ArrayList<>();
         KillerRobot r = new KillerRobot(2, 3);
         r.setActorPath(ActorPath.UPDOWN);
@@ -48,7 +47,7 @@ public class PersistencyPrint {
 
         List<MovableBox> boxes = new ArrayList<>();
         boxes.add(new MovableBox(2, 1));
-        boxes.add(new Mirror(Orientation.TWO, 2,4));
+        boxes.add(new Mirror(Orientation.BOTTOMLEFTFACING, 2,4));
         
         return new GameBoardBuilder().addBoard(board).addBoardSize(5, 5).addTimeLeft(120).addTreasure(1).addLevel(1).addPlayer(player).addRobots(robots).addBoxes(boxes).build();
     }
@@ -57,7 +56,7 @@ public class PersistencyPrint {
         // Create a sample GameState
         System.out.println("Reading JSON:");
 
-        GameBoard originalState = createSampleGameBoard();
+        GameBoard originalState = createSampleGameState();
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -76,21 +75,6 @@ public class PersistencyPrint {
         System.out.println("Robot location matches: " + originalState.getGameState().robots().get(0).getLocation().equals(convertedBoard.getGameState().robots().get(0).getLocation()));
         System.out.println("Number of treasures matches: " + (originalState.getGameState().totalTreasure() == convertedBoard.getGameState().totalTreasure()));
         System.out.println("Number of boxes matches: " + (originalState.getGameState().boxes().size() == convertedBoard.getGameState().boxes().size()));
-
-        // Compare Player Inventory
-        System.out.println("Original Player Inventory: " + originalState.getGameState().player().getTreasure());
-        System.out.println("Converted Player Inventory: " + convertedBoard.getGameState().player().getTreasure());
-        boolean inventoryMatches = true;
-        for (int i = 0; i < originalState.getGameState().player().getTreasure().size(); i++) {
-            Item originalItem = originalState.getGameState().player().getTreasure().get(i);
-            Item convertedItem = convertedBoard.getGameState().player().getTreasure().get(i);
-            if (!originalItem.getClass().equals(convertedItem.getClass())) {
-                inventoryMatches = false;
-                break;
-            }
-        }
-
-        System.out.println("Player inventory matches: " + inventoryMatches);
 
         // Compare board
         boolean boardMatches = true;
@@ -112,7 +96,7 @@ public class PersistencyPrint {
     }
 
     //Test loading a GameState from a file
-    private static void testLoadGameBoard(GameBoard original) throws IOException{
+    private static void testLoadGameState(GameBoard original) throws IOException{
         System.out.println("Loading GameState from file:--------------------------------------");
         GameBoard loadedState = Persistency.loadGameBoard(1);
         //Check if the loaded GameState is the same as the original GameState
@@ -124,20 +108,7 @@ public class PersistencyPrint {
         System.out.println("Number of treasures matches: " + (original.getGameState().totalTreasure() == loadedState.getGameState().totalTreasure()));
         System.out.println("Number of boxes matches: " + (original.getGameState().boxes().size() == loadedState.getGameState().boxes().size()));
 
-        // Compare Player Inventory
-        boolean inventoryMatches = true;
-        for (int i = 0; i < original.getGameState().player().getTreasure().size(); i++) {
-            Item originalItem = original.getGameState().player().getTreasure().get(i);
-            Item loadedItem = loadedState.getGameState().player().getTreasure().get(i);
-            if (!originalItem.getClass().equals(loadedItem.getClass())) {
-                inventoryMatches = false;
-                break;
-            }
-        }
-
-        System.out.println("Player inventory matches: " + inventoryMatches);
-
-        //Compare board
+        // Compare board
         boolean boardMatches = true;
         for (int y = 0; y < original.getGameState().board().size(); y++) {
             for (int x = 0; x < original.getGameState().board().get(y).size(); x++) {

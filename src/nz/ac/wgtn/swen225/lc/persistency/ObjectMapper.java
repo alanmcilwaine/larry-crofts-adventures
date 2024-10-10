@@ -1,7 +1,10 @@
 package nz.ac.wgtn.swen225.lc.persistency;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import nz.ac.wgtn.swen225.lc.app.Command;
@@ -108,22 +111,7 @@ public class ObjectMapper {
         json.append("    \"x\": ").append(x).append(",\n");
         json.append("    \"y\": ").append(y).append("\n");
         json.append("  }\n"); // Closing the info object
-
-        //Player Inventory
-        json.append("  \"inventory\": [\n");
-        for (int i = 0; i < level.getGameState().player().getTreasure().size(); i++) {
-            Item item = level.getGameState().player().getTreasure().get(i);
-            json.append("    {\n");
-            json.append("      \"itemType\": \"").append(gameItemCode(item)).append("\"\n");
-            json.append("    }");
-            if (i < level.getGameState().player().getTreasure().size() - 1) {
-                json.append(",\n"); // Comma between items
-            } else {
-                json.append("\n"); // No comma after the last item
-            }
-        }
-        json.append("  ],\n"); // Closing the inventory object
-
+    
         json.append("}"); // Closing the entire JSON object
     
         return json.toString();
@@ -257,22 +245,7 @@ public class ObjectMapper {
         int y = Integer.parseInt(extractValue(infoString, "\"y\": "));
     
         board.get(y).get(x).item = new Info(infoText);
-
-        // Parse inventory
-        int inventoryStart = json.indexOf("\"inventory\": [");
-        if (inventoryStart == -1) {
-            throw new IllegalArgumentException("Inventory not found in JSON");
-        }
-        String inventoryString = json.substring(inventoryStart + 14, json.lastIndexOf("]"));
-
-        String[] inventoryItems = inventoryString.split("\\},\\s*\\{");
-
-        for (String inventoryItem : inventoryItems) {
-            inventoryItem = inventoryItem.replace("{", "").replace("}", "").trim();
-            assert player != null;
-            player.addTreasure(createItemFromCode(extractValue(inventoryItem, "\"itemType\": \"")));
-        }
-
+    
         int width = board.get(0).size();
         int height = board.size();
     
@@ -547,9 +520,9 @@ public class ObjectMapper {
      */
     public Orientation orientationDefining (String orientation){
         if(orientation.equals("R")){
-            return Orientation.ONE;
+            return Orientation.TOPRIGHTFACING;
         } else {
-            return Orientation.TWO;
+            return Orientation.BOTTOMLEFTFACING;
         }
     }
 
@@ -559,7 +532,7 @@ public class ObjectMapper {
      * @return String The string representation of the orientation
      */
     public String orientationDefining (Orientation orientation){
-        if(orientation.equals(Orientation.ONE)){
+        if(orientation.equals(Orientation.TOPRIGHTFACING)){
             return "R";
         } else {
             return "L";

@@ -3,8 +3,8 @@ package nz.ac.wgtn.swen225.lc.domain.Utilities;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserSource;
 
 public enum Orientation {
-  ONE(Direction.DOWN, Direction.UP, Direction.LEFT, Direction.RIGHT),
-  TWO(Direction.UP, Direction.DOWN, Direction.RIGHT, Direction.LEFT);
+  TOPRIGHTFACING(Direction.DOWN, Direction.UP, Direction.LEFT, Direction.RIGHT),
+  BOTTOMLEFTFACING(Direction.UP, Direction.DOWN, Direction.RIGHT, Direction.LEFT);
   Direction one;
   Direction faceOne;
   Direction two;
