@@ -118,4 +118,9 @@ public class LaserTest {
     assertThrows(AssertionError.class, () -> checkLocation(lasers, new Location(5,0), "vertical"));
   }
 
+  @Test
+  public void playerDiesFromLaser() {
+    
+  }
+
 }

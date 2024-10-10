@@ -70,10 +70,14 @@ public class LaserSource implements Togglabble {
         else { break; }
       }
 
+      if(targetItem instanceof LaserInput l) { l.toggleSurroundingTiles(); }
+
       if(targetItem instanceof NoItem || targetItem instanceof Tube) {
         setOrientation();
         lasers.put(target, orientation);
         target = currentDirection.act(target);
+      } else {
+        break;
       }
     }
   }

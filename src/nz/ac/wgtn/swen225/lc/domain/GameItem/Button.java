@@ -32,6 +32,10 @@ public class Button implements Item {
 
     if (isBig && !(actor instanceof MovableBox)) { return; }
     isPressed = true; // set true
+    toggleSurroundingTiles();
+  }
+
+  public void toggleSurroundingTiles() {
     surroundingTiles.forEach(t -> {
       if (t.item instanceof Togglabble tg) {
         tg.toggle(t);
