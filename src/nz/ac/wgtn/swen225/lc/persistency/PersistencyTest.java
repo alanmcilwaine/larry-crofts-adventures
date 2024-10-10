@@ -48,6 +48,7 @@ public class PersistencyTest {
         board.get(3).get(4).item = new LockedExit();
 
         Player player = new Player(new Location(1, 1));
+        player.addTreasure(new Key(ItemColor.RED));
         List<Robot> robots = new ArrayList<>();
         robots.add(new KillerRobot(2, 3));
 
@@ -75,6 +76,17 @@ public class PersistencyTest {
         assertEquals(originalState.getGameState().totalTreasure(), convertedBoard.getGameState().totalTreasure(), "Number of treasures should match");
         assertEquals(originalState.getGameState().boxes().size(), convertedBoard.getGameState().boxes().size(), "Number of boxes should match");
 
+        //Compare Player Inventory
+        for (int i = 0; i < originalState.getGameState().player().getTreasure().size(); i++) {
+            Item originalItem = originalState.getGameState().player().getTreasure().get(i);
+            Item convertedItem = convertedBoard.getGameState().player().getTreasure().get(i);
+            assertEquals(
+                    originalItem.getClass(),
+                    convertedItem.getClass(),
+                    "Item at index " + i + " should be of the same class"
+            );
+        }
+
         // Compare board
         for (int y = 0; y < originalState.getGameState().board().size(); y++) {
             for (int x = 0; x < originalState.getGameState().board().get(y).size(); x++) {
@@ -100,7 +112,18 @@ public class PersistencyTest {
         assertEquals(originalState.getGameState().robots().size(), loadedState.getGameState().robots().size(), "Number of robots should match");
         assertEquals(originalState.getGameState().robots().get(0).getLocation(), loadedState.getGameState().robots().get(0).getLocation(), "Robot location should match");
         assertEquals(originalState.getGameState().totalTreasure(), loadedState.getGameState().totalTreasure(), "Number of treasures should match");
-        
+
+        //Compare Player Inventory
+        for (int i = 0; i < originalState.getGameState().player().getTreasure().size(); i++) {
+            Item originalItem = originalState.getGameState().player().getTreasure().get(i);
+            Item convertedItem = loadedState.getGameState().player().getTreasure().get(i);
+            assertEquals(
+                    originalItem.getClass(),
+                    convertedItem.getClass(),
+                    "Item at index " + i + " should be of the same class"
+            );
+        }
+
         // Compare board
         for (int y = 0; y < originalState.getGameState().board().size(); y++) {
             for (int x = 0; x < originalState.getGameState().board().get(y).size(); x++) {
