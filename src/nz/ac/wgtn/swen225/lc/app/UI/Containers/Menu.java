@@ -40,7 +40,7 @@ public class Menu extends JMenuBar {
             }
         });
         save.addActionListener((unused) -> {
-            Persistency.saveGameBoard(a.domain);
+            Persistency.saveProgress(a.domain);
         });
         exit.addActionListener((unused) -> System.exit(1));
         List.of(load, save, exit).forEach(file::add);
