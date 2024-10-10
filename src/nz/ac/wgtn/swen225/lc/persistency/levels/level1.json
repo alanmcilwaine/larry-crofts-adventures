@@ -1,9 +1,9 @@
 {
   "board": [
-    ["I", "W", "W", "W", "W"],
+    ["W", "W", "W", "W", "W"],
     ["W", "F-P", "F-MB", "K#R", "W"],
-    ["W", "F", "F", "F", "W"],
-    ["W", "F", "T-R=1", "LD#R", "LX"],
+    ["W", "F", "I", "F", "W"],
+    ["W", "F", "T-R=0", "LD#R", "LX"],
     ["W", "W", "W-M=L", "W", "W"]
   ],
   "level": {
@@ -12,8 +12,13 @@
     "Total Treasure": 1
   },
   "info": {
-    "info": "Null",
-    "x": 0,
-    "y": 0
+    "info": "Hello chap!",
+    "x": 2,
+    "y": 2
   }
+  "inventory": [
+    {
+      "itemType": "K#R"
+    }
+  ],
 }
