@@ -94,8 +94,8 @@ public class App extends AppFrame implements AppInterface{
      * Starts the main update loop for the program. Packages Domain, Renderer and Recorder should be used here.
      */
     private void startTick(){
-        domain = Persistency.loadGameBoard(1);
-        initialDomain = Persistency.loadGameBoard(1);
+        domain = loadSave();
+        initialDomain = domain.copyOf();
         render = ImageImplement.getImageImplement(game);
         time = domain.getGameState().timeLeft();
         tick.start();
@@ -119,6 +119,17 @@ public class App extends AppFrame implements AppInterface{
         Player player = domain.getGameState().player();
         if (player.isDead() || time <= 0) {
             tick.onDeath(() -> loadLevel(domain.getGameState().level()));
+        }
+    }
+
+    private GameBoard loadSave() {
+        // Already a saved game.
+        String path = Persistency.path + "save.json";
+        File save = new File(path);
+        if (save.exists() && !save.isDirectory()){
+            return Persistency.loadwithFilePath(path);
+        } else {
+            return Persistency.loadGameBoard(1);
         }
     }
 
