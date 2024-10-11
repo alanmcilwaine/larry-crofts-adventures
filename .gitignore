@@ -34,6 +34,7 @@
 bin/
 tmp/
 out/
+out/*
 *.tmp
 local.properties
 .settings/
@@ -41,3 +42,7 @@ local.properties
 *.iml
 .DS_Store
 larry-crofts-adventures.iml
+
+
+# Local save files
+src/nz/ac/wgtn/swen225/lc/persistency/levels/save.json

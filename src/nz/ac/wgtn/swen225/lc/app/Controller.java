@@ -52,7 +52,7 @@ public class Controller extends Keys{
             }
         });
         setAction(Action.ExitSave, () -> {
-           Persistency.saveGameBoard(a.domain);
+           Persistency.saveProgress(a.domain);
            System.exit(0);
         });
         setAction(Action.ExitNoSave, () -> System.exit(0));

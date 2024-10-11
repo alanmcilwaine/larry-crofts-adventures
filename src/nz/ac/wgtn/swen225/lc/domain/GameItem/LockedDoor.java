@@ -3,6 +3,7 @@ package nz.ac.wgtn.swen225.lc.domain.GameItem;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
+import nz.ac.wgtn.swen225.lc.domain.Interface.Togglabble;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 
@@ -10,9 +11,10 @@ import java.util.Optional;
 
 /**
  * Locked door on tile
+ *
  * @author Yee Li
  */
-public record LockedDoor(ItemColor itemColor) implements Item {
+public record LockedDoor(ItemColor itemColor) implements Togglabble {
     @Override
     public boolean blockActor(Actor actor) {
         return !(actor instanceof Player p) || getKeyForDoor(p).isEmpty();
@@ -38,6 +40,16 @@ public record LockedDoor(ItemColor itemColor) implements Item {
                 .filter(e -> e instanceof Key k && k.itemColor().equals(this.itemColor())).findFirst();
     }
 
+    public void toggle(Tile<Item> tile) {
+        // unlock the door automatically
+        tile.item = new UnLockedDoor(this.itemColor);
+        System.out.println(tile.item);
+        System.out.println("break");
+    }
+
     @Override
     public String toString() { return "LockedDoor" + itemColor.toString(); }
+
+    @Override
+    public Item makeNew() { return new LockedDoor(itemColor); }
 }

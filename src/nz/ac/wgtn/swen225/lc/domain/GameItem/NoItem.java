@@ -6,6 +6,7 @@ import nz.ac.wgtn.swen225.lc.domain.Tile;
 
 /**
  * A free tile.
+ *
  * @author Yee Li
  */
 public record NoItem() implements Item {
@@ -16,4 +17,7 @@ public record NoItem() implements Item {
 
     @Override
     public String toString() { return "Tile"; }
+
+    @Override
+    public Item makeNew() { return new NoItem(); }
 }

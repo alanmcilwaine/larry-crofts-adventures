@@ -1,12 +1,17 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
 
-import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Util;
 
+/**
+ * Base Tile on game board.
+ *
+ * @param <T> item
+ * @author Yee Li
+ */
 public class Tile<T extends Item> {
 
     public Item item;
@@ -38,10 +43,7 @@ public class Tile<T extends Item> {
         if (!canStepOn(actor)) {
             throw new IllegalArgumentException("Can't move into tile.");
         }
-        //TODO seems not reasonable
-        if (actor instanceof Player) {
-            item.onTouch(actor, this);
-        }
+        item.onTouch(actor, this);
     }
 
     /**

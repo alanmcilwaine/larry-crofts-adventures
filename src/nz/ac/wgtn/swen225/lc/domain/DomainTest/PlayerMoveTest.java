@@ -1,6 +1,6 @@
 package nz.ac.wgtn.swen225.lc.domain.DomainTest;
 
-import nz.ac.wgtn.swen225.lc.domain.GameBoard;
+import nz.ac.wgtn.swen225.lc.domain.GameActor.KillerRobot;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.Exit;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedExit;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Integrated player tests on game board.
+ *
  * @author Yee Li
  */
 public class PlayerMoveTest {
@@ -35,6 +36,7 @@ public class PlayerMoveTest {
 
         //can't move out of board
         gameboard.action(Direction.RIGHT);
+        assertEquals(gameboard.getGameState().player().getActorFacing(), Direction.RIGHT);
         gameboard.action(Direction.RIGHT);
         gameboard.action(Direction.RIGHT);
         assertEquals(player.getLocation(), new Location(5, 4));
@@ -117,5 +119,19 @@ public class PlayerMoveTest {
         gameboard.action(Direction.LEFT);
         assertFalse(player.isShowPlayerInfo());
         assertTrue(player.isNextLevel());
+    }
+
+    /**
+     * Killer robot kills player.
+     */
+    @Test
+    public void playerMoveTestsSet02() {
+        var gameboard = Mock.getGameBoard();
+
+        var player = gameboard.getGameState().player();
+        gameboard.getGameState().robots().add(new KillerRobot(4, 5));
+
+        gameboard.action(Direction.UP);
+        assertTrue(player.isDead());
     }
 }

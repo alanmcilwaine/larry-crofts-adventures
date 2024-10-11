@@ -1,10 +1,7 @@
 package nz.ac.wgtn.swen225.lc.persistency;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import nz.ac.wgtn.swen225.lc.app.Command;
@@ -13,10 +10,7 @@ import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
-import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
-import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
-import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
-import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.*;
 
 public class ObjectMapper {
     static final Map<String, String> gameItems = new HashMap<>();
@@ -31,7 +25,6 @@ public class ObjectMapper {
         itemConstructors.put("T", color -> new Treasure());
         itemConstructors.put("UD", UnLockedDoor::new);
         itemConstructors.put("W", color -> new Wall());
-        itemConstructors.put("M", color -> new Mirror());
         itemConstructors.put("Tu", color -> new Tube());
         itemConstructors.put("B", color -> new Button());
         itemConstructors.put("LI", color -> new LaserInput());
@@ -49,16 +42,16 @@ public class ObjectMapper {
         gameItems.put("MovableBox", "MB"); //Special case (has own creator)
         gameItems.put("Crate", "C"); //Special case (has own creator)
         gameItems.put("Tube", "Tu"); 
-        //gameItems.put("LaserSource", "L"); //Special case (has own creator)
-        gameItems.put("Mirror", "M");
+        gameItems.put("LaserSource", "L"); //Special case (has own creator)
+        gameItems.put("Mirror", "M"); //Special case (has own creator)
         gameItems.put("Button", "B");
         gameItems.put("LaserInput", "LI");
     }
 
     /**
-     * Saves the given GameState object as a JSON format to a file.
+     * Saves the given GameBoard object as a JSON format to a file.
      * @author zhoudavi1 300652444
-     * @param level
+     * @param level The GameBoard object to be saved.
      * @return String The JSON string to be saved.
      * @throws IOException
      */
@@ -115,7 +108,22 @@ public class ObjectMapper {
         json.append("    \"x\": ").append(x).append(",\n");
         json.append("    \"y\": ").append(y).append("\n");
         json.append("  }\n"); // Closing the info object
-    
+
+        //Player Inventory
+        json.append("  \"inventory\": [\n");
+        for (int i = 0; i < level.getGameState().player().getTreasure().size(); i++) {
+            Item item = level.getGameState().player().getTreasure().get(i);
+            json.append("    {\n");
+            json.append("      \"itemType\": \"").append(gameItemCode(item)).append("\"\n");
+            json.append("    }");
+            if (i < level.getGameState().player().getTreasure().size() - 1) {
+                json.append(",\n"); // Comma between items
+            } else {
+                json.append("\n"); // No comma after the last item
+            }
+        }
+        json.append("  ],\n"); // Closing the inventory object
+
         json.append("}"); // Closing the entire JSON object
     
         return json.toString();
@@ -124,7 +132,7 @@ public class ObjectMapper {
     /**
      * Saves the given list of actions as a JSON format to a file.
      * @author zhoudavi1 300652444
-     * @param actions
+     * @param actions The list of actions to be saved.
      * @return String The JSON string to be saved.
      * @throws IOException
      */
@@ -190,8 +198,12 @@ public class ObjectMapper {
                 }
     
                 // Check if the cell contains a robot (-R)
-                else if (parts.length > 1 && parts[1].equals("R")) {
-                    robots.add(new KillerRobot(x, y));
+                else if (parts.length > 1 && parts[1].startsWith("R")) {
+                    KillerRobot robot = new KillerRobot(x, y);
+                    //Check for path after =
+                    String path = parts[1].substring(1);
+                    robot.setActorPath(pathDefinining(path));
+                    robots.add(robot);
                 }
 
                 //Check for moveable box
@@ -204,11 +216,19 @@ public class ObjectMapper {
                     moveableBoxes.add(new Crate(x, y));
                 }
 
+                //Check for mirror
+                else if (parts.length > 1 && parts[1].startsWith("M")) {
+                    String orientation = parts[1].substring(2); //Get the orientation
+                    Orientation o = orientationDefining(orientation);
+                    moveableBoxes.add(new Mirror(o, x, y));
+                }
+
                 //Check for laser source
-                //if (parts.length > 1 && parts[1].equals("L->")) {
-                    //String direction = parts[1].substring(2);
-                    //new LaserSource(returnDirection(direction));
-    
+                else if (parts.length > 1 && parts[1].startsWith("L->")) {
+                    String direction = parts[1].substring(2);
+                    item = new LaserSource(returnDirection(direction), true, x , y);
+                }
+
                 row.add(new Tile<>(item, new Location(x, y))); // Add the item to the board row
             }
             board.add(row);
@@ -237,7 +257,24 @@ public class ObjectMapper {
         int y = Integer.parseInt(extractValue(infoString, "\"y\": "));
     
         board.get(y).get(x).item = new Info(infoText);
-    
+
+        // Parse inventory
+        int inventoryStart = json.indexOf("\"inventory\": [");
+        if (inventoryStart == -1) {
+            throw new IllegalArgumentException("Inventory not found in JSON");
+        }
+        String inventoryString = json.substring(inventoryStart + 14, json.lastIndexOf("]"));
+
+        String[] inventoryItems = inventoryString.split("\\},\\s*\\{");
+
+        if (!inventoryString.trim().isEmpty()) { // Check if the inventory is empty
+            for (String inventoryItem : inventoryItems) {
+                inventoryItem = inventoryItem.replace("{", "").replace("}", "").trim();
+                assert player != null;
+                player.addTreasure(createItemFromCode(extractValue(inventoryItem, "\"itemType\": \"")));
+            }
+        }
+
         int width = board.get(0).size();
         int height = board.size();
     
@@ -319,9 +356,9 @@ public class ObjectMapper {
         }
 
         //Special case for LaserSource
-        //if (item instanceof LaserSource laserSource) {
-           // return baseCode + "->" + laserSource.direction();
-        //}
+        if (item instanceof LaserSource laserSource) {
+           return baseCode + "->" + laserSource.getDirection();
+        }
     
         // Add color code if the item has a color
         String colorCode = "";
@@ -354,8 +391,6 @@ public class ObjectMapper {
      * Create an item from a string code for loading from JSON.
      * @author zhoudavi1 300652444
      * @param code The string code to be converted.
-     * @param x The x-coordinate of the item.
-     * @param y The y-coordinate of the item.
      * @return Item The item created from the code.
      */
     private Item createItemFromCode(String code) {
@@ -395,7 +430,7 @@ public class ObjectMapper {
     }
 
     /**
-     * Create an default Info item for the board.
+     * Create a default Info item for the board.
      * @author zhoudavi1 300652444
      * @return Item The Info item.
      */
@@ -461,6 +496,7 @@ public class ObjectMapper {
             int robotX = robot.getLocation().x();
             int robotY = robot.getLocation().y();
             stringBoard.get(robotY).set(robotX, stringBoard.get(robotY).get(robotX) + "-R");
+            stringBoard.get(robotY).set(robotX, stringBoard.get(robotY).get(robotX) + "=" + pathDefinining(robot.getActorPath()));
         }
 
         //Boxes and Crates -MB or -C
@@ -469,11 +505,66 @@ public class ObjectMapper {
             int boxY = box.getLocation().y();
             if (box instanceof Crate) {
                 stringBoard.get(boxY).set(boxX, stringBoard.get(boxY).get(boxX) + "-C");
-            } else {
+            }
+            else if(box instanceof Mirror mirror){
+                stringBoard.get(boxY).set(boxX, stringBoard.get(boxY).get(boxX) + "-M");
+                stringBoard.get(boxY).set(boxX, stringBoard.get(boxY).get(boxX) + "=" + orientationDefining(mirror.getOrientation()));
+            }
+            else {
                 stringBoard.get(boxY).set(boxX, stringBoard.get(boxY).get(boxX) + "-MB");
             }
         }
 
         return stringBoard;
+    }
+    /**
+     * Convert path to string
+     * @param path The path to be converted.
+     * @return String The string representation of the path
+     */
+    public String pathDefinining (ActorPath path){
+        if(path == ActorPath.UPDOWN){
+            return "1";
+        } else {
+            return "0";
+        }
+    }
+    /**
+     * Convert string back to path
+     * @param path The path to be converted.
+     * @return ActorPath The path for robot
+     */
+    public ActorPath pathDefinining (String path){
+        if(path.equals("1")){
+            return ActorPath.UPDOWN;
+        } else {
+            return ActorPath.LEFTRIGHT;
+        }
+    }
+
+    /**
+     * Convert string to Orientation
+     * @param orientation The orientation to be converted.
+     * @return String The string representation of the orientation
+     */
+    public Orientation orientationDefining (String orientation){
+        if(orientation.equals("R")){
+            return Orientation.ONE;
+        } else {
+            return Orientation.TWO;
+        }
+    }
+
+    /**
+     * Convert Orientation back to string
+     * @param orientation The orientation to be converted.
+     * @return String The string representation of the orientation
+     */
+    public String orientationDefining (Orientation orientation){
+        if(orientation.equals(Orientation.ONE)){
+            return "R";
+        } else {
+            return "L";
+        }
     }
 }

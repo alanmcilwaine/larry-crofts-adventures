@@ -8,6 +8,12 @@ import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
+/**
+ * Represents another Actor in the game who's actions are not influenced by the
+ * player pressing keys. Can follow two specific paths.
+ *
+ * @author Carla Parinas
+ */
 public abstract class Robot implements Actor {
   private Location location;
   private ActorPath actorPath = ActorPath.LEFTRIGHT;
@@ -33,8 +39,7 @@ public abstract class Robot implements Actor {
 
   public void update(GameBoard gameBoard) {
     if (!attemptMove(this.robotFacing, gameBoard)) {
-      this.robotFacing = actorPath.getDir2();
-      actorPath.switchDirection();
+      actorPath.switchDirection(this);
     }
   }
 

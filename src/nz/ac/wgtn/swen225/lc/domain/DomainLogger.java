@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 /**
  * A logger for domain debugging and monitoring.
+ * @author Yee Li
  */
 public enum DomainLogger {
     LOGGER;

@@ -13,7 +13,9 @@ import nz.ac.wgtn.swen225.lc.domain.Tile;
 public record Info(String info) implements Item {
 
     @Override
-    public boolean blockActor(Actor actor) { return !(actor instanceof Player); }
+    public boolean blockActor(Actor actor) {
+        return !(actor instanceof Player);
+    }
 
     @Override
     public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {
@@ -33,4 +35,7 @@ public record Info(String info) implements Item {
     public String toString() {
         return "Info";
     }
+
+    @Override
+    public Item makeNew() { return new Info(info); }
 }

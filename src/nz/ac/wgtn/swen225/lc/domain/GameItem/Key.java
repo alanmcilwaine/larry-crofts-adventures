@@ -8,6 +8,7 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 
 /**
  * Key on tile
+ *
  * @author Yee Li
  */
 public record Key(ItemColor itemColor) implements Item {
@@ -26,4 +27,7 @@ public record Key(ItemColor itemColor) implements Item {
 
     @Override
     public String toString() { return "Key" + itemColor.toString(); }
+
+    @Override
+    public Item makeNew() { return new Key(itemColor); }
 }

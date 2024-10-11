@@ -1,44 +1,34 @@
+/**
+ * Has 1 static method to allow us to make Actions easily and cleanly
+ *
+ * <p>
+ * Usage Example:
+ * <pre>
+ *     RecorderAction.of(() -> System.out.println("Convenient!"));
+ * </pre>
+ * </p>
+ *
+ * @author John Rais raisjohn@ecs.vuw.ac.nz
+ * @version 2.0
+ */
 package nz.ac.wgtn.swen225.lc.recorder;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
 
-/**
- * Implements all but 1 of Action's methods, so I can use a lambda to create actions
- */
-public interface RecorderAction extends Action {
-
-
-    @Override
-    default public Object getValue(String key) {
-        throw new Error("This Action should not have tried to call this method");
+public interface RecorderAction{
+    /**
+     * A nice way to cleanly make Actions
+     *
+     * @param r The action you want to happen when this ActionListener is run
+     */
+    static Action of(Runnable r) {
+        return new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                r.run();
+            }
+        };
     }
-
-    @Override
-    default public void putValue(String key, Object value) {
-        throw new Error("This Action should not have tried to call this method");
-    }
-
-    @Override
-    default public void setEnabled(boolean b) {
-        throw new Error("This Action should not have tried to call this method");
-    }
-
-    @Override
-    default public boolean isEnabled() {
-        throw new Error("This Action should not have tried to call this method");
-    }
-
-    @Override
-    default public void addPropertyChangeListener(PropertyChangeListener listener) {
-        throw new Error("This Action should not have tried to call this method");
-    }
-
-    @Override
-    default public void removePropertyChangeListener(PropertyChangeListener listener) {
-        throw new Error("This Action should not have tried to call this method");
-    }
-
 }
 

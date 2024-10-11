@@ -12,6 +12,7 @@ import java.util.logging.Level;
 
 /**
  * Locked Exit on tile
+ *
  * @author Yee Li
  */
 public record LockedExit() implements Item, GameStateObserver {
@@ -47,4 +48,7 @@ public record LockedExit() implements Item, GameStateObserver {
 
     @Override
     public String toString() { return "LockedExit"; }
+
+  @Override
+  public Item makeNew() { return new LockedExit(); }
 }

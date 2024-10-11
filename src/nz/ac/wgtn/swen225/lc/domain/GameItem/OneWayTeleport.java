@@ -19,10 +19,6 @@ import java.util.logging.Level;
 public record OneWayTeleport(Location destination) implements TeleportItem {
     @Override
     public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ignore) {
-        }
         if (actor instanceof Player p) {
             var destTile = p.findTileInSpecificLocation(p.getGameBoard(), destination);
             checkLoopTeleport(tile, destTile);
@@ -45,7 +41,8 @@ public record OneWayTeleport(Location destination) implements TeleportItem {
     }
 
     @Override
-    public String toString() {
-        return "OneWayTeleport";
-    }
+    public String toString() { return "OneWayTeleport"; }
+
+    @Override
+    public Item makeNew() { return new OneWayTeleport(destination); }
 }

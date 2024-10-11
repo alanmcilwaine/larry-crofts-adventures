@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.app.UI;
+package nz.ac.wgtn.swen225.lc.app.UI.Containers;
 
 import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
@@ -40,7 +40,7 @@ public class Menu extends JMenuBar {
             }
         });
         save.addActionListener((unused) -> {
-            Persistency.saveGameBoard(a.domain);
+            Persistency.saveProgress(a.domain);
         });
         exit.addActionListener((unused) -> System.exit(1));
         List.of(load, save, exit).forEach(file::add);
@@ -57,7 +57,8 @@ public class Menu extends JMenuBar {
         loadInputs.addActionListener((unused) -> {
             String filename = a.openFile();
             if (!filename.isEmpty()){
-                Persistency.loadRecording(a.recorder, filename);
+                a.domain = Persistency.loadRecording(a.recorder, filename);
+                a.initialDomain = a.domain.copyOf();
             }
         });
         List.of(saveInputs, loadInputs).forEach(input::add);
