@@ -74,7 +74,7 @@ public class LaserTest {
     gameboard.addLaserSource(track);
 
     // add mirror
-    Mirror mTrack = new Mirror(Orientation.BOTTOMLEFTFACING, 5,5);
+    Mirror mTrack = new Mirror(Orientation.TWO, 5,5);
     gameboard.getGameState().boxes().add(mTrack);
 
     // add box
