@@ -7,26 +7,34 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * store all the images
+ * a singleton used to store and manage all the images used in the game.
+ * It loads images from a folder, resizes them, and stores them in a map for easy access.
  */
 public enum Img{
     INSTANCE;
 
-    // store all the image name with the type Image
+    // stores image names as keys and corresponding Image objects as values.
     Map<String, Image> imageToName = new HashMap<>();
 
+    /**
+     * initializes the Img enum and loads all the images when the instance is created.
+     */
     Img(){
         loadImage();
     }
 
     /**
-     * load all the images from a folder and save to the map.
+     * Loads all images from the "AllItemsImages" folder, resizes them to the required size,
+     * and stores them in a map with their filenames as keys.
+     *
+     * @throws Error if an image fails to load.
      */
     public void loadImage() {
         int size = ImageImplement.IMAGE_SIZE;
-       File imageFolder = new File("AllItemsImages");
-       File[] imageFiles = imageFolder.listFiles();
+        File imageFolder = new File("AllItemsImages");
+        File[] imageFiles = imageFolder.listFiles();
         assert imageFiles != null;
+        // load each image, resize each, put to the map with the image name as the key
         for(File file: imageFiles){
            try{
                Image originalImage = ImageIO.read(file);
@@ -40,12 +48,23 @@ public enum Img{
        }
     }
 
+    /**
+     * Resizes the provided image to the suitable width and height.
+     *
+     * @param originalImage the original image to be resized.
+     * @param width the desired width of the resized image.
+     * @param height the desired height of the resized image.
+     * @return the resized Image object.
+     */
     public static Image resizeImage(Image originalImage, int width, int height) {
         return originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
     }
 
     /**
-     * get all the type Image through the name of the image
+     * Retrieves an image from the map by its filename.
+     *
+     * @param name the name of the image file to retrieve.
+     * @return the corresponding Image object, or null if not found.
      */
     public Image getImgs(String name){
         return imageToName.get(name);
