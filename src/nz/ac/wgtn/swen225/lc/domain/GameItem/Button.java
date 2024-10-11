@@ -14,10 +14,7 @@ import java.util.List;
 public class Button implements Item {
   boolean isPressed = false;
   List<Tile<Item>> surroundingTiles = null;
-  boolean isBig = false;
-
-  public void setBig(boolean big) { isBig = big; }
-  public boolean isBig() { return isBig; }
+  public boolean isBig = false;
 
   public void attachTiles(List<Tile<Item>> surroundingTiles) {
     this.surroundingTiles = surroundingTiles;
@@ -45,7 +42,11 @@ public class Button implements Item {
 
   @Override
   public String toString() {
-    return isPressed ? "PressedButton" : "Button";
+    if (isBig) {
+      return isPressed ? "PressedButton" : "Button";
+    } else {
+      return isPressed ? "PressedButtonSmall" : "ButtonSmall";
+    }
   }
 
   @Override

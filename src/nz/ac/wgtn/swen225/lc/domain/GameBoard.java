@@ -70,6 +70,7 @@ public class GameBoard {
             subscribeGameState(l);
         }
 
+
         configureButtons();
         subscribeGameState(getLockedExit());
         playerMove(Direction.NONE, this);
@@ -147,7 +148,7 @@ public class GameBoard {
                 .getFirst();
     }
 
-    private void configureButtons() {
+    public void configureButtons() {
         board.forEach(x -> x.forEach(y -> {
             if (y.item instanceof Button b) {
                 b.attachTiles(surroundingTilesAt(y.location));

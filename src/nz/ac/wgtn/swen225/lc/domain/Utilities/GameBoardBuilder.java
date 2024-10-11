@@ -46,6 +46,7 @@ public class GameBoardBuilder {
                 "height", height,
                 "totalTreasure", totalTreasure));
         Util.checkNull(List.of(board, player));
+
         return new GameBoard(this);
     }
 
