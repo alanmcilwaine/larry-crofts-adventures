@@ -1,10 +1,11 @@
 package nz.ac.wgtn.swen225.lc.domain.DomainTest;
 
+import nz.ac.wgtn.swen225.lc.domain.GameActor.Crate;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Mirror;
-import nz.ac.wgtn.swen225.lc.domain.GameBoard;
+import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserSource;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.Tube;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
-import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Orientation;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LaserTest {
 
@@ -30,7 +32,7 @@ public class LaserTest {
     var player = gameboard.getGameState().player();
     LaserSource track = new LaserSource(Direction.RIGHT, true, 0, 5);
     gameboard.getBoard().get(0).get(5).item = track;
-    gameboard.addLaserSourceAtLocation(track);
+    gameboard.addLaserSource(track);
 
     gameboard.action(Direction.NONE);
 
@@ -50,7 +52,7 @@ public class LaserTest {
     var player = gameboard.getGameState().player();
     LaserSource track = new LaserSource(Direction.DOWN, true, 0, 5);
     gameboard.getBoard().get(0).get(5).item = track;
-    gameboard.addLaserSourceAtLocation(track);
+    gameboard.addLaserSource(track);
 
     gameboard.action(Direction.NONE);
 
@@ -64,37 +66,61 @@ public class LaserTest {
   }
 
   @Test
-  public void testMirrorWorking() {
+  public void testItemsInteraction() {
     var gameboard = Mock.getGameBoard();
     var player = gameboard.getGameState().player();
     LaserSource track = new LaserSource(Direction.RIGHT, true, 0, 5);
-    gameboard.getBoard().get(0).get(5).item = track;
-    gameboard.addLaserSourceAtLocation(track);
+    gameboard.getBoard().get(5).get(0).item = track;
+    gameboard.addLaserSource(track);
 
+    // add mirror
     Mirror mTrack = new Mirror(Orientation.BOTTOMLEFTFACING, 5,5);
     gameboard.getGameState().boxes().add(mTrack);
+
+    // add box
+    MovableBox bTrack = new MovableBox( 5,0);
+    gameboard.getGameState().boxes().add(bTrack);
+
+    // add crate
+    Crate cTrack = new Crate(5,2);
+    gameboard.getGameState().boxes().add(cTrack);
+
+    // add tube
+    gameboard.getBoard().get(5).get(3).item = new Tube();
+
 
     gameboard.action(Direction.NONE);
 
     Map<Location, String> lasers = track.getLasers();
 
+    // lasersource works
     checkLocation(lasers, new Location(1,5), "horizontal");
     checkLocation(lasers, new Location(2,5), "horizontal");
+
+    // tube works and passes
     checkLocation(lasers, new Location(3,5), "horizontal");
     checkLocation(lasers, new Location(4,5), "horizontal");
-    checkLocation(lasers, new Location(5,5), "horizontal");
+
+    // mirror works and right orientation
+    checkLocation(lasers, new Location(5,5), "RIGHTDOWN");
 
     // check if mirror reflects
     checkLocation(lasers, new Location(5,4), "vertical");
     checkLocation(lasers, new Location(5,3), "vertical");
+    
+    // laser destroys the create and passes through
     checkLocation(lasers, new Location(5,2), "vertical");
     checkLocation(lasers, new Location(5,1), "vertical");
-    checkLocation(lasers, new Location(5,0), "vertical");
+    assertEquals(gameboard.getGameState().boxes().contains(cTrack), false);
+
+
+    // block
+    assertThrows(AssertionError.class, () -> checkLocation(lasers, new Location(5,0), "vertical"));
   }
 
   @Test
-  public void doorWorking() {
-
+  public void playerDiesFromLaser() {
+    
   }
 
 }

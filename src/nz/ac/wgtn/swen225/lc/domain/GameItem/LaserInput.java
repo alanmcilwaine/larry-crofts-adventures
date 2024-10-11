@@ -2,19 +2,22 @@ package nz.ac.wgtn.swen225.lc.domain.GameItem;
 
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
+import nz.ac.wgtn.swen225.lc.domain.Tile;
 
-public class LaserInput implements Item {
+public class LaserInput extends Button {
     boolean isHitByLaser = false;
 
     @Override
-    public boolean blockActor(Actor actor) {
-        return true;
+    public boolean blockActor(Actor actor) { return true; }
+
+    @Override
+    public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {
+      throw new IllegalStateException("Can't step on: " + tile.getItemOnTile());
     }
 
+    @Override
+    public String toString() { return "LaserInput"; }
 
-  @Override
-  public String toString() { return "LaserInput"; }
-
-  @Override
-  public Item makeNew() { return new LaserInput(); }
+    @Override
+    public Item makeNew() { return new LaserInput(); }
 }

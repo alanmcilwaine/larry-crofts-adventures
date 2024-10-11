@@ -25,7 +25,7 @@ public class LaserSource implements Togglabble {
 // TODO: FIX THIS UP
   private Location location; // needs to set the laser somewhere
   private Direction direction; // has a direction but it should not move as well as blocks all actors
-  private String orientation;
+  public String orientation;
 
   private boolean laserToggle = true; // auto set to false
   private Map<Location, String> lasers = new HashMap<>();
@@ -38,7 +38,6 @@ public class LaserSource implements Togglabble {
     this.direction = direction;
     this.location = new Location(x, y);
     this.laserToggle = toggle;
-
   }
 
   private void setOrientation()  {
@@ -53,28 +52,33 @@ public class LaserSource implements Togglabble {
     currentDirection = direction;
     target = direction.act(location);
 
-    Item targetItem = gameBoard.itemOnTile(target).item;
 
     while(target != null &&
             target.x() >= 0 && target.x() < gameBoard.getWidth() &&
-            target.y() >= 0 && target.y() < gameBoard.getHeight() &&
-            targetItem.equals(new NoItem())) {
+            target.y() >= 0 && target.y() < gameBoard.getHeight())
+    {
+
+      Item targetItem = gameBoard.itemOnTile(target).item;
 
       MovableBox box = gameBoard.getGameState().boxes()
               .stream().filter(b -> b.getLocation().equals(target))
               .findFirst().orElse(null);
 
       if (box != null) {
-        if (box instanceof Mirror m) {
-          lasers.put(target, orientation);
-          m.reflectLaser(this);
-        }
-        if (box instanceof Crate c)  { c.explode(gameBoard.itemOnTile(target)); }
+        if (box instanceof Mirror m) { m.reflectLaser(this); }
+        else if (box instanceof Crate c)  { c.explode(gameBoard.getGameState().boxes()); }
+        else { break; }
       }
 
+      if(targetItem instanceof LaserInput l) { l.toggleSurroundingTiles(); }
+
+      if(targetItem instanceof NoItem || targetItem instanceof Tube) {
         setOrientation();
         lasers.put(target, orientation);
         target = currentDirection.act(target);
+      } else {
+        break;
+      }
     }
   }
 
