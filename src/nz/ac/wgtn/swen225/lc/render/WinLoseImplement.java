@@ -2,21 +2,30 @@ package nz.ac.wgtn.swen225.lc.render;
 
 import nz.ac.wgtn.swen225.lc.domain.GameState;
 
-import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * responsible for handling the display of win/lose messages and
+ * playing corresponding sound effects when the player either wins or loses the game.
+ * It tracks whether the win/lose music has already been played to avoid repetition.
+ */
 public class WinLoseImplement {
     static Clip clip;
     private static boolean winMusicPlayed = false;
     private static boolean loseMusicPlayed = false;
 
+    /**
+     * Draws the win or lose message on the game screen
+     *
+     * @param gameState the current state of the game.
+     * @param g the Graphics object used to draw the message.
+     * @param jpanel the JPanel where the message will be drawn.
+     */
     public void drawWinLose(GameState gameState, Graphics g, JPanel jpanel) {
-
-
         g.setFont(new Font("Brush Script MT", Font.BOLD, 60));
         if (gameState.player().isNextLevel()) {
 
@@ -35,11 +44,15 @@ public class WinLoseImplement {
 
         }
         jpanel.repaint();
-
     }
 
+    /**
+     * Plays the music based on the provided sound file name.
+     *
+     * @param name the name of the sound file to play, without the file extension.
+     * @throws RuntimeException if the music file cannot be found or played.
+     */
     public static void playMusic(String name) {
-
         try {
             File wavFile = new File("SoundEffect/" + name + ".wav");
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(wavFile);
@@ -48,10 +61,17 @@ public class WinLoseImplement {
             clip.start();
 
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            throw new RuntimeException("No such music");
+            throw new RuntimeException("No such music for status: " + name);
         }
     }
 
+    /**
+     * Plays the appropriate music based on the player's state (win or lose).
+     * It ensures that the win or lose music is only played once during the relevant event.
+     * Also, resets the win/lose flags when the game continues without a win or loss.
+     *
+     * @param gameState the current state of the game.
+     */
     public void allMusicPlayed(GameState gameState) {
         // Play win music only once when the player wins
         if (gameState.player().isNextLevel() && !winMusicPlayed) {
@@ -73,6 +93,4 @@ public class WinLoseImplement {
             loseMusicPlayed = false;
         }
     }
-
-
 }
