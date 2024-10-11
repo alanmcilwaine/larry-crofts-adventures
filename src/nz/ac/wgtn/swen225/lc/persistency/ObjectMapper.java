@@ -267,10 +267,12 @@ public class ObjectMapper {
 
         String[] inventoryItems = inventoryString.split("\\},\\s*\\{");
 
-        for (String inventoryItem : inventoryItems) {
-            inventoryItem = inventoryItem.replace("{", "").replace("}", "").trim();
-            assert player != null;
-            player.addTreasure(createItemFromCode(extractValue(inventoryItem, "\"itemType\": \"")));
+        if (!inventoryString.trim().isEmpty()) { // Check if the inventory is empty
+            for (String inventoryItem : inventoryItems) {
+                inventoryItem = inventoryItem.replace("{", "").replace("}", "").trim();
+                assert player != null;
+                player.addTreasure(createItemFromCode(extractValue(inventoryItem, "\"itemType\": \"")));
+            }
         }
 
         int width = board.get(0).size();

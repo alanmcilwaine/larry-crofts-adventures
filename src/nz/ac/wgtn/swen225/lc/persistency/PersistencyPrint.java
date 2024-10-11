@@ -40,7 +40,8 @@ public class PersistencyPrint {
         board.get(3).get(4).item = new LockedExit();
 
         Player player = new Player(new Location(1, 1));
-        player.addTreasure(new Key(ItemColor.RED));
+        //player.addTreasure(new Key(ItemColor.RED));
+        //player.addTreasure(new Key(ItemColor.BLUE));
         List<Robot> robots = new ArrayList<>();
         KillerRobot r = new KillerRobot(2, 3);
         r.setActorPath(ActorPath.UPDOWN);
