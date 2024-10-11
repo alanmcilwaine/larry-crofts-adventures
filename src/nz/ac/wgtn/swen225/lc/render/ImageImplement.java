@@ -7,17 +7,17 @@ import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.GameState;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
-
-import java.io.IOException;
 import java.util.List;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 
-
+/**
+ * responsible for rendering various game elements
+ * (tiles, items, actors, and boxes) onto a JPanel, as well as managing background
+ * sound and additional effects during the game.
+ */
 public class ImageImplement{
-    // App's jpanel called game in App
+    // App's jpanel
     private JPanel jpanel;
     public static final int IMAGE_SIZE = 70;
     private static final int BUFFER_SIZE = 5;
@@ -27,46 +27,68 @@ public class ImageImplement{
     private InfoImplement info;
     private SoundEffectImplement soundImplement;
 
-    // Flags to track if win or lose music has been played
-    private boolean winMusicPlayed = false;
-    private boolean loseMusicPlayed = false;
-
+    /**
+     * Constructs an ImageImplement object to draw elements on the provided JPanel.
+     * Initializes background, sound, and info implementations.
+     *
+     * @param jpanel the JPanel where game images are drawn.
+     */
     ImageImplement(JPanel jpanel) {
         this.jpanel = jpanel;
         this.jpanel.setDoubleBuffered(true);
         backgroundImplement = new BackgroundImplement();
         info = new InfoImplement(jpanel);
         soundImplement = new SoundEffectImplement();
-        new BackgroundSoundImplement().playMusic();
+        BackgroundSoundImplement.playMusic();
     }
 
     /**
-     * Factory method getting the ImageImplement instance.
+     * Factory method for getting an ImageImplement instance.
+     *
+     * @param jpanel the JPanel where the images will be drawn.
+     * @return an instance of ImageImplement.
      */
     public static ImageImplement getImageImplement(JPanel jpanel) {
         return new ImageImplement(jpanel);
     }
 
     /**
-     * Draw the image in each game board to the jpanel.
+     * Draws the game elements, implements the info, sounds and background
+     *
+     * @param gameState the current state of the game.
+     * @param g the Graphics object used for rendering.
      */
     public void drawImages(GameState gameState, Graphics g) {
+        // give actions to info
         info.fillAction(g, gameState);
 
+        // give action to sound effect
         soundImplement.fillAction(gameState);
+
+        // background
         backgroundImplement.drawBackGround(jpanel, g);
+
+        // game items
         drawItemsTile(gameState, g);
         drawActors(gameState, g);
         drawBoxes(gameState, g);
-        info.locationMatch(gameState);
-        soundImplement.locationMatch(gameState);
-        new WinLoseImplement().drawWinLose(gameState, g, jpanel);
 
+        // implement the action to info
+        info.locationMatch(gameState);
+
+        // implement the action to sound effect
+        soundImplement.locationMatch(gameState);
+
+        // win lose implementation
+        new WinLoseImplement().drawWinLose(gameState, g, jpanel);
         new WinLoseImplement().allMusicPlayed(gameState);
     }
 
     /**
-     * draw all the items and the tiles
+     * Draws all the items and tiles on the game board.
+     *
+     * @param gameState the current state of the game.
+     * @param g the Graphics object used for rendering.
      */
     public void drawItemsTile(GameState gameState, Graphics g){
         List<List<Tile<Item>>> gameBoard = gameState.board();
@@ -91,7 +113,10 @@ public class ImageImplement{
     }
 
     /**
-     * draw all the Actors
+     * Draws all actors in the game, including the player and robots.
+     *
+     * @param gameState the current state of the game.
+     * @param g the Graphics object used for rendering.
      */
     public void drawActors(GameState gameState, Graphics g){
         // player
@@ -107,16 +132,26 @@ public class ImageImplement{
     }
 
     /**
-     * draw one image
+     * Draws a single image.
+     *
+     * @param imageName the name of the image file to be drawn.
+     * @param x the x-coordinate relative to the player.
+     * @param y the y-coordinate relative to the player.
+     * @param g the Graphics object used for rendering.
      */
     public void drawOneImage(String imageName, int x, int y, Graphics g){
-
         if(Math.abs(x) < BUFFER_SIZE && Math.abs(y) < BUFFER_SIZE) {
             g.drawImage(Img.INSTANCE.getImgs(imageName + ".png"), x * IMAGE_SIZE + xBorder,
                     y * IMAGE_SIZE + yBorder, jpanel);
         }
     }
 
+    /**
+     * Draws all movable boxes in the game.
+     *
+     * @param gameState the current state of the game.
+     * @param g the Graphics object used for rendering.
+     */
     public void drawBoxes(GameState gameState, Graphics g){
         List<MovableBox> boxList = gameState.boxes();
         Player player = gameState.player();

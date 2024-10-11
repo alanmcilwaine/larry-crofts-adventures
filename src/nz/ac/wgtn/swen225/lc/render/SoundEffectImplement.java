@@ -1,6 +1,5 @@
 package nz.ac.wgtn.swen225.lc.render;
 
-import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.Button;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.Key;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedDoor;
@@ -14,20 +13,38 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * responsible for managing and playing sound effects
+ * when certain actions occur in the game.
+ * It stores sound effects actions mapped to specific game locations and triggers them based
+ * on the player's movements.
+ */
 public class SoundEffectImplement {
     private Map<Location, Runnable> SoundActionMap = new HashMap<>();
 
-    public void collectKeySound(String type) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-
-
+    /**
+     * Plays the sound effect when a key or other specific item is collected.
+     *
+     * @param type the type of item being collected, used to determine the corresponding sound effect.
+     * @throws UnsupportedAudioFileException if the audio format is unsupported.
+     * @throws IOException if there is an error reading the sound file.
+     * @throws LineUnavailableException if the audio line cannot be opened.
+     */
+    public void sound(String type) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         File wavFile = new File("SoundEffect/get" + type + ".wav");
         AudioInputStream audioStream = AudioSystem.getAudioInputStream(wavFile);
         Clip clip = AudioSystem.getClip();
         clip.open(audioStream);
-
         clip.start();
     }
 
+    /**
+     * Fills the SoundActionMap with actions that should trigger sound effects when the player
+     * reaches certain tiles containing specific types of game items
+     *
+     * @param gameState the current state of the game.
+     * @param type the class type of the game item to match.
+     */
     public void eachFillAction(GameState gameState, Class<?> type) {
         gameState.board().forEach(listTile ->
                 listTile.stream()
@@ -36,7 +53,8 @@ public class SoundEffectImplement {
                             // Adding action to SoundActionMap
                             SoundActionMap.put(i.location, () -> {
                                 try {
-                                    collectKeySound(type.getSimpleName());  // Play sound for Key
+                                    // Play sound for item
+                                    sound(type.getSimpleName());
                                 } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
                                     throw new RuntimeException("No such sound effect for item: " + i.getItemOnTile());
                                 }
@@ -45,6 +63,11 @@ public class SoundEffectImplement {
         );
     }
 
+    /**
+     * use the method eachFillAction() to implement different sound effects
+     *
+     * @param gameState the current state of the game.
+     */
     public void fillAction(GameState gameState){
         eachFillAction(gameState, Key.class);
         eachFillAction(gameState, LockedDoor.class);
@@ -53,6 +76,12 @@ public class SoundEffectImplement {
 
     }
 
+    /**
+     * Matches the player's current location to a sound action in the SoundActionMap, and if a match is found,
+     * executes the associated action (plays the sound) and then removes it from the map.
+     *
+     * @param gameState the current state of the game.
+     */
     public void locationMatch(GameState gameState){
         Location playerLocation = gameState.player().getLocation();
         Runnable action = SoundActionMap.get(playerLocation);
@@ -60,7 +89,5 @@ public class SoundEffectImplement {
             action.run();
             SoundActionMap.remove(playerLocation);
         }
-
-
     }
 }
