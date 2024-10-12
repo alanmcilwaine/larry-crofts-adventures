@@ -174,6 +174,7 @@ public class ObjectMapper {
         Player player = null;
         List<Robot> robots = new ArrayList<>();
         List<MovableBox> moveableBoxes = new ArrayList<>();
+        List<LaserSource> laserSources = new ArrayList<>();
     
         // Find the board section
         int boardStart = json.indexOf("\"board\": [");
@@ -227,6 +228,8 @@ public class ObjectMapper {
                 else if (parts.length > 1 && parts[1].startsWith("L->")) {
                     String direction = parts[1].substring(2);
                     item = new LaserSource(returnDirection(direction), true, x , y);
+                    laserSources.add((LaserSource) item);
+
                 }
 
                 row.add(new Tile<>(item, new Location(x, y))); // Add the item to the board row
@@ -279,7 +282,7 @@ public class ObjectMapper {
         int height = board.size();
     
         return new GameBoardBuilder().addBoard(board).addBoardSize(width, height).addTimeLeft(timeLimit)
-                .addTreasure(totalTreasure).addLevel(levelNumber).addPlayer(player).addRobots(robots).addBoxes(moveableBoxes).build();
+                .addTreasure(totalTreasure).addLevel(levelNumber).addPlayer(player).addRobots(robots).addBoxes(moveableBoxes).addLaserSources(laserSources).build();
     }
 
     /**
@@ -513,6 +516,13 @@ public class ObjectMapper {
             else {
                 stringBoard.get(boxY).set(boxX, stringBoard.get(boxY).get(boxX) + "-MB");
             }
+        }
+
+        //Laser Sources
+        for (LaserSource laserSource : level.getGameState().laserSources()) {
+            int laserX = 0; //laserSource.getLocation().x();
+            int laserY = 0; //laserSource.getLocation().y();
+            stringBoard.get(laserY).set(laserX, stringBoard.get(laserY).get(laserX) + "-L->" + laserSource.getDirection());
         }
 
         return stringBoard;

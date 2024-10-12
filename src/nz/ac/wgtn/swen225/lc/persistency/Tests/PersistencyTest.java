@@ -209,4 +209,11 @@ public class PersistencyTest {
         assertEquals(Command.Down, recorder.getCommands().get(3), "Fourth command should be Down");
         assertEquals(Command.Up, recorder.getCommands().get(4), "Fifth command should be Up");
     }
+
+    @Test
+    public void testSaveProgress(){
+        GameBoard gameBoard = createSampleGameState();
+        Persistency.saveProgress(gameBoard);
+
+    }
 }
