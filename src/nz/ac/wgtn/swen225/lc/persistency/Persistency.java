@@ -142,7 +142,7 @@ public class Persistency{
      * @return GameBoard Loading GameBoard from a file.
      */
     public static GameBoard loadwithFilePath(String filename){
-        // load the level GameState from a file path
+        // load the level GameBoard from a file path
         try{
             //Read JSON string from file
             File file = new File(filename);
@@ -190,7 +190,12 @@ public class Persistency{
             ObjectMapper mapper = new ObjectMapper();
             List<Command> actions = mapper.convertJSONtoActions(json);
             r.setCommands(actions);
-            return loadwithFilePath(filename);
+            //Cut out path
+            filename = filename.substring(filename.lastIndexOf("/") + 1);
+            //Split filname to get level number
+            String[] parts = filename.split("_");
+            int level = Integer.parseInt(parts[0]);
+            return loadGameBoard(level);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
