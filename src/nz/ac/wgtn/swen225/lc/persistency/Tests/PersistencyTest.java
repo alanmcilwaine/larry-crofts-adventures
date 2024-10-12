@@ -1,5 +1,6 @@
-package nz.ac.wgtn.swen225.lc.persistency;
+package nz.ac.wgtn.swen225.lc.persistency.Tests;
 
+import nz.ac.wgtn.swen225.lc.app.Command;
 import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.*;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
@@ -8,6 +9,8 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
+import nz.ac.wgtn.swen225.lc.persistency.ObjectMapper;
+import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,6 +27,11 @@ public class PersistencyTest {
         originalState = createSampleGameState();
     }
 
+    /**
+     * Create a sample game state for testing
+     * @autor zhoudavi1 300652444
+     * @return GameBoard
+     */
     private static GameBoard createSampleGameState() {
         List<List<Tile<Item>>> board = new ArrayList<>();
         for (int y = 0; y < 5; y++) {
@@ -58,6 +66,11 @@ public class PersistencyTest {
         return new GameBoardBuilder().addBoard(board).addBoardSize(5, 5).addTimeLeft(120).addTreasure(1).addLevel(1).addPlayer(player).addRobots(robots).addBoxes(boxes).build();
     }
 
+    /**
+     * Test reading JSON from a file
+     * @autor zhoudavi1 300652444
+     * @throws IOException
+     */
     @Test
     public void testReadJSON() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -100,6 +113,11 @@ public class PersistencyTest {
         Persistency.saveGameBoard(convertedBoard);
     }
 
+    /**
+     * Test saving and loading a GameState
+     * @autor zhoudavi1 300652444
+     * @throws IOException
+     */
     @Test
     public void testLoadGameState() throws IOException {
         Persistency.saveGameBoard(originalState);
@@ -134,11 +152,61 @@ public class PersistencyTest {
         }
     }
 
+    /**
+     * Test making a filename unique
+     * @autor zhoudavi1 300652444
+     */
     @Test
     public void testUniqueFilename() {
         String filename = Persistency.path + "level1.json";
         String uniqueFilename = Persistency.uniqueFilename(filename);
         assertNotEquals(filename, uniqueFilename, "Unique filename should be different from the original");
         assertTrue(uniqueFilename.startsWith(Persistency.path + "level1"), "Unique filename should start with the original name");
+    }
+
+    /**
+     * Test saving and loading commands
+     * @autor zhoudavi1 300652444
+     */
+    @Test
+    public void testSaveCommands(){
+        List<Command> actions = new ArrayList<>();
+        actions.add(Command.generate("Right"));
+        actions.add(Command.generate("Left"));
+        actions.add(Command.generate("Down"));
+        actions.add(Command.generate("Down"));
+        actions.add(Command.generate("Up"));
+
+        ObjectMapper mapper = new ObjectMapper();
+        String json = null;
+        try {
+            json = mapper.saveCommandstoFile(actions, 1);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        List<Command> loadedCommands = mapper.convertJSONtoActions(json);
+
+        assertEquals(actions.size(), loadedCommands.size(), "Number of commands should match");
+        for (int i = 0; i < actions.size(); i++) {
+            assertEquals(actions.get(i).direction(), loadedCommands.get(i).direction(), "Direction should match");
+        }
+    }
+
+    /**
+     * Test loading commands
+     * @autor zhoudavi1 300652444
+     */
+    @Test
+    public void loadRecording(){
+        MockRecorder recorder = new MockRecorder();
+        GameBoard b = Persistency.loadRecording(recorder ,Persistency.path + "1_commands.json");
+        assertNotNull(b, "GameBoard should not be null");
+        //Assert commands are loaded correctly
+        assertEquals(5, recorder.getCommands().size(), "Number of commands should match");
+        assertEquals(Command.Right, recorder.getCommands().get(0), "First command should be Right");
+        assertEquals(Command.Left, recorder.getCommands().get(1), "Second command should be Left");
+        assertEquals(Command.Down, recorder.getCommands().get(2), "Third command should be Down");
+        assertEquals(Command.Down, recorder.getCommands().get(3), "Fourth command should be Down");
+        assertEquals(Command.Up, recorder.getCommands().get(4), "Fifth command should be Up");
     }
 }
