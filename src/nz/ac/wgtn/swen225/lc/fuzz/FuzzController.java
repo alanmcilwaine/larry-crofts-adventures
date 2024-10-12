@@ -1,7 +1,12 @@
+/**
+ * Replaces the human controller with one that automatically generates smart inputs for testing
+ *
+ * @author John Rais raisjohn@ecs.vuw.ac.nz
+ * @version 2.0
+ */
 package nz.ac.wgtn.swen225.lc.fuzz;
 
 import nz.ac.wgtn.swen225.lc.app.Action;
-import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.app.Controller;
 
 import java.util.ArrayList;
@@ -15,26 +20,13 @@ class FuzzController extends Controller {
      * Presses and releases random keys in every possible way. This will test corner cases that would be almost impossible to recreate.
      * For example releasing a key twice before ever pressing it.
      */
-    private FuzzKeyChooser keyChooser;
     List<Action> keyLogger = new ArrayList<>();
-    int level = -1;
-    App app;
-
-    /**
-     * Give the key chooser an app so that it can make smart decisions
-     * @param app
-     */
-    void setUpKeyChooser(App app){
-        this.app = app;
-        this.keyChooser = new FuzzKeyChooser(app);
-        changedLevel();
-    }
 
     /**
      * Creates pseudo random inputs, based on keyChoosers desired keys.
      */
-    void randomizeInputs(){
-        Action keyPressed = nextKey();
+    void randomizeInputs(FuzzKeyChooser strategy){
+        Action keyPressed = nextKey(strategy);
         keyLogger.add(keyPressed);
         actionsPressed.getOrDefault(keyPressed, ()->{}).run();
 
@@ -48,8 +40,8 @@ class FuzzController extends Controller {
      *
      * @return Will be slightly random, but more likely to be a move that guides us somewhere new.
      */
-    Action nextKey() {
-        return keyChooser.nextKey();
+    Action nextKey(FuzzKeyChooser strategy) {
+        return strategy.nextKey();
     }
 
     /**
@@ -60,13 +52,4 @@ class FuzzController extends Controller {
         return List.of(Action.Up, Action.Down, Action.Left, Action.Right).get((int)(Math.random()*4));
     }
 
-    /**
-     * If the level is over we need a new keyChooser
-     */
-    void changedLevel(){
-        if(app.domain.getGameState().level() != level){
-            level = app.domain.getGameState().level();
-            this.keyChooser = new FuzzKeyChooser(app);
-        }
-    }
 }
