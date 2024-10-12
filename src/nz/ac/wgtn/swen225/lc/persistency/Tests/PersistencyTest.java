@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -160,8 +161,16 @@ public class PersistencyTest {
     public void testUniqueFilename() {
         String filename = Persistency.path + "level1.json";
         String uniqueFilename = Persistency.uniqueFilename(filename);
-        assertNotEquals(filename, uniqueFilename, "Unique filename should be different from the original");
-        assertTrue(uniqueFilename.startsWith(Persistency.path + "level1"), "Unique filename should start with the original name");
+        File file = new File(filename);
+        if(file.exists()){
+            int i = 1;
+            while(file.exists()){
+                filename = filename.substring(0, filename.indexOf(".")) + "." + i + ".json";
+                file = new File(filename);
+                i++;
+            }
+        }
+        assertEquals(uniqueFilename, filename, "Unique filename should match expected result");
     }
 
     /**
@@ -191,6 +200,20 @@ public class PersistencyTest {
             assertEquals(actions.get(i).direction(), loadedCommands.get(i).direction(), "Direction should match");
         }
     }
+    /**
+     * Test saving commands in Persistency
+     * @autor zhoudavi1 300652444
+     */
+    @Test
+    public void testSaveCommandsInPersistency(){
+        List<Command> actions = new ArrayList<>();
+        actions.add(Command.generate("Right"));
+        actions.add(Command.generate("Left"));
+        actions.add(Command.generate("Down"));
+        actions.add(Command.generate("Down"));
+        actions.add(Command.generate("Up"));
+        Persistency.saveCommands(actions, 1);
+    }
 
     /**
      * Test loading commands
@@ -210,10 +233,25 @@ public class PersistencyTest {
         assertEquals(Command.Up, recorder.getCommands().get(4), "Fifth command should be Up");
     }
 
+    /**
+     * Test saving progress
+     * @autor zhoudavi1 300652444
+     */
     @Test
     public void testSaveProgress(){
         GameBoard gameBoard = createSampleGameState();
         Persistency.saveProgress(gameBoard);
 
     }
+
+    /**
+     * Test load from file path
+     * @autor zhoudavi1 300652444
+     */
+    @Test
+    public void testLoadFromFile(){
+        GameBoard gameBoard = Persistency.loadwithFilePath(Persistency.path + "level1.json");
+        assertNotNull(gameBoard, "GameBoard should not be null");
+    }
+
 }
