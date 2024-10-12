@@ -174,6 +174,7 @@ public class ObjectMapper {
         Player player = null;
         List<Robot> robots = new ArrayList<>();
         List<MovableBox> moveableBoxes = new ArrayList<>();
+        List<LaserSource> laserSources = new ArrayList<>();
     
         // Find the board section
         int boardStart = json.indexOf("\"board\": [");
@@ -190,7 +191,11 @@ public class ObjectMapper {
             for (int x = 0; x < cellStrings.length; x++) {
                 String cellCode = cellStrings[x].replace("\"", "").trim(); // Trim whitespaces
                 String[] parts = cellCode.split("-"); // Find the dash to indicate actors
-                Item item = createItemFromCode(parts[0]);
+                Item item = createItemFromCode(parts[0], x, y);
+
+                if(item instanceof LaserSource laserSource){
+                    laserSources.add(laserSource);
+                }
 
                 // Check if the cell contains the player (-P)
                 if (parts.length > 1 && parts[1].equals("P")) {
@@ -221,12 +226,6 @@ public class ObjectMapper {
                     String orientation = parts[1].substring(2); //Get the orientation
                     Orientation o = orientationDefining(orientation);
                     moveableBoxes.add(new Mirror(o, x, y));
-                }
-
-                //Check for laser source
-                else if (parts.length > 1 && parts[1].startsWith("L->")) {
-                    String direction = parts[1].substring(2);
-                    item = new LaserSource(returnDirection(direction), true, x , y);
                 }
 
                 row.add(new Tile<>(item, new Location(x, y))); // Add the item to the board row
@@ -271,7 +270,7 @@ public class ObjectMapper {
             for (String inventoryItem : inventoryItems) {
                 inventoryItem = inventoryItem.replace("{", "").replace("}", "").trim();
                 assert player != null;
-                player.addTreasure(createItemFromCode(extractValue(inventoryItem, "\"itemType\": \"")));
+                player.addTreasure(createItemFromCode(extractValue(inventoryItem, "\"itemType\": \""), 0, 0));
             }
         }
 
@@ -279,7 +278,7 @@ public class ObjectMapper {
         int height = board.size();
     
         return new GameBoardBuilder().addBoard(board).addBoardSize(width, height).addTimeLeft(timeLimit)
-                .addTreasure(totalTreasure).addLevel(levelNumber).addPlayer(player).addRobots(robots).addBoxes(moveableBoxes).build();
+                .addTreasure(totalTreasure).addLevel(levelNumber).addPlayer(player).addRobots(robots).addBoxes(moveableBoxes).addLaserSources(laserSources).build();
     }
 
     /**
@@ -393,12 +392,18 @@ public class ObjectMapper {
      * @param code The string code to be converted.
      * @return Item The item created from the code.
      */
-    private Item createItemFromCode(String code) {
+    private Item createItemFromCode(String code, int x, int y) {
         //Special case for TP as it takes a location
         if (code.startsWith("TP(")) {
             String location = code.substring(3, code.indexOf(")"));
             Location l = locationMaker(location);
             return new OneWayTeleport(l);
+        }
+
+        //Check for laser source
+        else if (code.startsWith("L->")) {
+            String direction = code.substring(2, code.indexOf("\""));
+            return new LaserSource(returnDirection(direction), true, x , y);
         }
 
         // Split the code into the main item and the optional color code
