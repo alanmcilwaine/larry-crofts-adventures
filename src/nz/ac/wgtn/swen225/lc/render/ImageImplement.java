@@ -4,6 +4,8 @@ package nz.ac.wgtn.swen225.lc.render;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserInput;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserSource;
 import nz.ac.wgtn.swen225.lc.domain.GameState;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
@@ -72,6 +74,7 @@ public class ImageImplement{
         drawItemsTile(gameState, g);
         drawActors(gameState, g);
         drawBoxes(gameState, g);
+        drawLasers(gameState, g);
 
         // implement the action to info
         info.locationMatch(gameState);
@@ -144,6 +147,7 @@ public class ImageImplement{
             g.drawImage(Img.INSTANCE.getImgs(imageName + ".png"), x * IMAGE_SIZE + xBorder,
                     y * IMAGE_SIZE + yBorder, jpanel);
         }
+        System.out.println(imageName);
     }
 
     /**
@@ -158,6 +162,30 @@ public class ImageImplement{
         boxList.forEach(box -> drawOneImage(box.toString(),
                 box.getLocation().x() - player.getLocation().x(),
                 box.getLocation().y() - player.getLocation().y(), g));
+    }
+
+    /**
+     * Draws all lasers emitted by laser sources in the game.
+     *
+     * @param gameState the current state of the game.
+     * @param g the Graphics object used for rendering.
+     */
+    public void drawLasers(GameState gameState, Graphics g) {
+        // Get player for reference of relative positioning
+        Player player = gameState.player();
+        LaserInput laserInput = new LaserInput();
+
+        // Get all laser sources from the game state
+        List<LaserSource> lasers = gameState.laserSources();
+
+        // Loop through each laser source and its lasers
+        lasers.forEach(laserSource -> {
+            laserSource.getLasers().forEach((laserLocation, orientation) -> {
+                int relativeX = laserLocation.x() - player.getLocation().x();
+                int relativeY = laserLocation.y() - player.getLocation().y();
+                drawOneImage("laser" + orientation, relativeX, relativeY, g);
+            });
+        });
     }
 
 
