@@ -5,7 +5,6 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 
 public class LaserInput extends Button {
-    boolean isHitByLaser = false;
 
     @Override
     public boolean blockActor(Actor actor) { return true; }

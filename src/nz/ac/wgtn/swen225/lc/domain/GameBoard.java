@@ -161,10 +161,15 @@ public class GameBoard {
 
         for(int x = l.x() - 1; x <= l.x() + 1; x++) {
             for(int y = l.y() - 1; y <= l.y() + 1; y++) {
-                ls.add(board.get(y).get(x));
+                if (locationisValid(new Location(x, y))) { ls.add(board.get(y).get(x)); }
             }
         }
         return ls;
+    }
+
+    private boolean locationisValid(Location location) {
+        return location.x() >= 0 && location.x() < getWidth() &&
+                location.y() >= 0 && location.y() < getHeight();
     }
 
     /**

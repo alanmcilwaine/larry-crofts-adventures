@@ -126,7 +126,7 @@ public class LaserTest {
   public void playerDiesFromLaser() {
     var gameboard = Mock.getGameBoard();
     var player = gameboard.getGameState().player();
-    LaserSource track = new LaserSource(Direction.DOWN, true, 0, 5);
+    LaserSource track = new LaserSource(Direction.DOWN, true, 5, 5);
     gameboard.getBoard().get(0).get(5).item = track;
     gameboard.addLaserSource(track);
 
@@ -135,24 +135,30 @@ public class LaserTest {
     gameboard.action(Direction.RIGHT);
     gameboard.action(Direction.RIGHT);
 
+    assert player.isDead();
   }
 
   @Test
   public void laserInputWorks() {
     var gameboard = Mock.getGameBoard();
     var player = gameboard.getGameState().player();
+
     Button track = new LaserInput();
-    Tile<Item> tileTrack = gameboard.getGameState().board().get(2).get(2);
+    Tile<Item> tileTrack = gameboard.getGameState().board().get(2).get(5);
     tileTrack.item = track;
 
-    LaserSource ltrack = new LaserSource(Direction.DOWN, true, 0, 5);
+    LaserSource ltrack = new LaserSource(Direction.DOWN, true, 5, 5);
     gameboard.getBoard().get(0).get(5).item = ltrack;
     gameboard.addLaserSource(ltrack);
+
+    assert !track.isPressed;
 
     gameboard.configureButtons();
 
     gameboard.action(Direction.NONE);
+    assert track.isPressed;
 
+    // TODO: CHECK IF INTERACTION WITH NEARBY OBJECT WORKS
   }
 
 }

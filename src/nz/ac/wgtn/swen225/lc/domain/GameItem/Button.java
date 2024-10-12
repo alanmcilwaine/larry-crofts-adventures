@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Button implements Item {
-  boolean isPressed = false;
+  public boolean isPressed = false;
   List<Tile<Item>> surroundingTiles = null;
   public boolean isBig = false;
 
