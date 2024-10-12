@@ -11,7 +11,9 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * responsible for managing and playing sound effects
@@ -21,6 +23,8 @@ import java.util.Map;
  */
 public class SoundEffectImplement {
     private Map<Location, Runnable> SoundActionMap = new HashMap<>();
+    private Set<Location> soundPlayedLocations = new HashSet<>();
+    private Location previousLocation = null;
 
     /**
      * Plays the sound effect when a key or other specific item is collected.
@@ -36,6 +40,7 @@ public class SoundEffectImplement {
         Clip clip = AudioSystem.getClip();
         clip.open(audioStream);
         clip.start();
+
     }
 
     /**
@@ -85,9 +90,20 @@ public class SoundEffectImplement {
     public void locationMatch(GameState gameState){
         Location playerLocation = gameState.player().getLocation();
         Runnable action = SoundActionMap.get(playerLocation);
-        if(action != null){
+        // Check if player moved off a previously triggered button
+        if (previousLocation != null && !playerLocation.equals(previousLocation)) {
+            soundPlayedLocations.remove(previousLocation);
+        }
+
+        // Play sound if the player is on a button, and it hasn't played yet
+        if (action != null && !soundPlayedLocations.contains(playerLocation)) {
             action.run();
             SoundActionMap.remove(playerLocation);
+            soundPlayedLocations.add(playerLocation); // Mark location as sound played
         }
+
+        previousLocation = playerLocation; // Update previous location
     }
+
+
 }

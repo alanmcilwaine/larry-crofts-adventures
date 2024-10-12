@@ -1,21 +1,33 @@
-package nz.ac.wgtn.swen225.lc.persistency;
+package nz.ac.wgtn.swen225.lc.persistency.Tests;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import nz.ac.wgtn.swen225.lc.app.Command;
 import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.*;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.*;
+import nz.ac.wgtn.swen225.lc.persistency.ObjectMapper;
+import nz.ac.wgtn.swen225.lc.persistency.Persistency;
+
+import static nz.ac.wgtn.swen225.lc.persistency.Persistency.path;
 
 public class PersistencyPrint {
     public static void main(String[] args) throws IOException {
         GameBoard gameBoard = testReadJSON();
         testLoadGameBoard(gameBoard);
         testUniqueFilename();
+        testCommands();
     }
-
+    /**
+     * Create a sample GameBoard object
+     * @author zhoudavi1 300652444
+     * @return The GameBoard object.
+     * @throws IOException
+     */
     private static GameBoard createSampleGameBoard() {
         List<List<Tile<Item>>> board = new ArrayList<>();
         for (int y = 0; y < 5; y++) {
@@ -31,7 +43,7 @@ public class PersistencyPrint {
         board.get(1).get(3).item = new Key(ItemColor.RED);
         board.get(3).get(3).item = new LockedDoor(ItemColor.RED);
         board.get(2).get(2).item = new Info("Hello chap!");
-        //board.get(2).get(2).item = new LaserSource(Direction.UP, true, 2, 2);
+        board.get(2).get(2).item = new LaserSource(Direction.UP, true, 2, 2);
         
         //Treasure
         board.get(3).get(2).item = new Treasure();
@@ -54,6 +66,12 @@ public class PersistencyPrint {
         return new GameBoardBuilder().addBoard(board).addBoardSize(5, 5).addTimeLeft(120).addTreasure(1).addLevel(1).addPlayer(player).addRobots(robots).addBoxes(boxes).build();
     }
 
+    /**
+     * Create a sample GameBoard object and test the conversion to JSON and back.
+     * @author zhoudavi1 300652444
+     * @return The converted GameBoard object.
+     * @throws IOException
+     */
     private static GameBoard testReadJSON() throws IOException{
         // Create a sample GameState
         System.out.println("Reading JSON:");
@@ -112,7 +130,12 @@ public class PersistencyPrint {
         return convertedBoard;
     }
 
-    //Test loading a GameState from a file
+    /**
+     * Test loading a GameBoard object from a file and compare it with the original GameBoard object.
+     * @author zhoudavi1 300652444
+     * @param original The original GameBoard object.
+     * @throws IOException
+     */
     private static void testLoadGameBoard(GameBoard original) throws IOException{
         System.out.println("Loading GameState from file:--------------------------------------");
         GameBoard loadedState = Persistency.loadGameBoard(1);
@@ -153,13 +176,58 @@ public class PersistencyPrint {
         System.out.println("Board matches: " + boardMatches);
     }
 
-    //Test Unique filename generation
+    /**
+     * Test the generation of a unique filename for a file path.
+     * @autor zhoudavi1 300652444
+     */
     private static void testUniqueFilename(){
         System.out.println("Testing unique filename generation:");
-        String filename = Persistency.path + "level1.json";
+        String filename = path + "level1.json";
         System.out.println("Original filename: " + filename);
         filename = Persistency.uniqueFilename(filename);
         System.out.println("Unique filename: " + filename);
     }
 
+    /**
+     * Test saving and loading commands.
+     * @autor zhoudavi1 300652444
+     */
+    private static void testCommands(){
+        List<Command> actions = new ArrayList<>();
+        actions.add(Command.generate("Right"));
+        actions.add(Command.generate("Left"));
+        actions.add(Command.generate("Down"));
+        actions.add(Command.generate("Down"));
+        actions.add(Command.generate("Up"));
+        testSaveCommands(actions);
+        testLoadCommands(actions);
+    }
+
+    /**
+     * Test saving commands
+     * @autor zhoudavi1 300652444
+     * @param actions The list of commands to be saved.
+     */
+    private static void testSaveCommands(List<Command> actions){
+        System.out.println("Testing saving commands---------------");
+        GameBoard gameBoard = createSampleGameBoard();
+        Persistency.saveCommands(actions, 1);
+    }
+
+    /**
+     * Test loading commands
+     * @autor zhoudavi1 300652444
+     * @param actions The list of commands to be loaded.
+     */
+    private static void testLoadCommands(List<Command> actions){
+        System.out.println("Testing loading commands---------------");
+        MockRecorder recorder = new MockRecorder();
+        GameBoard b = Persistency.loadRecording(recorder ,path + "1_commands.json");
+        //Check commands same
+        List<Command> loadedactions = recorder.getCommands();
+        System.out.println("Number of commands should match: " + (actions.size() == loadedactions.size()));
+        for (int i = 0; i < actions.size(); i++) {
+            System.out.println("Direction should match: " + (actions.get(i).direction().equals(loadedactions.get(i).direction())));
+        }
+    }
 }

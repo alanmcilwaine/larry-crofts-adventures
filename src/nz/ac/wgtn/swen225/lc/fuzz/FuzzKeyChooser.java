@@ -1,3 +1,9 @@
+/**
+ * Stores info so that it can generate the best inputs for testing
+ *
+ * @author John Rais raisjohn@ecs.vuw.ac.nz
+ * @version 2.0
+ */
 package nz.ac.wgtn.swen225.lc.fuzz;
 
 import nz.ac.wgtn.swen225.lc.app.Action;
