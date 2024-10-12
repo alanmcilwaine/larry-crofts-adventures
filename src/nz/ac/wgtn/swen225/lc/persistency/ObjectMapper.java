@@ -356,7 +356,7 @@ public class ObjectMapper {
 
         //Special case for LaserSource
         if (item instanceof LaserSource laserSource) {
-           return baseCode + "->" + laserSource.getDirection();
+           return baseCode + "(" + laserSource.getDirection() + ")";
         }
     
         // Add color code if the item has a color
@@ -401,8 +401,8 @@ public class ObjectMapper {
         }
 
         //Check for laser source
-        else if (code.startsWith("L->")) {
-            String direction = code.substring(2, code.indexOf("\""));
+        else if (code.startsWith("L(")) {
+            String direction = code.substring(2, code.indexOf(")"));
             return new LaserSource(returnDirection(direction), true, x , y);
         }
 
@@ -464,11 +464,11 @@ public class ObjectMapper {
      */
     public Direction returnDirection(String direction){
         return switch(direction){
-            case "Left" -> Direction.LEFT;
-            case "Right" -> Direction.RIGHT;
-            case "Up" -> Direction.UP;
-            case "Down" -> Direction.DOWN;
-            case "None" -> Direction.NONE;
+            case "LEFT" -> Direction.LEFT;
+            case "RIGHT" -> Direction.RIGHT;
+            case "UP" -> Direction.UP;
+            case "DOWN" -> Direction.DOWN;
+            case "NONE" -> Direction.NONE;
             default -> throw new IllegalStateException("Unexpected value: " + direction);
         };
     }
