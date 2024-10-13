@@ -34,4 +34,14 @@ public class BackgroundSoundImplement {
             throw new RuntimeException("No such music for the status: " + statusSupplier.get());
         }
     }
+
+    public static void muteMusic(boolean mute){
+        if(mute){
+            clip.stop();
+        }
+        else{
+            clip.start();
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        }
+    }
 }

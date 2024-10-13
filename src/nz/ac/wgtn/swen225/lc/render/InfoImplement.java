@@ -17,7 +17,7 @@ import java.util.Map;
  * on the game's JPanel when the player reaches certain locations.
  */
 public class InfoImplement {
-    JTextArea textArea = new JTextArea();
+    static JTextArea textArea = new JTextArea();
     JPanel jPanel;
 
     private Map<Location, Runnable> locationActionMap = new HashMap<>();
@@ -96,6 +96,10 @@ public class InfoImplement {
             action.run();
         }
         locationActionMap.clear();
+    }
+    
+    public static void unvisiableTextArea(){
+        textArea.setVisible(false);
     }
 
 }
