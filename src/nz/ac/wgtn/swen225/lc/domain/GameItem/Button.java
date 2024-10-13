@@ -14,7 +14,7 @@ import java.util.List;
 public class Button implements Item {
   public boolean isPressed = false;
   List<Tile<Item>> surroundingTiles = new ArrayList<>();
-  public boolean isBig = true;
+  public boolean isBig = false;
 
   public void attachTiles(List<Tile<Item>> surroundingTiles) {
     this.surroundingTiles = surroundingTiles;

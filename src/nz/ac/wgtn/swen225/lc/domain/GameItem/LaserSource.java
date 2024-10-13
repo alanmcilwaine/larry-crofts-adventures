@@ -76,7 +76,7 @@ public class LaserSource implements Togglabble {
         l.toggleSurroundingTiles();
       }
 
-      if(targetItem instanceof NoItem || targetItem instanceof Tube) {
+      if(targetItem instanceof NoItem || targetItem instanceof Tube || targetItem instanceof LaserInput) {
         setOrientation();
         lasers.put(target, orientation);
         target = currentDirection.act(target);

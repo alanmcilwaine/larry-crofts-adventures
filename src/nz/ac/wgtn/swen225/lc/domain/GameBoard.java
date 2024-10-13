@@ -5,10 +5,8 @@ import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Crate;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.Button;
-import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserSource;
-import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedDoor;
-import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedExit;
 import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
@@ -206,8 +204,11 @@ public class GameBoard {
                                     .addRobots(newRobots).addBoxes(newBoxes).addLaserSources(newLasers)
                                     .addTimeLeft(timeLeft)
                                     .addTreasure(totalTreasure)
-//                                    .addKeys(totalKeys)
                                     .build();
+    }
+
+    public int keysLeft() {
+        return (int) board.stream().flatMap(x -> x.stream().filter(y -> y.item instanceof Key)).count();
     }
 
     /**
