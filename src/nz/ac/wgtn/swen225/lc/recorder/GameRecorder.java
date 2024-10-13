@@ -156,7 +156,6 @@ class GameRecorder implements Recorder{
     @Override
     public void setCommands(List<Command> commands) {
         assert commands != null;
-        assert !commands.isEmpty();
 
         completed.clear();
         //First element in the list will be the top of the stack

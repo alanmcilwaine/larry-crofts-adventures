@@ -68,7 +68,7 @@ public class FuzzKeyChooser {
         if(notValid(x,y)) return 1;
 
         //Spend less time attempting to move onto walls
-        boolean canStepOn = app.domain.getBoard().get(y).get(x).canStepOn(app.domain.getGameState().player());
+        boolean canStepOn = x < 0 || y < 0 || app.domain.getBoard().get(y).get(x).canStepOn(app.domain.getGameState().player());
 
         return value(x,y) + (canStepOn ? 0 : 1);
     }
@@ -88,6 +88,7 @@ public class FuzzKeyChooser {
         board.get(y).set(x, value(x,y) + amount);
     }
     float value(int x, int y){
+        if(x < 0 || y < 0) return 0.5f;
         return board.get(y).get(x);
     }
     Location move(Action a){
@@ -101,7 +102,7 @@ public class FuzzKeyChooser {
         return app.domain.getGameState().player().getLocation();
     }
     boolean notValid(int x, int y){
-        return y >= board.size() || x >= board.get(0).size();
+        return y >= board.size() || x >= board.get(0).size() || x < 0 || y < 0;
     }
     /**
      * Create a list of list of floats to store how well tested each space on our board is.

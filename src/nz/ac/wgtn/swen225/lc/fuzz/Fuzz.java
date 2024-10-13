@@ -54,6 +54,7 @@ public class Fuzz {
         // Sleep to keep the test running for a set duration
         try {
             Thread.sleep(TEST_TIME * 1000); // Keep the test running for 60 seconds
+            closeAppWindow();
         } catch (InterruptedException e) {
             System.out.println("Interruption: " + e);
         }
@@ -126,5 +127,19 @@ public class Fuzz {
                 if(draw) super.paintComponent(g);
             }
         };
+    }
+    /**
+     * Closes the app window on the SWING thread
+     */
+    private static void closeAppWindow() {
+        SwingUtilities.invokeLater(() -> {
+            Window[] windows = Window.getWindows();
+            //Get rid of all open windows
+            for (Window window : windows) {
+                if (window.isShowing()) {
+                    window.dispose();
+                }
+            }
+        });
     }
 }
