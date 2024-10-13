@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import nz.ac.wgtn.swen225.lc.app.Command;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.*;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;

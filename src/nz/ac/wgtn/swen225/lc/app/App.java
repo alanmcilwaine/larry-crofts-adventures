@@ -5,7 +5,10 @@ import java.awt.*;
 import java.io.File;
 import java.util.List;
 
+import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Controller;
 import nz.ac.wgtn.swen225.lc.app.UI.Containers.AppFrame;
+import nz.ac.wgtn.swen225.lc.app.UI.Containers.GamePanel;
 import nz.ac.wgtn.swen225.lc.app.UI.Containers.Menu;
 import nz.ac.wgtn.swen225.lc.app.UI.Containers.UIPanel;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;

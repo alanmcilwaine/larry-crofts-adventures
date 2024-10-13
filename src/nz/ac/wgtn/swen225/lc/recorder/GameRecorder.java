@@ -29,7 +29,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import nz.ac.wgtn.swen225.lc.app.AppInterface;
-import nz.ac.wgtn.swen225.lc.app.Command;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
 
 class GameRecorder implements Recorder{
     /** Reference to the main application interface */

@@ -7,7 +7,7 @@
  */
 package nz.ac.wgtn.swen225.lc.recorder;
 
-import nz.ac.wgtn.swen225.lc.app.Command;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
 import nz.ac.wgtn.swen225.lc.app.AppInterface;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

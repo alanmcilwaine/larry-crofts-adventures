@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import java.util.Arrays;
 
 import nz.ac.wgtn.swen225.lc.app.App;
-import nz.ac.wgtn.swen225.lc.app.Action;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Action;
 
 /**
  * RemapFrame --- Handling the window where the user can set their key remappings.

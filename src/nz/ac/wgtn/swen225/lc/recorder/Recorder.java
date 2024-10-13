@@ -26,7 +26,7 @@ import javax.swing.*;
 import java.util.List;
 
 import nz.ac.wgtn.swen225.lc.app.AppInterface;
-import nz.ac.wgtn.swen225.lc.app.Command;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
 
 public interface Recorder {
 
