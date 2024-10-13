@@ -28,6 +28,7 @@ public class ObjectMapper {
         itemConstructors.put("Tu", color -> new Tube());
         itemConstructors.put("B", color -> new Button());
         itemConstructors.put("LI", color -> new LaserInput());
+        itemConstructors.put("BB", color -> new BigButton());
 
         gameItems.put("Exit", "X");
         gameItems.put("Info", "I");
@@ -45,6 +46,7 @@ public class ObjectMapper {
         gameItems.put("LaserSource", "L"); //Special case (has own creator)
         gameItems.put("Mirror", "M"); //Special case (has own creator)
         gameItems.put("Button", "B");
+        gameItems.put("BigButton", "BB");
         gameItems.put("LaserInput", "LI");
     }
 
