@@ -2,6 +2,11 @@ package nz.ac.wgtn.swen225.lc.app.UI.Widgets;
 
 import javax.swing.*;
 
+/**
+ * Icons --- Loads the dedicated icons for the recorder panel.
+ *
+ * @author Alan McIlwaine 300653905
+ */
 public enum Icons {
     Undo(new ImageIcon("AllItemsImages/undo.png")),
     Redo(new ImageIcon("AllItemsImages/redo.png")),

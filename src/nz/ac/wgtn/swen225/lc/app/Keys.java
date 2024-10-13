@@ -7,33 +7,25 @@ import java.util.*;
 import javax.swing.SwingUtilities;
 
 /**
- * This will add a EntrySet to the actionsPressed and actionsReleased maps that will be executed when keys are pressed
- * actionsPressed -> runs the onPressed Runnable passed in, then sets the opposite key (opposite of UP is DOWN) to do
- * this keys onPressed Runnable.
- * This way, if you hold down UP, then without letting go of UP, hold down DOWN, when you let go of DOWN, UP's runnable
- * will run, resulting in the player moving upwards again.
+ * Keys --- Handles what to do if a key is pressed. Holds associations between specific actions and the event
+ * they will cause.
  *
- * actionsReleased -> runs the action.stop, which either sets currentCommand to NONE, or runs the opposite keys runnable
- * (see above)
- *
- * @author John Rais and Alan McIlwaine
+ * @author Alan McIlwaine 300653905
  */
 class Keys implements KeyListener {
     protected Stack<Command> inputBuffer = new Stack<>();
     protected final Map<Action, Runnable> actionsPressed= new HashMap<>();
     protected final Map<Action, Runnable> actionsReleased= new HashMap<>();
 
-    public static final int INPUT_WAIT = App.TICK_RATE * 3; // move every 3 ticks.
     public int movementWaitTime = 0;
 
     private final List<Action> inputs = List.of(Action.Up, Action.Down, Action.Left, Action.Right);
 
     /**
-     * Links actions from a keyboard in the form of enum Action,
-     * which holds the key pressed and opposite key to a Runnable action in the game.
-     *
-     * @param action Action holds the KeyEvent from the keyboard and the opposite key.
-     * @param onPressed The action to do when the key is pressed.
+     * Creates an association between the action and what that action will cause. On key press we will find the action, and call
+     * the runnable.
+     * @param action Holds the KeyEvent in the form of Action.
+     * @param onPressed The thing to do once the key is pressed.
      */
     public void setAction(Action action, Runnable onPressed){
         actionsPressed.put(action, onPressed);

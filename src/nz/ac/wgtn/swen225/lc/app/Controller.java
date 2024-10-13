@@ -1,20 +1,13 @@
 package nz.ac.wgtn.swen225.lc.app;
 
-import java.awt.event.KeyEvent;
-import java.util.Arrays;
 import java.util.EmptyStackException;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
-import nz.ac.wgtn.swen225.lc.app.Keys;
-import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 
 /**
  * Controller --- Sets up the initial keys for the game.
  *
- * @author Alan McIlwaine
+ * @author Alan McIlwaine 300653905
  */
 public class Controller extends Keys{
     /**
@@ -36,18 +29,15 @@ public class Controller extends Keys{
         setAction(Action.Pause, () -> a.pauseTimer(true));
         setAction(Action.Resume, () -> a.pauseTimer(false));
         setAction(Action.Level1, () -> {
-            a.domain = Persistency.loadGameBoard(1);
-            a.initialDomain = Persistency.loadGameBoard(1);
+            a.loadLevel(1);
         });
         setAction(Action.Level2, () -> {
-            a.domain = Persistency.loadGameBoard(2);
-            a.initialDomain = Persistency.loadGameBoard(2);
+            a.loadLevel(2);
         });
         setAction(Action.LoadSave, () -> {
             String path = a.openFile();
             if (!path.isEmpty()){
                 a.domain = Persistency.loadwithFilePath(path);
-                assert a.domain != null;
                 a.initialDomain = a.domain.copyOf();
             }
         });

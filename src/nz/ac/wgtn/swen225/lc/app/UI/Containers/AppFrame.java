@@ -4,6 +4,11 @@ import javax.swing.*;
 
 import nz.ac.wgtn.swen225.lc.app.App;
 
+/**
+ * AppFrame --- The frame encompasing the entire game.
+ *
+ * @author Alan McIlwaine 300653905
+ */
 public class AppFrame extends JFrame{
     public AppFrame(){
         super("Larry Crofts Adventures");

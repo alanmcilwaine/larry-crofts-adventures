@@ -5,7 +5,9 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
- * Action that is mapped to a KeyEvent. Each enum corresponds to a key press.
+ * Action ---- Each Key is mapped to an event mapped. Each enum corresponds to a key press.
+ *
+ * @author Alan McIlwaine 300653905
  */
 public enum Action{
     // Movement.
@@ -32,6 +34,14 @@ public enum Action{
         this.description = description;
     }
     public void key(int key) { this.key = key; }
+
+    /**
+     * Returns the action associated with the given keyCode. Will produce a different action depending on if
+     * control is pressed.
+     * @param keyCode KeyCode of the key pressed.
+     * @param controlPressed If control on the keyboard is held alongside the key.
+     * @return The action associated with the keyCode. Can return an empty optional if no association.
+     */
     public static Optional<Action> getAction(int keyCode, boolean controlPressed){
         return Stream.of(values())
                 .filter(a -> a.key == keyCode && a.control == controlPressed)

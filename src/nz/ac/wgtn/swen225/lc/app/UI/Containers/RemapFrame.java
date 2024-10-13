@@ -8,6 +8,11 @@ import java.util.Arrays;
 import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.app.Action;
 
+/**
+ * RemapFrame --- Handling the window where the user can set their key remappings.
+ *
+ * @author Alan McIlwaine 300653905
+ */
 public class RemapFrame extends JFrame {
     public RemapFrame(){
         assert SwingUtilities.isEventDispatchThread();

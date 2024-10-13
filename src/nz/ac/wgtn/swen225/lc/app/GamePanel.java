@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * UIPanel --- JPanel extension which holds the Game elements on the left side of the screen.
+ * GamePanel --- JPanel extension which holds the Game elements on the left side of the screen.
  *
  * @author Alan McIlwaine 300653905
  */
