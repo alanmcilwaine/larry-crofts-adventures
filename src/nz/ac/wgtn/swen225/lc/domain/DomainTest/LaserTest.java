@@ -3,8 +3,12 @@ package nz.ac.wgtn.swen225.lc.domain.DomainTest;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Crate;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Mirror;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.Button;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserInput;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserSource;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.Tube;
+import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
+import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Orientation;
@@ -120,7 +124,41 @@ public class LaserTest {
 
   @Test
   public void playerDiesFromLaser() {
-    
+    var gameboard = Mock.getGameBoard();
+    var player = gameboard.getGameState().player();
+    LaserSource track = new LaserSource(Direction.DOWN, true, 5, 5);
+    gameboard.getBoard().get(0).get(5).item = track;
+    gameboard.addLaserSource(track);
+
+    gameboard.action(Direction.NONE);
+
+    gameboard.action(Direction.RIGHT);
+    gameboard.action(Direction.RIGHT);
+
+    assert player.isDead();
+  }
+
+  @Test
+  public void laserInputWorks() {
+    var gameboard = Mock.getGameBoard();
+    var player = gameboard.getGameState().player();
+
+    Button track = new LaserInput();
+    Tile<Item> tileTrack = gameboard.getGameState().board().get(2).get(5);
+    tileTrack.item = track;
+
+    LaserSource ltrack = new LaserSource(Direction.DOWN, true, 5, 5);
+    gameboard.getBoard().get(0).get(5).item = ltrack;
+    gameboard.addLaserSource(ltrack);
+
+    assert !track.isPressed;
+
+    gameboard.configureButtons();
+
+    gameboard.action(Direction.NONE);
+    assert track.isPressed;
+
+    // TODO: CHECK IF INTERACTION WITH NEARBY OBJECT WORKS
   }
 
 }

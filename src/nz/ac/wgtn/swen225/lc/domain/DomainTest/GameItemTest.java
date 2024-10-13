@@ -326,6 +326,27 @@ public class GameItemTest {
     }
 
     @Test
+    public void buttonUnlock() {
+        var gameboard = Mock.getGameBoard();
+        var player = gameboard.getGameState().player();
+        Button track = new Button();
+        Tile<Item> tileTrack = gameboard.getGameState().board().get(2).get(3);
+        tileTrack.item = track;
+
+        gameboard.configureButtons();
+
+        // go to the button
+        gameboard.action(Direction.DOWN);
+        gameboard.action(Direction.DOWN);
+        gameboard.action(Direction.LEFT);
+        gameboard.action(Direction.LEFT);
+        gameboard.action(Direction.UP);
+
+        // check if doors beside it are open
+        assert gameboard.getBoard().get(3).get(3).item instanceof UnLockedDoor : gameboard.getBoard().get(3).get(3).item.toString();
+    }
+
+    @Test
     public void itemDefaultTest() {
         var wall = new Wall();
         var tile = new Tile<>(wall, testLocation);

@@ -18,6 +18,8 @@ public class Mirror extends MovableBox {
   }
 
   @Override
-  public String toString() { return "Mirror"; }
+  public String toString() {
+    return orientation.equals(Orientation.ONE) ? "MirrorReversed" : "Mirror";
+  }
 
 }

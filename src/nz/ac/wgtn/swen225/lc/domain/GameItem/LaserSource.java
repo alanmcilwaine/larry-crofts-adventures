@@ -22,7 +22,6 @@ import java.util.Map;
  * @author Carla Parinas
  */
 public class LaserSource implements Togglabble {
-// TODO: FIX THIS UP
   private Location location; // needs to set the laser somewhere
   private Direction direction; // has a direction but it should not move as well as blocks all actors
   public String orientation;
@@ -32,7 +31,6 @@ public class LaserSource implements Togglabble {
 
   public Location target;
   public Direction currentDirection;
-
 
   public LaserSource(Direction direction, boolean toggle, int x, int y) {
     this.direction = direction;
@@ -52,6 +50,7 @@ public class LaserSource implements Togglabble {
     currentDirection = direction;
     target = direction.act(location);
 
+    if (!laserToggle) return;
 
     while(target != null &&
             target.x() >= 0 && target.x() < gameBoard.getWidth() &&
@@ -65,12 +64,17 @@ public class LaserSource implements Togglabble {
               .findFirst().orElse(null);
 
       if (box != null) {
-        if (box instanceof Mirror m) { m.reflectLaser(this); }
+        if (box instanceof Mirror m) {
+          m.reflectLaser(this);
+          continue;
+        }
         else if (box instanceof Crate c)  { c.explode(gameBoard.getGameState().boxes()); }
         else { break; }
       }
 
-      if(targetItem instanceof LaserInput l) { l.toggleSurroundingTiles(); }
+      if(targetItem instanceof LaserInput l) {
+        l.toggleSurroundingTiles();
+      }
 
       if(targetItem instanceof NoItem || targetItem instanceof Tube) {
         setOrientation();

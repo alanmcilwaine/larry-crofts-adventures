@@ -38,6 +38,7 @@ public class GameBoardBuilder {
     private int height = -1;
 
     private int totalTreasure = -1;
+    private int totalKeys = -1;
 
     public GameBoard build() {
         Util.checkNegative(Map.of("timeLeft", timeLeft,
@@ -46,6 +47,7 @@ public class GameBoardBuilder {
                 "height", height,
                 "totalTreasure", totalTreasure));
         Util.checkNull(List.of(board, player));
+
         return new GameBoard(this);
     }
 
@@ -100,6 +102,12 @@ public class GameBoardBuilder {
         return this;
     }
 
+    public GameBoardBuilder addKeys(int totalKeys) {
+        Util.checkNegative("Total Treasure", totalKeys);
+        this.totalKeys = totalKeys;
+        return this;
+    }
+
     public GameBoardBuilder addLevel(int level) {
         Util.checkNegative("Level", level);
         this.level = level;
@@ -144,4 +152,6 @@ public class GameBoardBuilder {
     public int getTotalTreasure() {
         return totalTreasure;
     }
+
+    public int getTotalKeys() { return totalKeys; }
 }

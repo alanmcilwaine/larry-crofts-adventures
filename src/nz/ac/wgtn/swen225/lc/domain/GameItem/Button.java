@@ -12,12 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Button implements Item {
-  boolean isPressed = false;
-  List<Tile<Item>> surroundingTiles = null;
-  boolean isBig = false;
-
-  public void setBig(boolean big) { isBig = big; }
-  public boolean isBig() { return isBig; }
+  public boolean isPressed = false;
+  List<Tile<Item>> surroundingTiles = new ArrayList<>();
+  public boolean isBig = true;
 
   public void attachTiles(List<Tile<Item>> surroundingTiles) {
     this.surroundingTiles = surroundingTiles;
@@ -31,21 +28,31 @@ public class Button implements Item {
     if (actor instanceof Robot) { return; }
 
     if (isBig && !(actor instanceof MovableBox)) { return; }
-    isPressed = true; // set true
     toggleSurroundingTiles();
   }
 
   public void toggleSurroundingTiles() {
+    if (isPressed) { return; }
     surroundingTiles.forEach(t -> {
       if (t.item instanceof Togglabble tg) {
         tg.toggle(t);
       }
     });
+    isPressed = true;
+  }
+
+  @Override
+  public <T extends Item> void onExit(Actor actor, Tile<T> tile) {
+    isPressed = false;
   }
 
   @Override
   public String toString() {
-    return isPressed ? "PressedButton" : "Button";
+    if (isBig) {
+      return isPressed ? "PressedButton" : "Button";
+    } else {
+      return isPressed ? "PressedButtonSmall" : "ButtonSmall";
+    }
   }
 
   @Override

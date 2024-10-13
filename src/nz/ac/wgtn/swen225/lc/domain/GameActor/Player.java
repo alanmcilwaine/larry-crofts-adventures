@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen225.lc.domain.GameActor;
 
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserSource;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
@@ -92,7 +93,8 @@ public class Player implements Actor {
         GameBoard.domainLogger.log(Level.INFO, "Player is at:" + location + " after moving " + direction);
 
         // check for game over
-        if (gameBoard.getGameState().robots().stream().anyMatch((x) -> x.getLocation().equals(this.location))) {
+        if (gameBoard.getGameState().robots().stream().anyMatch((x) -> x.getLocation().equals(this.location)) ||
+                gameBoard.getGameState().laserSources().stream().map(LaserSource::getLasers).anyMatch(m -> m.containsKey(getLocation()))) {
             die();
         }
     }

@@ -1,15 +1,17 @@
 {
   "board": [
-    ["W", "W", "W", "W", "W"],
-    ["W", "F-P", "F-MB", "K#R", "W"],
+    ["W", "B", "F", "LD#R", "T"],
+    ["W", "L(RIGHT)", "F-MB", "LI", "W"],
+    ["W", "F-P", "F", "K#R", "W"],
     ["W", "F", "I", "F", "TP(2@4)"],
     ["W", "F", "T-R=0", "LD#R", "LX"],
-    ["W", "W", "W", "W", "W"]
+    ["W", "LD#B", "BB", "F", "W"],
+    ["W", "T", "W", "W", "W"]
   ],
   "level": {
     "number": 1,
     "Time Limit": 120,
-    "Total Treasure": 1
+    "Total Treasure": 3
   },
   "info": {
     "info": "Hello chap!",
@@ -18,7 +20,6 @@
   }
   "inventory": [
     {
-      "itemType": "K#R"
     }
   ],
 }

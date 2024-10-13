@@ -6,6 +6,7 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Interface.TeleportItem;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.Animation;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
 import java.util.logging.Level;
@@ -16,7 +17,19 @@ import java.util.logging.Level;
  * @param destination, the location player will be teleported to.
  * @author Yee Li
  */
-public record OneWayTeleport(Location destination) implements TeleportItem {
+public class OneWayTeleport implements TeleportItem {
+
+    Location destination;
+    Animation anim = new Animation("portal", 6, 3);
+
+    public OneWayTeleport(Location destination) {
+        this.destination = destination;
+    }
+
+    public Location destination() {
+        return destination;
+    }
+
     @Override
     public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {
         if (actor instanceof Player p) {
@@ -41,7 +54,12 @@ public record OneWayTeleport(Location destination) implements TeleportItem {
     }
 
     @Override
-    public String toString() { return "OneWayTeleport"; }
+    public void tick() {
+        anim.tick();
+    }
+
+    @Override
+    public String toString() { return anim.toString(); }
 
     @Override
     public Item makeNew() { return new OneWayTeleport(destination); }

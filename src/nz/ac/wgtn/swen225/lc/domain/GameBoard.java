@@ -53,6 +53,7 @@ public class GameBoard {
     private final int height;
 
     private final int totalTreasure;
+//    private final int totalKeys;
 
     public GameBoard(GameBoardBuilder builder) {
         this.board = builder.getBoard();
@@ -65,12 +66,14 @@ public class GameBoard {
         this.width = builder.getWidth();
         this.height = builder.getHeight();
         this.totalTreasure = builder.getTotalTreasure();
+//        this.totalKeys = builder.getTotalKeys();
         var l = getLockedExit();
         if (l != null) {
             subscribeGameState(l);
         }
 
         configureButtons();
+        activateLasers();
         subscribeGameState(getLockedExit());
         playerMove(Direction.NONE, this);
     }
@@ -83,7 +86,7 @@ public class GameBoard {
     public void action(Direction direction) {
         Util.checkNull(direction, "Direction is null");
 
-        activateLasers();
+        //activateLasers();
         robotsMove();
         playerMove(direction, this);
         notifyObservers();
@@ -126,7 +129,7 @@ public class GameBoard {
         robots.forEach(r -> r.update(this));
     }
 
-    private void activateLasers() {
+    public void activateLasers() {
         laserSources.forEach(ls -> ls.updateLasers(this));
     }
 
@@ -147,7 +150,7 @@ public class GameBoard {
                 .getFirst();
     }
 
-    private void configureButtons() {
+    public void configureButtons() {
         board.forEach(x -> x.forEach(y -> {
             if (y.item instanceof Button b) {
                 b.attachTiles(surroundingTilesAt(y.location));
@@ -160,10 +163,15 @@ public class GameBoard {
 
         for(int x = l.x() - 1; x <= l.x() + 1; x++) {
             for(int y = l.y() - 1; y <= l.y() + 1; y++) {
-                ls.add(board.get(y).get(x));
+                if (locationisValid(new Location(x, y))) { ls.add(board.get(y).get(x)); }
             }
         }
         return ls;
+    }
+
+    private boolean locationisValid(Location location) {
+        return location.x() >= 0 && location.x() < getWidth() &&
+                location.y() >= 0 && location.y() < getHeight();
     }
 
     /**
@@ -197,7 +205,9 @@ public class GameBoard {
                                     .addLevel(level).addPlayer(new Player(player.getLocation()))
                                     .addRobots(newRobots).addBoxes(newBoxes).addLaserSources(newLasers)
                                     .addTimeLeft(timeLeft)
-                                    .addTreasure(totalTreasure).build();
+                                    .addTreasure(totalTreasure)
+//                                    .addKeys(totalKeys)
+                                    .build();
     }
 
     /**
@@ -249,5 +259,3 @@ public class GameBoard {
                 .orElse(null);
     }
 }
-
-
