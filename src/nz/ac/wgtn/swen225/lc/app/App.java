@@ -5,7 +5,10 @@ import java.awt.*;
 import java.io.File;
 import java.util.List;
 
+import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Controller;
 import nz.ac.wgtn.swen225.lc.app.UI.Containers.AppFrame;
+import nz.ac.wgtn.swen225.lc.app.UI.Containers.GamePanel;
 import nz.ac.wgtn.swen225.lc.app.UI.Containers.Menu;
 import nz.ac.wgtn.swen225.lc.app.UI.Containers.UIPanel;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
@@ -21,7 +24,7 @@ import nz.ac.wgtn.swen225.lc.render.ImageImplement;
  */
 public class App extends AppFrame implements AppInterface{
     // Window is made up of two main panels
-    private GamePanel game; //Don't generate here as controller could be generated in constructor.
+    public GamePanel game; //Don't generate here as controller could be generated in constructor.
     public UIPanel ui;
     private Menu menu = new Menu(this);
 
@@ -31,6 +34,7 @@ public class App extends AppFrame implements AppInterface{
 
     // Tick rate
     public static final int TICK_RATE = 50;
+    public static final int INPUT_WAIT = App.TICK_RATE * 3; // move every 3 ticks.
     public static double time;
 
     // Game Information
@@ -39,7 +43,6 @@ public class App extends AppFrame implements AppInterface{
     public GameBoard domain;
     public GameBoard initialDomain;
     public ImageImplement render;
-
     public GameTimer tick = new GameTimer(this::tick);
 
     /**
@@ -52,7 +55,7 @@ public class App extends AppFrame implements AppInterface{
         game = makePanel();
         ui = new UIPanel(this);
         setupUI();
-        startTick();
+        startTick(loadSave());
     }
 
     /**
@@ -65,7 +68,7 @@ public class App extends AppFrame implements AppInterface{
         game = makePanel();
         ui = new UIPanel(this);
         setupUI();
-        startTick();
+        startTick(loadSave());
     }
 
     /**
@@ -93,11 +96,13 @@ public class App extends AppFrame implements AppInterface{
      * startTick()
      * Starts the main update loop for the program. Packages Domain, Renderer and Recorder should be used here.
      */
-    private void startTick(){
-        domain = loadSave();
-        initialDomain = domain.copyOf();
+    private void startTick(GameBoard b){
         render = ImageImplement.getImageImplement(game);
+        domain = b;
+        initialDomain = domain.copyOf();
+        recorder.setCommands(List.of());
         time = domain.getGameState().timeLeft();
+        game.requestFocusInWindow();
         tick.start();
     }
 
@@ -122,6 +127,10 @@ public class App extends AppFrame implements AppInterface{
         }
     }
 
+    /**
+     * Checks if a save exists and loads that. Otherwise, loads level 1.
+     * @return A GameBoard of the save or level.
+     */
     private GameBoard loadSave() {
         // Already a saved game.
         String path = Persistency.path + "save.json";
@@ -132,6 +141,7 @@ public class App extends AppFrame implements AppInterface{
             return Persistency.loadGameBoard(1);
         }
     }
+
 
     /**
      * Chooses the input to send to the game. We do this because an input is chosen
@@ -144,7 +154,7 @@ public class App extends AppFrame implements AppInterface{
         Command input = Command.None;
         if (controller.movementWaitTime <= 0 && controller.currentCommand() != Command.None) {
             input = controller.currentCommand();
-            controller.movementWaitTime = Keys.INPUT_WAIT;
+            controller.movementWaitTime = INPUT_WAIT;
         }
         controller.movementWaitTime -= TICK_RATE;
         return input;
@@ -171,12 +181,15 @@ public class App extends AppFrame implements AppInterface{
      * @param level The level we go to.
      */
     public void loadLevel(int level) {
-        domain = Persistency.loadGameBoard(level);
-        initialDomain = domain.copyOf();
-        recorder.setCommands(List.of());
-        time = domain.getGameState().timeLeft();
-        game.requestFocusInWindow();
-        tick.start();
+        startTick(Persistency.loadGameBoard(level));
+    }
+
+    /**
+     * Loads the given level from a path.
+     * @param b The level board.
+     */
+    public void loadLevel(GameBoard b) {
+        startTick(b);
     }
 
     /**

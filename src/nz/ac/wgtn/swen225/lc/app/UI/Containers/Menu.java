@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.app.UI.Containers;
 
 import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
+import nz.ac.wgtn.swen225.lc.render.ImageImplement;
 
 import javax.swing.*;
 import java.util.List;
@@ -35,8 +36,7 @@ public class Menu extends JMenuBar {
         load.addActionListener((unused) -> {
             String path = a.openFile();
             if (!path.isEmpty()){
-                a.domain = Persistency.loadwithFilePath(path);
-                a.initialDomain = a.domain.copyOf();
+                a.loadLevel(Persistency.loadwithFilePath(path));
             }
         });
         save.addActionListener((unused) -> {
@@ -57,8 +57,7 @@ public class Menu extends JMenuBar {
         loadInputs.addActionListener((unused) -> {
             String filename = a.openFile();
             if (!filename.isEmpty()){
-                a.domain = Persistency.loadRecording(a.recorder, filename);
-                a.initialDomain = a.domain.copyOf();
+                a.loadLevel(Persistency.loadwithFilePath(filename));
             }
         });
         List.of(saveInputs, loadInputs).forEach(input::add);

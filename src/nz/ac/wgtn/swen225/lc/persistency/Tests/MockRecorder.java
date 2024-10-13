@@ -1,6 +1,6 @@
 package nz.ac.wgtn.swen225.lc.persistency.Tests;
 
-import nz.ac.wgtn.swen225.lc.app.Command;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
 import nz.ac.wgtn.swen225.lc.recorder.Recorder;
 
 import javax.swing.*;

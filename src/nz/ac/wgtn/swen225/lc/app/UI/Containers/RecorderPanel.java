@@ -3,13 +3,17 @@ package nz.ac.wgtn.swen225.lc.app.UI.Containers;
 import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.app.UI.Widgets.Icons;
 import nz.ac.wgtn.swen225.lc.app.UI.Widgets.SquareButton;
-import nz.ac.wgtn.swen225.lc.app.UI.UIElement;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class RecorderPanel extends JPanel implements UIElement {
+/**
+ * RecorderPanel --- This is the section of the UI dedicated to the recorder. It handles the pressing of recorder buttons.
+ *
+ * @author Alan McIlwaine 300653905
+ */
+public class RecorderPanel extends JPanel{
     private final App app;
     private final JSlider playbackSpeed = new JSlider(JSlider.HORIZONTAL, 1, 45, 1);
     private final JButton undo = new SquareButton(Icons.Undo.icon(), 75, 8);
@@ -28,7 +32,9 @@ public class RecorderPanel extends JPanel implements UIElement {
         setVisible(true);
     }
 
-    @Override
+    /**
+     * Builds the relevant UI for the recorder panel.
+     */
     public void build() {
         pause.addActionListener((unused) -> app.pauseTimer(app.tick.isRunning()));
         undo.addActionListener(app.recorder.undo());

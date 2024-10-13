@@ -3,6 +3,11 @@ package nz.ac.wgtn.swen225.lc.app.UI.Widgets;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * UILabel --- The text styling for information section.
+ *
+ * @author Alan McIlwaine 300653905
+ */
 public class UILabel extends JLabel {
     public UILabel(String text, int x, int y) {
         super(text, SwingConstants.CENTER);

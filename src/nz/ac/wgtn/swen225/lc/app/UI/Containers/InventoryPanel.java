@@ -9,6 +9,11 @@ import java.awt.*;
 import java.util.stream.IntStream;
 import java.util.List;
 
+/**
+ * InventoryPanel --- This is the section of the UI dedicated to the inventory.
+ *
+ * @author Alan McIlwaine 300653905
+ */
 public class InventoryPanel extends JPanel {
     private App app;
     public InventoryPanel(App app) {

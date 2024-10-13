@@ -6,8 +6,8 @@
  */
 package nz.ac.wgtn.swen225.lc.fuzz;
 
-import nz.ac.wgtn.swen225.lc.app.Action;
-import nz.ac.wgtn.swen225.lc.app.Controller;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Action;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
