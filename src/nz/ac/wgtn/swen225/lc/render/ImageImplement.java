@@ -147,7 +147,6 @@ public class ImageImplement{
             g.drawImage(Img.INSTANCE.getImgs(imageName + ".png"), x * IMAGE_SIZE + xBorder,
                     y * IMAGE_SIZE + yBorder, jpanel);
         }
-        System.out.println(imageName);
     }
 
     /**
