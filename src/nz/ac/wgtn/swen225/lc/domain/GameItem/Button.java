@@ -13,8 +13,8 @@ import java.util.List;
 
 public class Button implements Item {
   public boolean isPressed = false;
-  List<Tile<Item>> surroundingTiles = null;
-  public boolean isBig = false;
+  List<Tile<Item>> surroundingTiles = new ArrayList<>();
+  public boolean isBig = true;
 
   public void attachTiles(List<Tile<Item>> surroundingTiles) {
     this.surroundingTiles = surroundingTiles;
@@ -28,16 +28,22 @@ public class Button implements Item {
     if (actor instanceof Robot) { return; }
 
     if (isBig && !(actor instanceof MovableBox)) { return; }
-    isPressed = true; // set true
     toggleSurroundingTiles();
   }
 
   public void toggleSurroundingTiles() {
+    if (isPressed) { return; }
     surroundingTiles.forEach(t -> {
       if (t.item instanceof Togglabble tg) {
         tg.toggle(t);
       }
     });
+    isPressed = true;
+  }
+
+  @Override
+  public <T extends Item> void onExit(Actor actor, Tile<T> tile) {
+    isPressed = false;
   }
 
   @Override

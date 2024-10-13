@@ -1,7 +1,7 @@
 package nz.ac.wgtn.swen225.lc.domain.Utilities;
 
 public class Animation {
-  Animation(String name, int length, int ticksPerFrame){
+  public Animation(String name, int length, int ticksPerFrame){
     this.name = name;
     this.length = length*ticksPerFrame;
     this.ticksPerFrame = ticksPerFrame;
@@ -12,9 +12,9 @@ public class Animation {
   private final int ticksPerFrame;
   private int frame;
 
-  void tick(){
+  public void tick(){
     frame++;
-    if(frame > length) frame = 0;
+    if(frame >= length) frame = 0;
   }
 
   public String toString(){

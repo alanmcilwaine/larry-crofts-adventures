@@ -8,10 +8,30 @@ package nz.ac.wgtn.swen225.lc.domain.Utilities;
  */
 public enum Direction {
     NONE(0,0),
-    UP(0, 1),
-    DOWN(0, -1),
-    LEFT(-1, 0),
-    RIGHT(1, 0)
+    UP(0, 1) {
+        @Override
+        public Direction opposite() {
+            return Direction.DOWN;
+        }
+    },
+    DOWN(0, -1) {
+        @Override
+        public Direction opposite() {
+            return Direction.UP;
+        }
+    },
+    LEFT(-1, 0) {
+        @Override
+        public Direction opposite() {
+            return Direction.RIGHT;
+        }
+    },
+    RIGHT(1, 0) {
+        @Override
+        public Direction opposite() {
+            return Direction.LEFT;
+        }
+    }
     ;
 
     private final Location location;
@@ -22,6 +42,8 @@ public enum Direction {
      * @return updated location
      */
     public Location act(Location loc) { return location.add(loc); }
+
+    public Direction opposite() { return Direction.NONE; }
 
     /**
      * @param x x-coordinate

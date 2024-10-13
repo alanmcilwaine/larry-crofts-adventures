@@ -53,6 +53,7 @@ public class GameBoard {
     private final int height;
 
     private final int totalTreasure;
+//    private final int totalKeys;
 
     public GameBoard(GameBoardBuilder builder) {
         this.board = builder.getBoard();
@@ -65,13 +66,14 @@ public class GameBoard {
         this.width = builder.getWidth();
         this.height = builder.getHeight();
         this.totalTreasure = builder.getTotalTreasure();
+//        this.totalKeys = builder.getTotalKeys();
         var l = getLockedExit();
         if (l != null) {
             subscribeGameState(l);
         }
 
-
         configureButtons();
+        activateLasers();
         subscribeGameState(getLockedExit());
         playerMove(Direction.NONE, this);
     }
@@ -84,7 +86,7 @@ public class GameBoard {
     public void action(Direction direction) {
         Util.checkNull(direction, "Direction is null");
 
-        activateLasers();
+        //activateLasers();
         robotsMove();
         playerMove(direction, this);
         notifyObservers();
@@ -127,7 +129,7 @@ public class GameBoard {
         robots.forEach(r -> r.update(this));
     }
 
-    private void activateLasers() {
+    public void activateLasers() {
         laserSources.forEach(ls -> ls.updateLasers(this));
     }
 
@@ -203,7 +205,9 @@ public class GameBoard {
                                     .addLevel(level).addPlayer(new Player(player.getLocation()))
                                     .addRobots(newRobots).addBoxes(newBoxes).addLaserSources(newLasers)
                                     .addTimeLeft(timeLeft)
-                                    .addTreasure(totalTreasure).build();
+                                    .addTreasure(totalTreasure)
+//                                    .addKeys(totalKeys)
+                                    .build();
     }
 
     /**
@@ -255,5 +259,3 @@ public class GameBoard {
                 .orElse(null);
     }
 }
-
-

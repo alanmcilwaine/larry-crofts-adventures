@@ -1,5 +1,6 @@
 package nz.ac.wgtn.swen225.lc.domain.Interface;
 
+import nz.ac.wgtn.swen225.lc.domain.GameActor.Mirror;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
@@ -48,7 +49,12 @@ public interface Actor {
 
         if (box != null && !box.attemptMove(direction, gameBoard)) {
             return false;
+        } else {
+            gameBoard.activateLasers();
         }
+
+
+
         if (!nextTile.canStepOn(this) && !(this instanceof Robot)) {
             return false;
         }
@@ -66,6 +72,7 @@ public interface Actor {
     void doMove(Direction direction, GameBoard gameBoard, Tile<Item> current, Tile<Item> next);
 
     default void actOnTile(Direction dir, GameBoard gameBoard, Tile<Item> current, Tile<Item> next) {
+        if (dir.equals(Direction.NONE)) { return; }
         current.onExit(this);
         next.onEntry(this);
         if (!(next.item instanceof TeleportItem)) {

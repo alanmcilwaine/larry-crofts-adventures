@@ -1,0 +1,25 @@
+{
+  "board": [
+    ["W","W","W","W","W","W","W","W","W"],
+    ["W","F","F","F","F","F","F","T","W"],
+    ["W","F","F-M=R","F-M=L","F","F","F","F","W"],
+    ["W","F","F","F","F","F","F","F","W"],
+    ["W","F","F","F","F","F","F","L(LEFT)","W"],
+    ["W","F","F","F","F","F-M=R","F","B","W"],
+    ["W","F","F","F","F-MB","F","F","F-P","W"],
+    ["W","LI","LD#R","F","F","F","F","LX","W"],
+    ["W","W","T","W","W","W","W","W","W"]
+  ],
+  "level": {
+    "number": 4,
+    "Time Limit": 300,
+    "Total Treasure": 2
+},
+  "info": {
+    "info": "Lasers will kill you.",
+    "x": 6,
+    "y": 5
+}
+  "inventory": [
+  ],
+}
