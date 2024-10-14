@@ -1,15 +1,18 @@
 package nz.ac.wgtn.swen225.lc.domain.GameActor;
 
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
-import nz.ac.wgtn.swen225.lc.domain.GameItem.NoItem;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
-import java.util.logging.Level;
-
+/**
+ * Represents a box that can be moved around by actors. Does not move when there
+ * you are pushing the box into another box.
+ *
+ * @author Carla Parinas 300653631
+ */
 public class MovableBox implements Actor {
   private Location location;
   private Direction wallFacing = Direction.NONE; // set to none on initialization
@@ -38,9 +41,6 @@ public class MovableBox implements Actor {
 
   @Override
   public void doMove(Direction direction, GameBoard gameBoard, Tile<Item> current, Tile<Item> next) {
-
-
-    // if there is another box then dont push
     actOnTile(direction, gameBoard, current, next);
   }
 

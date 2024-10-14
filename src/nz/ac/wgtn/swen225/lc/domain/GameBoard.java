@@ -6,7 +6,6 @@ import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Crate;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
-import nz.ac.wgtn.swen225.lc.domain.GameItem.Button;
 import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
@@ -14,14 +13,12 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.GameBoardBuilder;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Util;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
-import java.util.stream.IntStream;
 
 /**
  * The main game board
@@ -64,7 +61,6 @@ public class GameBoard {
         this.width = builder.getWidth();
         this.height = builder.getHeight();
         this.totalTreasure = builder.getTotalTreasure();
-//        this.totalKeys = builder.getTotalKeys();
         var l = getLockedExit();
         if (l != null) {
             subscribeGameState(l);
@@ -92,6 +88,11 @@ public class GameBoard {
         board.forEach(x -> x.forEach(y -> y.item.tick()));
     }
 
+    /**
+     * Makes the move on the player
+     * @param direction direction player will take
+     * @param gameBoard current gameboard
+     */
     private void playerMove(Direction direction, GameBoard gameBoard) {
         player.attemptMove(direction, gameBoard);
     }
@@ -104,15 +105,10 @@ public class GameBoard {
         return height;
     }
 
-    //TODO this is for testing?
-    public void addRobot(int x, int y) {
-        robots.add(new KillerRobot(x, y));
-    }
-
-    public void addBox(MovableBox box) {
-        boxes.add(box);
-    }
-
+    /**
+     * Adds a laser source in the map
+     * @param ls laser source to be added
+     */
     public void addLaserSource(LaserSource ls) {
         laserSources.add(ls);
     }

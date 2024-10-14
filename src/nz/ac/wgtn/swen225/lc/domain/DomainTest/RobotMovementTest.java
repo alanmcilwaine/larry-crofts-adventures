@@ -76,8 +76,6 @@ public class RobotMovementTest {
     GameBoard gameBoard = Mock.getGameBoard();
     Player player = gameBoard.getGameState().player();
     gameBoard.getGameState().robots().add(new KillerRobot(0, 5));
-    List<Robot> robots = gameBoard.getGameState().robots();
-    Robot track = robots.getFirst();
 
     // robot killing player
     gameBoard.action(Direction.UP);
@@ -95,8 +93,6 @@ public class RobotMovementTest {
     GameBoard gameBoard = Mock.getGameBoard();
     Player player = gameBoard.getGameState().player();
     gameBoard.getGameState().robots().add(new KillerRobot(0, 5));
-    List<Robot> robots = gameBoard.getGameState().robots();
-    Robot track = robots.getFirst();
 
     // robot killing player
     gameBoard.action(Direction.UP);
@@ -108,24 +104,5 @@ public class RobotMovementTest {
 
     assert player.isDead();
   }
-//
-//  @Test
-//  public void robotKillPlayer() {
-//    GameBoard gameBoard = Mock.getGameBoard();
-//
-//    Player player = gameBoard.getGameState().player();
-//    gameBoard.addRobotAtLocation(4,3);
-//    List<Robot> robots = gameBoard.getGameState().robots();
-//    Robot track = robots.getFirst();
-//
-//    // player stepping into robot
-//    track.setActorFacing(Direction.NONE);
-//    try {
-//      gameBoard.action(Direction.DOWN);
-//    } catch (IllegalArgumentException e) {
-//      ; // pass for now
-//    }
-//
-//  }
 
 }

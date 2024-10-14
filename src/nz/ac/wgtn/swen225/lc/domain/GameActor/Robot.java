@@ -12,16 +12,13 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
  * Represents another Actor in the game who's actions are not influenced by the
  * player pressing keys. Can follow two specific paths.
  *
- * @author Carla Parinas
+ * @author Carla Parinas 300653631
  */
 public abstract class Robot implements Actor {
   private Location location;
   private ActorPath actorPath = ActorPath.LEFTRIGHT;
 
   private Direction robotFacing = actorPath.getDir1();
-  private int moveCount;
-
-  // GETTERS
 
   @Override
   public Location getLocation() {
@@ -45,7 +42,6 @@ public abstract class Robot implements Actor {
 
   @Override
   public void doMove(Direction direction, GameBoard gameBoard, Tile<Item> current, Tile<Item> next) {
-    // TODO make it have a deterministic pattern, using states probably
     actorPath.doMove(this, gameBoard, current, next);
   }
 

@@ -4,6 +4,12 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 
+/**
+ * Toggles all the nearby togglable items much like a button,
+ * toggles when a laser comes into contact with the item rather than a press.
+ *
+ * @author Carla Parinas 300653631
+ */
 public class LaserInput extends Button {
 
     @Override

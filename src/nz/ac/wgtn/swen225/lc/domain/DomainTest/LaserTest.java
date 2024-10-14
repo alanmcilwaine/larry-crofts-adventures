@@ -16,9 +16,13 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests for lasers and laser interaction
+ *
+ * @author Carla Parinas 300653631
+ */
 public class LaserTest {
 
   public void checkLocation(Map<Location, String> map, Location expected, String orientation) {
@@ -33,7 +37,6 @@ public class LaserTest {
   @Test
   public void testRightFacing() {
     var gameboard = Mock.getGameBoard();
-    var player = gameboard.getGameState().player();
     LaserSource track = new LaserSource(Direction.RIGHT, true, 0, 5);
     gameboard.getBoard().get(0).get(5).item = track;
     gameboard.addLaserSource(track);
@@ -53,7 +56,6 @@ public class LaserTest {
   @Test
   public void testDownFacing() {
     var gameboard = Mock.getGameBoard();
-    var player = gameboard.getGameState().player();
     LaserSource track = new LaserSource(Direction.DOWN, true, 0, 5);
     gameboard.getBoard().get(0).get(5).item = track;
     gameboard.addLaserSource(track);
@@ -72,7 +74,6 @@ public class LaserTest {
   @Test
   public void testItemsInteraction() {
     var gameboard = Mock.getGameBoard();
-    var player = gameboard.getGameState().player();
     LaserSource track = new LaserSource(Direction.RIGHT, true, 0, 5);
     gameboard.getBoard().get(5).get(0).item = track;
     gameboard.addLaserSource(track);
@@ -106,7 +107,7 @@ public class LaserTest {
     checkLocation(lasers, new Location(4,5), "horizontal");
 
     // mirror works and right orientation
-    checkLocation(lasers, new Location(5,5), "RIGHTDOWN");
+    checkLocation(lasers, new Location(5,5), "Reflectrightup");
 
     // check if mirror reflects
     checkLocation(lasers, new Location(5,4), "vertical");
@@ -115,7 +116,7 @@ public class LaserTest {
     // laser destroys the create and passes through
     checkLocation(lasers, new Location(5,2), "vertical");
     checkLocation(lasers, new Location(5,1), "vertical");
-    assertEquals(gameboard.getGameState().boxes().contains(cTrack), false);
+    assertFalse(gameboard.getGameState().boxes().contains(cTrack));
 
 
     // block
@@ -141,7 +142,6 @@ public class LaserTest {
   @Test
   public void laserInputWorks() {
     var gameboard = Mock.getGameBoard();
-    var player = gameboard.getGameState().player();
 
     Button track = new LaserInput();
     Tile<Item> tileTrack = gameboard.getGameState().board().get(2).get(5);
