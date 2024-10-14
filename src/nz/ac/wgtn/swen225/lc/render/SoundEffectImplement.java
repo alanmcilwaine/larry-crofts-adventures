@@ -39,7 +39,7 @@ public class SoundEffectImplement {
         AudioInputStream audioStream = AudioSystem.getAudioInputStream(wavFile);
         Clip clip = AudioSystem.getClip();
         clip.open(audioStream);
-        clip.start();
+        //clip.start();
 
     }
 

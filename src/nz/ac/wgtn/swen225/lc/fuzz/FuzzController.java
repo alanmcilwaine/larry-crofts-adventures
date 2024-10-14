@@ -1,4 +1,3 @@
-
 package nz.ac.wgtn.swen225.lc.fuzz;
 
 import nz.ac.wgtn.swen225.lc.app.Inputs.Action;
@@ -10,7 +9,7 @@ import java.util.List;
 /**
  * Replaces the human controller with one that automatically generates smart inputs for testing
  *
- * @author John Rais raisjohn@ecs.vuw.ac.nz
+ * @author John Rais 30065627
  * @version 2.0
  */
 class FuzzController extends Controller {

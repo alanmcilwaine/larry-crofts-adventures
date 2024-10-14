@@ -1,4 +1,3 @@
-
 package nz.ac.wgtn.swen225.lc.fuzz;
 
 import nz.ac.wgtn.swen225.lc.app.Inputs.Action;
@@ -13,7 +12,7 @@ import java.util.stream.Stream;
 /**
  * Stores info so that it can generate the best inputs for testing
  *
- * @author John Rais raisjohn@ecs.vuw.ac.nz
+ * @author John Rais 30065627
  * @version 2.0
  */
 public class FuzzKeyChooser {

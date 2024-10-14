@@ -1,4 +1,3 @@
-
 package nz.ac.wgtn.swen225.lc.fuzz;
 
 import nz.ac.wgtn.swen225.lc.app.App;
@@ -17,7 +16,7 @@ import java.util.List;
  * Creates smart random inputs to test the game automatically.
  * Tests run for a set period, and save commands that were used to a file if the game crashes
  *
- * @author John Rais raisjohn@ecs.vuw.ac.nz
+ * @author John Rais 30065627
  * @version 2.0
  */
 public class Fuzz {
