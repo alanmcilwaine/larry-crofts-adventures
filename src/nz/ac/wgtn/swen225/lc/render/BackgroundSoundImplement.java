@@ -41,10 +41,19 @@ public class BackgroundSoundImplement {
         }
     }
 
-    /** mute and unmute the music
+    /** mute and unmute all the music
      * @param mute to decide whether mute the background music
      */
     public static void muteMusic(boolean mute){
+        WinLoseImplement.mute(mute);
+        SoundEffectImplement.mute(mute);
+        mute(mute);
+    }
+
+    /** mute and unmute the background music
+     * @param mute to decide whether mute the background music
+     */
+    public static void mute(boolean mute){
         if(mute){
             clip.stop();
         }
