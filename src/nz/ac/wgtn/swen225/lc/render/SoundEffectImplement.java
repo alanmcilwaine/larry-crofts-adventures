@@ -28,6 +28,7 @@ public class SoundEffectImplement {
     private final Map<Location, Runnable> SoundActionMap = new HashMap<>();
     private final Set<Location> soundPlayedLocations = new HashSet<>();
     private Location previousLocation = null;
+    private static Clip clip;
 
     /**
      * Plays the sound effect when a key or other specific item is collected.
@@ -40,10 +41,24 @@ public class SoundEffectImplement {
     public void sound(String type) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         File wavFile = new File("SoundEffect/get" + type + ".wav");
         AudioInputStream audioStream = AudioSystem.getAudioInputStream(wavFile);
-        Clip clip = AudioSystem.getClip();
+        clip = AudioSystem.getClip();
         clip.open(audioStream);
         clip.start();
 
+    }
+
+    /**
+     * mute the sound effect music
+     *
+     * @param mute to decide should mute the music or not
+     */
+    public static void mute(boolean mute){
+        if(mute){
+            clip.stop();
+        }
+        else{
+            clip.start();
+        }
     }
 
     /**
