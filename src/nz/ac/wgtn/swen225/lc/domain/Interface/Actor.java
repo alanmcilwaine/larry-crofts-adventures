@@ -1,6 +1,5 @@
 package nz.ac.wgtn.swen225.lc.domain.Interface;
 
-import nz.ac.wgtn.swen225.lc.domain.GameActor.Mirror;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
@@ -29,20 +28,25 @@ public interface Actor {
 
     void setActorFacing(Direction d);
 
-
+    /**
+     * Checks if the actor can attempt a move on the next tile.
+     * @param direction the direction the actor is heading in
+     * @param gameBoard current gameboard
+     * @return true if the actor is able to move, false if not
+     */
     default boolean attemptMove(Direction direction, GameBoard gameBoard) {
         setActorFacing(direction);
 
         Location nextLocation = direction.act(this.getLocation());
 
         if (!locationIsValid(direction.act(this.getLocation()), gameBoard)) {
-            //GameBoard.domainLogger.log(Level.INFO, "Player tried to move to invalid location:" + nextLocation);
             return false;
         }
 
         var nextTile = findTileInSpecificLocation(gameBoard, nextLocation);
         var currentTile = findTileInSpecificLocation(gameBoard, this.getLocation());
 
+        // checks for a box and if it can move
         MovableBox box = gameBoard.getGameState().boxes()
                 .stream().filter(b -> b.getLocation().equals(nextTile.location))
                 .findFirst().orElse(null);
@@ -52,8 +56,6 @@ public interface Actor {
         } else {
             gameBoard.activateLasers();
         }
-
-
 
         if (!nextTile.canStepOn(this) && !(this instanceof Robot)) {
             return false;

@@ -2,13 +2,17 @@ package nz.ac.wgtn.swen225.lc.domain.Utilities;
 
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserSource;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents an orientation for the mirror with it's respective reflection directions
+ * Has two types: ONE and TWO.
+ *
+ * @author Carla Parinas 300653631
+ */
 public enum Orientation {
   ONE {
-
     @Override
     public void setReflectionMap() {
       reflectionMap = Map.of(Direction.DOWN, Direction.LEFT,
@@ -49,13 +53,17 @@ public enum Orientation {
 
   }
 
+  /**
+   * Constructor sets the reflection map based on the enum type
+   */
   Orientation() { setReflectionMap(); }
 
+  /**
+   * Sets the reflection map based on the orientation type. The map contains
+   * all four directions (not including Direction.NONE) and it's corresponding reflection
+   * resultant.
+   */
   public void setReflectionMap() {}
-
-  public Map<Direction, Direction> getReflectionMap() {
-    return Collections.unmodifiableMap(reflectionMap);
-  }
 
   @Override
   public String toString() { return lastUsedDir; }
