@@ -3,6 +3,7 @@ package nz.ac.wgtn.swen225.lc.app.UI.Containers;
 import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.app.UI.Widgets.Icons;
 import nz.ac.wgtn.swen225.lc.app.UI.Widgets.SquareButton;
+import nz.ac.wgtn.swen225.lc.render.BackgroundSoundImplement;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +22,11 @@ public class RecorderPanel extends JPanel{
     private final JButton pause = new SquareButton(Icons.Pause.icon(), 125,8);
     private final JButton play = new SquareButton("Play", 0, 60);
     private final JButton restart = new SquareButton("Restart", 0, 8);
-    private final List<JButton> buttons = List.of(undo, redo, pause, play, restart);
+    private final JButton mute = new SquareButton("Unmute", 230, 8);
+    private final List<JButton> buttons = List.of(undo, redo, pause, play, restart,mute);
+
+    // State of music playing
+    private boolean isMuted = true;
 
     public RecorderPanel(App app) {
         this.app = app;
@@ -43,6 +48,12 @@ public class RecorderPanel extends JPanel{
         restart.addActionListener((unused) -> {
             app.tick.stop();
             app.loadLevel(app.domain.getGameState().level());
+        });
+        mute.setBounds(mute.getX(), mute.getY(), mute.getWidth() + 20, mute.getHeight());
+        mute.addActionListener((unused) -> {
+            isMuted = !isMuted;
+            BackgroundSoundImplement.muteMusic(isMuted);
+            mute.setText(isMuted ? "Unmute" : "Mute");
         });
         buildSlider();
         buttons.forEach(this::add);

@@ -16,6 +16,7 @@ import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 import nz.ac.wgtn.swen225.lc.recorder.Recorder;
 import nz.ac.wgtn.swen225.lc.render.ImageImplement;
+import nz.ac.wgtn.swen225.lc.render.InfoImplement;
 
 /**
  * App --- Program to build the Application elements, and start the ticking process.
@@ -97,6 +98,9 @@ public class App extends AppFrame implements AppInterface{
      * Starts the main update loop for the program. Packages Domain, Renderer and Recorder should be used here.
      */
     private void startTick(GameBoard b){
+        if (render != null) {
+            InfoImplement.unvisiableTextArea(); // Set info areas to invisible. Or else still visible in memory.
+        }
         render = ImageImplement.getImageImplement(game);
         domain = b;
         initialDomain = domain.copyOf();
