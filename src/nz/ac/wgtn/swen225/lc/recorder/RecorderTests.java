@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -22,6 +23,8 @@ import java.util.stream.IntStream;
  */
 public class RecorderTests {
 
+    //Use to generate random actions
+    final static Random random = new Random();
 
     @Test void undoTest(){
         var lis = List.of(Command.Up,Command.Left,Command.None,Command.Right);
@@ -223,7 +226,7 @@ public class RecorderTests {
             int com = 50;
             recorder.setCommands(randomCommands(com));
 
-            IntStream.range(0, (int)(Math.random()*60)).forEach(i -> recorder.redo());
+            IntStream.range(0, random.nextInt(0,60)).forEach(i -> recorder.redo());
             recorder.redo();//Make sure it is not a place 0
 
             String[][] save = deepclone(app.state);
@@ -324,6 +327,7 @@ public class RecorderTests {
                 case Down -> movePlayer(0,1);
                 case Left -> movePlayer(-1,0);
                 case Right -> movePlayer(1,0);
+                default -> throw new Error("Should never happen");
             }
         }
         @Override
