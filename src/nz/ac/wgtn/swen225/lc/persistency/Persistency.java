@@ -7,7 +7,10 @@ import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.recorder.Recorder;
 
 
-
+/**
+ * Saving and loading GameBoard objects and recordings of actions.
+ * @author zhoudavi1 300652444
+ */
 public class Persistency{
 
     private static String json;
@@ -16,7 +19,6 @@ public class Persistency{
     /**
      * Saves the given GameBoard object as a JSON format to a file.
      *
-     * @author zhoudavi1 300652444
      * @param level The GameBoard object to be saved.
      */
     public static void saveGameBoard(GameBoard level){
@@ -28,7 +30,6 @@ public class Persistency{
             e.printStackTrace();
         }
         //Write JSON string to file
-        
         String filename = path + "level" + level.getGameState().level() + ".json";
         File file = new File(filename);
         try {
@@ -42,7 +43,7 @@ public class Persistency{
 
     /**
      * Saves the progress if they exit mid-level.
-     * @author zhoudavi1 300652444
+     * 
      * @param level The GameBoard object to be saved.
      */
     public static void saveProgress(GameBoard level){
@@ -68,7 +69,6 @@ public class Persistency{
     /**
      * Saves the given list of actions as a JSON format to a file.
      *
-     * @author zhoudavi1 300652444
      * @param level The level of the actions to be saved.
      * @param actions Saving the list of actions to a file.
      */
@@ -101,7 +101,6 @@ public class Persistency{
      * For example if filename is "level1.json" and it already exists, it will return "level1.1.json".
      * If "level1.1.json" already exists it will return "level1.2.json" and so on.
      *
-     * @author zhoudavi1 300652444 
      * @param filename The filename to be made unique.
      * @return String A unique filename.
      */
@@ -123,21 +122,19 @@ public class Persistency{
     /**
      * Loads a GameBoard object from a level number.
      *
-     * @author zhoudavi1 300652444
      * @param levelNum The level number of the file to load the GameBoard from.
      * @return GameBoard Loading GameBoard from a file.
      */
     public static GameBoard loadGameBoard(int levelNum){
         // load the level GameState from a level number
-            //Read JSON string from file
-            String filename = path + "level" + levelNum + ".json";
-            return loadwithFilePath(filename);
+        //Read JSON string from file
+        String filename = path + "level" + levelNum + ".json";
+        return loadwithFilePath(filename);
     }
 
         /**
      * Loads a GameBoard object from a level number.
      *
-     * @author zhoudavi1 300652444
      * @param filename The file path to load the GameBoard from.
      * @return GameBoard Loading GameBoard from a file.
      */
@@ -168,7 +165,6 @@ public class Persistency{
     /**
      * Loads a recording of actions from a file.
      *
-     * @author zhoudavi1 300652444
      * @param filename The file path which to load recording from
      * @return List<Action> Loading list of actions from a file.
      */
