@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.app;
+package nz.ac.wgtn.swen225.lc.app.Inputs;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 
 /**

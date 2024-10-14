@@ -2,6 +2,12 @@ package nz.ac.wgtn.swen225.lc.app;
 
 import javax.swing.*;
 
+/**
+ * GameTimer --- Holds information about the timer that causes the game to tick.
+ * Has methods for specific events to cause a delay before going forward with the event.
+ *
+ * @author Alan McIlwaine 300653905
+ */
 public class GameTimer extends Timer {
     public GameTimer(Runnable tick) {
         super(App.TICK_RATE, (unused) -> tick.run());
@@ -26,7 +32,7 @@ public class GameTimer extends Timer {
      */
     public void onDeath(Runnable death) {
         this.stop();
-        Timer delay = new Timer(1000, e -> {
+        Timer delay = new Timer(5000, e -> {
             death.run();
         });
         delay.setRepeats(false);

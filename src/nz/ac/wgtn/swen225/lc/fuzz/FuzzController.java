@@ -1,26 +1,24 @@
-/**
- * Replaces the human controller with one that automatically generates smart inputs for testing
- *
- * @author John Rais raisjohn@ecs.vuw.ac.nz
- * @version 2.0
- */
+
 package nz.ac.wgtn.swen225.lc.fuzz;
 
-import nz.ac.wgtn.swen225.lc.app.Action;
-import nz.ac.wgtn.swen225.lc.app.Controller;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Action;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Creates a fake controller that generates random inputs
+ * Replaces the human controller with one that automatically generates smart inputs for testing
+ *
+ * @author John Rais 300654627
+ * @version 2.0
  */
 class FuzzController extends Controller {
     /**
      * Presses and releases random keys in every possible way. This will test corner cases that would be almost impossible to recreate.
      * For example releasing a key twice before ever pressing it.
      */
-    List<Action> keyLogger = new ArrayList<>();
+    final List<Action> keyLogger = new ArrayList<>();
 
     /**
      * Creates pseudo random inputs, based on keyChoosers desired keys.

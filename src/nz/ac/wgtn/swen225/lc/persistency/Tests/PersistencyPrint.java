@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import nz.ac.wgtn.swen225.lc.app.Command;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
 import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.*;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
@@ -15,6 +15,10 @@ import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 
 import static nz.ac.wgtn.swen225.lc.persistency.Persistency.path;
 
+/**
+ * Testing using print lines
+ * @author zhoudavi1 300652444
+ */
 public class PersistencyPrint {
     public static void main(String[] args) throws IOException {
         GameBoard gameBoard = testReadJSON();
@@ -24,7 +28,6 @@ public class PersistencyPrint {
     }
     /**
      * Create a sample GameBoard object
-     * @author zhoudavi1 300652444
      * @return The GameBoard object.
      * @throws IOException
      */
@@ -68,7 +71,6 @@ public class PersistencyPrint {
 
     /**
      * Create a sample GameBoard object and test the conversion to JSON and back.
-     * @author zhoudavi1 300652444
      * @return The converted GameBoard object.
      * @throws IOException
      */
@@ -132,7 +134,6 @@ public class PersistencyPrint {
 
     /**
      * Test loading a GameBoard object from a file and compare it with the original GameBoard object.
-     * @author zhoudavi1 300652444
      * @param original The original GameBoard object.
      * @throws IOException
      */
@@ -178,7 +179,6 @@ public class PersistencyPrint {
 
     /**
      * Test the generation of a unique filename for a file path.
-     * @autor zhoudavi1 300652444
      */
     private static void testUniqueFilename(){
         System.out.println("Testing unique filename generation:");
@@ -190,7 +190,6 @@ public class PersistencyPrint {
 
     /**
      * Test saving and loading commands.
-     * @autor zhoudavi1 300652444
      */
     private static void testCommands(){
         List<Command> actions = new ArrayList<>();
@@ -205,7 +204,6 @@ public class PersistencyPrint {
 
     /**
      * Test saving commands
-     * @autor zhoudavi1 300652444
      * @param actions The list of commands to be saved.
      */
     private static void testSaveCommands(List<Command> actions){
@@ -216,7 +214,6 @@ public class PersistencyPrint {
 
     /**
      * Test loading commands
-     * @autor zhoudavi1 300652444
      * @param actions The list of commands to be loaded.
      */
     private static void testLoadCommands(List<Command> actions){

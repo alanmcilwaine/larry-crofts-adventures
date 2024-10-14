@@ -1,5 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app;
 
+import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
+
 /**
  * AppInterface --- Holds the default commands that should be the only things read by Recorder and Persistency for testing.
  *

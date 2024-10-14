@@ -7,12 +7,18 @@ import java.util.function.Supplier;
 
 /**
  * handles playing background sound effects using .wav files.
+ *
+ * @author libaix 300641237
+ * @version 2.5
  */
 public class BackgroundSoundImplement {
     private static Clip clip;
-    public static String status = "soundEffect";
+    /**
+     * the status decide what kine of music to be implemented
+     */
+    public final static String status = "soundEffect";
     // load the different sounds based on different status
-    private static Supplier<String> statusSupplier = () -> status;
+    private static final Supplier<String> statusSupplier = () -> status;
 
     /**
      * Plays the background music or sound effect based on the current status.
@@ -32,6 +38,19 @@ public class BackgroundSoundImplement {
             //clip.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             throw new RuntimeException("No such music for the status: " + statusSupplier.get());
+        }
+    }
+
+    /** mute and unmute the music
+     * @param mute to decide whether mute the background music
+     */
+    public static void muteMusic(boolean mute){
+        if(mute){
+            clip.stop();
+        }
+        else{
+            clip.start();
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
 }

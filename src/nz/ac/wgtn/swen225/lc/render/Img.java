@@ -9,12 +9,18 @@ import java.util.*;
 /**
  * a singleton used to store and manage all the images used in the game.
  * It loads images from a folder, resizes them, and stores them in a map for easy access.
+ *
+ * @author libaix 300641237
+ * @version 2.5
  */
 public enum Img{
+    /**
+     * one instance store all the images
+     */
     INSTANCE;
 
     // stores image names as keys and corresponding Image objects as values.
-    Map<String, Image> imageToName = new HashMap<>();
+    final Map<String, Image> imageToName = new HashMap<>();
 
     /**
      * initializes the Img enum and loads all the images when the instance is created.

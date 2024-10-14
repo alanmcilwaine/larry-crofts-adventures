@@ -5,14 +5,19 @@ import java.awt.*;
 import java.io.File;
 import java.util.List;
 
+import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Controller;
 import nz.ac.wgtn.swen225.lc.app.UI.Containers.AppFrame;
+import nz.ac.wgtn.swen225.lc.app.UI.Containers.GamePanel;
 import nz.ac.wgtn.swen225.lc.app.UI.Containers.Menu;
 import nz.ac.wgtn.swen225.lc.app.UI.Containers.UIPanel;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 import nz.ac.wgtn.swen225.lc.recorder.Recorder;
+import nz.ac.wgtn.swen225.lc.render.BackgroundSoundImplement;
 import nz.ac.wgtn.swen225.lc.render.ImageImplement;
+import nz.ac.wgtn.swen225.lc.render.InfoImplement;
 
 /**
  * App --- Program to build the Application elements, and start the ticking process.
@@ -21,7 +26,7 @@ import nz.ac.wgtn.swen225.lc.render.ImageImplement;
  */
 public class App extends AppFrame implements AppInterface{
     // Window is made up of two main panels
-    private GamePanel game; //Don't generate here as controller could be generated in constructor.
+    public GamePanel game; //Don't generate here as controller could be generated in constructor.
     public UIPanel ui;
     private Menu menu = new Menu(this);
 
@@ -31,6 +36,7 @@ public class App extends AppFrame implements AppInterface{
 
     // Tick rate
     public static final int TICK_RATE = 50;
+    public static final int INPUT_WAIT = App.TICK_RATE * 3; // move every 3 ticks.
     public static double time;
 
     // Game Information
@@ -39,7 +45,6 @@ public class App extends AppFrame implements AppInterface{
     public GameBoard domain;
     public GameBoard initialDomain;
     public ImageImplement render;
-
     public GameTimer tick = new GameTimer(this::tick);
 
     /**
@@ -52,7 +57,7 @@ public class App extends AppFrame implements AppInterface{
         game = makePanel();
         ui = new UIPanel(this);
         setupUI();
-        startTick();
+        startTick(loadSave());
     }
 
     /**
@@ -65,7 +70,7 @@ public class App extends AppFrame implements AppInterface{
         game = makePanel();
         ui = new UIPanel(this);
         setupUI();
-        startTick();
+        startTick(loadSave());
     }
 
     /**
@@ -93,11 +98,15 @@ public class App extends AppFrame implements AppInterface{
      * startTick()
      * Starts the main update loop for the program. Packages Domain, Renderer and Recorder should be used here.
      */
-    private void startTick(){
-        domain = loadSave();
-        initialDomain = domain.copyOf();
+    private void startTick(GameBoard b){
+        if (render != null) {
+            InfoImplement.unvisiableTextArea(); // Set info areas to invisible. Or else still visible in memory.
+        }
         render = ImageImplement.getImageImplement(game);
+        domain = b;
+        initialDomain = domain.copyOf();
         time = domain.getGameState().timeLeft();
+        game.requestFocusInWindow();
         tick.start();
     }
 
@@ -117,11 +126,31 @@ public class App extends AppFrame implements AppInterface{
      */
     private void checkDeath() {
         Player player = domain.getGameState().player();
-        if (player.isDead() || time <= 0) {
-            tick.onDeath(() -> loadLevel(domain.getGameState().level()));
+        if (!player.isDead() && time > 0) {
+            return;
         }
+        tick.onDeath(() -> {
+            if (domain.getGameState().player().isDead()) { // We re-check if the player is dead because they can undo.
+                loadLevel(domain.getGameState().level());
+            }
+        });
     }
 
+    /**
+     * If the player has started making moves, we want to remove the list of redo's.
+     * @param input If not Command.None, then the player has started making moves.
+     */
+    private void checkRemoveRedo(Command input) {
+        if (input == Command.None) {
+            return;
+        }
+        recorder.takeControl();
+    }
+
+    /**
+     * Checks if a save exists and loads that. Otherwise, loads level 1.
+     * @return A GameBoard of the save or level.
+     */
     private GameBoard loadSave() {
         // Already a saved game.
         String path = Persistency.path + "save.json";
@@ -131,6 +160,14 @@ public class App extends AppFrame implements AppInterface{
         } else {
             return Persistency.loadGameBoard(1);
         }
+    }
+
+    /**
+     * Mutes the game given the state.
+     * @param state True to mute, false to unmute.
+     */
+    public void muteGame(boolean state) {
+        BackgroundSoundImplement.muteMusic(state);
     }
 
     /**
@@ -144,7 +181,7 @@ public class App extends AppFrame implements AppInterface{
         Command input = Command.None;
         if (controller.movementWaitTime <= 0 && controller.currentCommand() != Command.None) {
             input = controller.currentCommand();
-            controller.movementWaitTime = Keys.INPUT_WAIT;
+            controller.movementWaitTime = INPUT_WAIT;
         }
         controller.movementWaitTime -= TICK_RATE;
         return input;
@@ -152,7 +189,7 @@ public class App extends AppFrame implements AppInterface{
 
     /**
      * tick()
-     * Code inside tick() is called every 50ms. This is what ticks the rest of the game.
+     * Code inside tick() is called every TICK_RATE. This is what ticks the rest of the game.
      */
     public void tick(){
         time -= ((double) TICK_RATE / 1000);
@@ -162,6 +199,7 @@ public class App extends AppFrame implements AppInterface{
         giveInput(input);
         updateGraphics();
 
+        checkRemoveRedo(input);
         checkNextLevel();
         checkDeath();
     }
@@ -171,12 +209,30 @@ public class App extends AppFrame implements AppInterface{
      * @param level The level we go to.
      */
     public void loadLevel(int level) {
-        domain = Persistency.loadGameBoard(level);
-        initialDomain = domain.copyOf();
+        File checkExists = new File(Persistency.path + "level" + level + ".json");
+        if (!checkExists.exists()) {
+            startTick(Persistency.loadGameBoard(1));
+            return;
+        }
         recorder.setCommands(List.of());
-        time = domain.getGameState().timeLeft();
-        game.requestFocusInWindow();
-        tick.start();
+        startTick(Persistency.loadGameBoard(level));
+    }
+
+    /**
+     * Loads the given level from a path.
+     * @param b The level board.
+     */
+    public void loadLevel(GameBoard b) {
+        recorder.setCommands(List.of());
+        startTick(b);
+    }
+
+    /**
+     * Loads a recording. Doesn't clear the list of commands that Persistency sets up.
+     * @param b The level board.
+     */
+    public void loadRecording(GameBoard b) {
+        startTick(b);
     }
 
     /**

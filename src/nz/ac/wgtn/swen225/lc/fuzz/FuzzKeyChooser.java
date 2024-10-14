@@ -1,24 +1,25 @@
-/**
- * Stores info so that it can generate the best inputs for testing
- *
- * @author John Rais raisjohn@ecs.vuw.ac.nz
- * @version 2.0
- */
+
 package nz.ac.wgtn.swen225.lc.fuzz;
 
-import nz.ac.wgtn.swen225.lc.app.Action;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Action;
 import nz.ac.wgtn.swen225.lc.app.App;
-import nz.ac.wgtn.swen225.lc.app.Command;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Stores info so that it can generate the best inputs for testing
+ *
+ * @author John Rais 300654627
+ * @version 2.0
+ */
 public class FuzzKeyChooser {
 
-    List<List<Float>> board;
-    App app;
+    final List<List<Float>> board;
+    final App app;
 
     FuzzKeyChooser(App app){
         this.app = app;
@@ -34,8 +35,7 @@ public class FuzzKeyChooser {
      */
     Action nextKey() {
         //Assign the value to each action respectively
-        var actions = List.of(Action.Up, Action.Down, Action.Left, Action.Right)
-                .stream()
+        var actions = Stream.of(Action.Up, Action.Down, Action.Left, Action.Right)
                 .collect(Collectors.toMap(
                         a -> a,                // Key extractor (the Action itself)
                         a -> 10/valueOfMove(a)  // inversely proportional to value of space
@@ -68,7 +68,7 @@ public class FuzzKeyChooser {
         if(notValid(x,y)) return 1;
 
         //Spend less time attempting to move onto walls
-        boolean canStepOn = app.domain.getBoard().get(y).get(x).canStepOn(app.domain.getGameState().player());
+        boolean canStepOn = x < 0 || y < 0 || app.domain.getBoard().get(y).get(x).canStepOn(app.domain.getGameState().player());
 
         return value(x,y) + (canStepOn ? 0 : 1);
     }
@@ -88,6 +88,7 @@ public class FuzzKeyChooser {
         board.get(y).set(x, value(x,y) + amount);
     }
     float value(int x, int y){
+        if(x < 0 || y < 0) return 0.5f;
         return board.get(y).get(x);
     }
     Location move(Action a){
@@ -101,12 +102,12 @@ public class FuzzKeyChooser {
         return app.domain.getGameState().player().getLocation();
     }
     boolean notValid(int x, int y){
-        return y >= board.size() || x >= board.get(0).size();
+        return y >= board.size() || x >= board.get(0).size() || x < 0 || y < 0;
     }
     /**
-     * Create a list of list of floats to store how well tested each space on our board is.
+     * Create a list of floats to store how well tested each space on our board is.
      * @param app the application, which we can get the board from
-     * @return the list<list<float>> everything set to 0.0f, or wall set to 10 since they should never be gone on
+     * @return the grid of floats everything set to 0.0f, or wall set to 10 since they should never be gone on
      */
     public static List<List<Float>> createZeroMatrix(App app) {
         var boardRows = app.domain.getBoard();

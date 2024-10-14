@@ -12,6 +12,9 @@ import java.io.IOException;
  * responsible for handling the display of win/lose messages and
  * playing corresponding sound effects when the player either wins or loses the game.
  * It tracks whether the win/lose music has already been played to avoid repetition.
+ *
+ * @author libaix 300641237
+ * @version 2.5
  */
 public class WinLoseImplement {
     static Clip clip;

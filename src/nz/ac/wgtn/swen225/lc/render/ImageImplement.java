@@ -4,7 +4,6 @@ package nz.ac.wgtn.swen225.lc.render;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
-import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserInput;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserSource;
 import nz.ac.wgtn.swen225.lc.domain.GameState;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
@@ -17,29 +16,36 @@ import java.awt.*;
  * responsible for rendering various game elements
  * (tiles, items, actors, and boxes) onto a JPanel, as well as managing background
  * sound and additional effects during the game.
+ *
+ * @author libaix 300641237
+ * @version 2.5
  */
 public class ImageImplement{
-    // App's jpanel
-    private JPanel jpanel;
+    // App's panel
+    private final JPanel jpanel;
+    /**
+     * the parameters help to draw the maze on the right place
+     * also the background, information and sound effect
+     */
     public static final int IMAGE_SIZE = 70;
     private static final int BUFFER_SIZE = 5;
     private static final int xBorder = 260;
     private static final int yBorder = 260;
-    private BackgroundImplement backgroundImplement;
-    private InfoImplement info;
-    private SoundEffectImplement soundImplement;
+    private final BackgroundImplement backgroundImplement;
+    private final InfoImplement info;
+    private final SoundEffectImplement soundImplement;
 
     /**
      * Constructs an ImageImplement object to draw elements on the provided JPanel.
      * Initializes background, sound, and info implementations.
      *
-     * @param jpanel the JPanel where game images are drawn.
+     * @param panel the JPanel where game images are drawn.
      */
-    ImageImplement(JPanel jpanel) {
-        this.jpanel = jpanel;
+    ImageImplement(JPanel panel) {
+        this.jpanel = panel;
         this.jpanel.setDoubleBuffered(true);
         backgroundImplement = new BackgroundImplement();
-        info = new InfoImplement(jpanel);
+        info = new InfoImplement(panel);
         soundImplement = new SoundEffectImplement();
         BackgroundSoundImplement.playMusic();
     }
@@ -47,11 +53,11 @@ public class ImageImplement{
     /**
      * Factory method for getting an ImageImplement instance.
      *
-     * @param jpanel the JPanel where the images will be drawn.
+     * @param panel the JPanel where the images will be drawn.
      * @return an instance of ImageImplement.
      */
-    public static ImageImplement getImageImplement(JPanel jpanel) {
-        return new ImageImplement(jpanel);
+    public static ImageImplement getImageImplement(JPanel panel) {
+        return new ImageImplement(panel);
     }
 
     /**
@@ -147,7 +153,6 @@ public class ImageImplement{
             g.drawImage(Img.INSTANCE.getImgs(imageName + ".png"), x * IMAGE_SIZE + xBorder,
                     y * IMAGE_SIZE + yBorder, jpanel);
         }
-        System.out.println(imageName);
     }
 
     /**
@@ -173,19 +178,16 @@ public class ImageImplement{
     public void drawLasers(GameState gameState, Graphics g) {
         // Get player for reference of relative positioning
         Player player = gameState.player();
-        LaserInput laserInput = new LaserInput();
 
         // Get all laser sources from the game state
         List<LaserSource> lasers = gameState.laserSources();
 
         // Loop through each laser source and its lasers
-        lasers.forEach(laserSource -> {
-            laserSource.getLasers().forEach((laserLocation, orientation) -> {
-                int relativeX = laserLocation.x() - player.getLocation().x();
-                int relativeY = laserLocation.y() - player.getLocation().y();
-                drawOneImage("laser" + orientation, relativeX, relativeY, g);
-            });
-        });
+        lasers.forEach(laserSource -> laserSource.getLasers().forEach((laserLocation, orientation) -> {
+            int relativeX = laserLocation.x() - player.getLocation().x();
+            int relativeY = laserLocation.y() - player.getLocation().y();
+            drawOneImage("laser" + orientation, relativeX, relativeY, g);
+        }));
     }
 
 

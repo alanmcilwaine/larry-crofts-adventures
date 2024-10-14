@@ -1,3 +1,16 @@
+package nz.ac.wgtn.swen225.lc.recorder;
+
+import javax.swing.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+import nz.ac.wgtn.swen225.lc.app.AppInterface;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
+
 /**
  * GameRecorder class implements the Recorder interface to manage game state recording and playback.
  * It handles undo/redo operations, command storage, and playback control.
@@ -13,24 +26,11 @@
  *     //On tick
  *     recorder.tick(userCommand);
  * </pre>
- * </p>
  *
- * @author John Rais raisjohn@ecs.vuw.ac.nz
+ *
+ * @author John Rais 300654627
  * @version 3.0
  */
-package nz.ac.wgtn.swen225.lc.recorder;
-
-import javax.swing.*;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
-import nz.ac.wgtn.swen225.lc.app.AppInterface;
-import nz.ac.wgtn.swen225.lc.app.Command;
-
 class GameRecorder implements Recorder{
     /** Reference to the main application interface */
     private final AppInterface app;
@@ -64,7 +64,7 @@ class GameRecorder implements Recorder{
         IntStream.range(0, undoAll())//The amount of move to redo after going back to the start
                 .forEach(i -> app.giveInput(nextCommand()));
 
-        _pause();
+        pause();
     }
 
     /**
@@ -72,26 +72,16 @@ class GameRecorder implements Recorder{
      */
     protected void _redo(){
         if(!redoFrame()) _redo();
-        _pause();
-    }
-
-    /**
-     * Stop the timer
-     */
-    private void _pause(){
-        timer.stop();
-        app.pauseTimer(true);
+        pause();
     }
 
     /**
      * Discards all commands after the current tick.
      * Then allows the player to move around again, recording further commands
      */
-    protected void _takeControl(){
+    public void takeControl(){
         //Delete all actions after this point.
         undone.clear();
-        timer.stop();
-        app.pauseTimer(false);
     }
 
     //================= HELPER METHODS
@@ -156,7 +146,6 @@ class GameRecorder implements Recorder{
     @Override
     public void setCommands(List<Command> commands) {
         assert commands != null;
-        assert !commands.isEmpty();
 
         completed.clear();
         //First element in the list will be the top of the stack
@@ -166,7 +155,6 @@ class GameRecorder implements Recorder{
     @Override
     public void setPlaybackSpeed(int tickTime) {
         GameRecorder.tickTime = tickTime;
-        if(timer != null) timer.stop();
         timer = new PlaybackTimer(this::redoFrame);
     }
 
@@ -180,12 +168,11 @@ class GameRecorder implements Recorder{
     @Override
     public Action redo() { return RecorderAction.of(this::_redo);}
     @Override
-    public Action play() {return RecorderAction.of(timer::start);}
+    public Action play() {return RecorderAction.of(() -> this.timer.start());}
     @Override
-    public Action pause() {return RecorderAction.of(this::_pause);}
-    @Override
-    public Action takeControl() {return RecorderAction.of(this::_takeControl);}
-
+    public void pause() {
+        timer.stop();
+    }
     @Override
     public boolean canUndo() {return !completed.isEmpty();}
 

@@ -9,8 +9,18 @@ import java.awt.*;
 import java.util.stream.IntStream;
 import java.util.List;
 
+/**
+ * InventoryPanel --- This is the section of the UI dedicated to the inventory.
+ *
+ * @author Alan McIlwaine 300653905
+ */
 public class InventoryPanel extends JPanel {
     private App app;
+
+    /**
+     * Constructor for creating the Inventory panel. Will set to display.
+     * @param app Application to obtain vars for information.
+     */
     public InventoryPanel(App app) {
         this.app = app;
         setPreferredSize(new Dimension(App.WIDTH/3, App.HEIGHT/3)); // 300x200

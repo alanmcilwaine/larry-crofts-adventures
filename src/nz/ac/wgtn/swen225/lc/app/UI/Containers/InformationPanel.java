@@ -1,7 +1,6 @@
 package nz.ac.wgtn.swen225.lc.app.UI.Containers;
 
 import nz.ac.wgtn.swen225.lc.app.App;
-import nz.ac.wgtn.swen225.lc.app.UI.UIElement;
 import nz.ac.wgtn.swen225.lc.app.UI.Widgets.UILabel;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.Key;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.Treasure;
@@ -12,7 +11,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class InformationPanel extends JPanel implements UIElement {
+/**
+ * InformationPanel --- This is the section of the UI holding information about the game.
+ * e.g Level, keys left, treasure left, time.
+ *
+ * @author Alan McIlwaine 300653905
+ */
+public class InformationPanel extends JPanel{
     public JLabel level = new UILabel("1", 34, 24);
     public JLabel time = new UILabel("0", 166, 24);
     public JLabel chips = new UILabel("0", 34, 125);
@@ -20,6 +25,11 @@ public class InformationPanel extends JPanel implements UIElement {
     private final List<JLabel> items = List.of(level, time, chips, keys);
 
     private final App app;
+
+    /**
+     * Constructor for creating the information panel. Will set to display.
+     * @param app Application to obtain vars for information.
+     */
     public InformationPanel(App app) {
         this.app = app;
         setPreferredSize(new Dimension(App.WIDTH/3, App.HEIGHT/3)); // 300x200
@@ -28,7 +38,9 @@ public class InformationPanel extends JPanel implements UIElement {
         build();
     }
 
-    @Override
+    /**
+     * Builds the relevant UI for the information panel.
+     */
     public void build() {
         items.forEach(this::add);
     }
@@ -40,6 +52,7 @@ public class InformationPanel extends JPanel implements UIElement {
         level.setText(String.valueOf(game.level()));
         time.setText(String.valueOf((int)App.time));
         chips.setText(String.valueOf(game.totalTreasure() - treasure.stream().filter(t -> t instanceof Treasure).count()));
+        keys.setText(String.valueOf(app.domain.keysLeft()));
         super.paintComponent(g);
     }
 

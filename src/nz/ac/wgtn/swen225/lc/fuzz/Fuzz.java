@@ -1,15 +1,9 @@
-/**
- * Creates smart random inputs to test the game automatically.
- * Tests run for a set period, and save commands that were used to a file if the game crashes
- *
- * @author John Rais raisjohn@ecs.vuw.ac.nz
- * @version 2.0
- */
+
 package nz.ac.wgtn.swen225.lc.fuzz;
 
 import nz.ac.wgtn.swen225.lc.app.App;
-import nz.ac.wgtn.swen225.lc.app.Command;
-import nz.ac.wgtn.swen225.lc.app.GamePanel;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
+import nz.ac.wgtn.swen225.lc.app.UI.Containers.GamePanel;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -19,9 +13,17 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Creates smart random inputs to test the game automatically.
+ * Tests run for a set period, and save commands that were used to a file if the game crashes
+ *
+ * @author John Rais 300654627
+ * @version 2.0
+ */
 public class Fuzz {
     //Should we draw the game every time it ticks (will significantly slow down the tests)
     private static final boolean draw = true;
+    private static final boolean mute = true;
     //Max time the tests will run for
     private static final int TEST_TIME = 60;
     /**
@@ -54,6 +56,7 @@ public class Fuzz {
         // Sleep to keep the test running for a set duration
         try {
             Thread.sleep(TEST_TIME * 1000); // Keep the test running for 60 seconds
+            closeAppWindow();
         } catch (InterruptedException e) {
             System.out.println("Interruption: " + e);
         }
@@ -85,6 +88,7 @@ public class Fuzz {
              * Set up and load the correct level for this test.
              */
             {
+                muteGame(mute);
                 if(level != 1) {
                     domain = Persistency.loadGameBoard(level);
                     initialDomain = domain.copyOf();
@@ -126,5 +130,19 @@ public class Fuzz {
                 if(draw) super.paintComponent(g);
             }
         };
+    }
+    /**
+     * Closes the app window on the SWING thread
+     */
+    private static void closeAppWindow() {
+        SwingUtilities.invokeLater(() -> {
+            Window[] windows = Window.getWindows();
+            //Get rid of all open windows
+            for (Window window : windows) {
+                if (window.isShowing()) {
+                    window.dispose();
+                }
+            }
+        });
     }
 }
