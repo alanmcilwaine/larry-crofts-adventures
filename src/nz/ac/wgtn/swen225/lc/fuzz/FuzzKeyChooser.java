@@ -1,9 +1,4 @@
-/**
- * Stores info so that it can generate the best inputs for testing
- *
- * @author John Rais raisjohn@ecs.vuw.ac.nz
- * @version 2.0
- */
+
 package nz.ac.wgtn.swen225.lc.fuzz;
 
 import nz.ac.wgtn.swen225.lc.app.Inputs.Action;
@@ -15,6 +10,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Stores info so that it can generate the best inputs for testing
+ *
+ * @author John Rais raisjohn@ecs.vuw.ac.nz
+ * @version 2.0
+ */
 public class FuzzKeyChooser {
 
     List<List<Float>> board;

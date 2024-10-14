@@ -1,3 +1,8 @@
+package nz.ac.wgtn.swen225.lc.recorder;
+
+import nz.ac.wgtn.swen225.lc.app.AppInterface;
+import javax.swing.*;
+
 /**
  * A clean way to set up timers, not exposing the unused Action, and insuring it is running at the correct tick rate
  *
@@ -6,16 +11,11 @@
  * <pre>
  *     timer = new PlaybackTimer(this::redoFrame);
  * </pre>
- * </p>
+ *
  *
  * @author John Rais raisjohn@ecs.vuw.ac.nz
  * @version 1.0
  */
-package nz.ac.wgtn.swen225.lc.recorder;
-
-import nz.ac.wgtn.swen225.lc.app.AppInterface;
-import javax.swing.*;
-
 public class PlaybackTimer extends Timer {
     /**
      * A timer that ticks based on AppInterfaces TICK_RATE, running the supplied runnable every frame.

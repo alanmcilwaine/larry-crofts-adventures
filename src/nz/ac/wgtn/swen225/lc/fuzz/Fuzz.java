@@ -1,10 +1,4 @@
-/**
- * Creates smart random inputs to test the game automatically.
- * Tests run for a set period, and save commands that were used to a file if the game crashes
- *
- * @author John Rais raisjohn@ecs.vuw.ac.nz
- * @version 2.0
- */
+
 package nz.ac.wgtn.swen225.lc.fuzz;
 
 import nz.ac.wgtn.swen225.lc.app.App;
@@ -19,6 +13,13 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Creates smart random inputs to test the game automatically.
+ * Tests run for a set period, and save commands that were used to a file if the game crashes
+ *
+ * @author John Rais raisjohn@ecs.vuw.ac.nz
+ * @version 2.0
+ */
 public class Fuzz {
     //Should we draw the game every time it ticks (will significantly slow down the tests)
     private static final boolean draw = true;

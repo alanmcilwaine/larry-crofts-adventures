@@ -1,3 +1,12 @@
+
+package nz.ac.wgtn.swen225.lc.recorder;
+
+import javax.swing.*;
+import java.util.List;
+
+import nz.ac.wgtn.swen225.lc.app.AppInterface;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
+
 /**
  * The Recorder interface defines the basic actions for saving, loading,
  * and controlling the playback of recordings. Implementations of this
@@ -15,19 +24,11 @@
  *     //On tick
  *     recorder.tick(userCommand);
  * </pre>
- * </p>
+ *
  *
  * @author John Rais raisjohn@ecs.vuw.ac.nz
  * @version 1.2
  */
-package nz.ac.wgtn.swen225.lc.recorder;
-
-import javax.swing.*;
-import java.util.List;
-
-import nz.ac.wgtn.swen225.lc.app.AppInterface;
-import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
-
 public interface Recorder {
 
     /**
@@ -84,29 +85,23 @@ public interface Recorder {
     Action play();
 
     /**
-     * Supplies an action that can be given to a Button.
-     * The internal pause logic will be executed when this action is called.
-     *
-     * @return an Action which calls the pause method
+     * The internal pause logic will be executed when this action is called, stopping the playback of the recorder timer
      */
-    Action pause();
+    void pause();
 
     /**
-     * Supplies an action that can be given to a Button.
      * Deletes all the recorded actions after this point, allowing you to resume play.
-     *
-     * @return an Action which allows you to take control of the recording
      */
-    Action takeControl();
+    void takeControl();
 
     /**
-     * Can you undo? Checks to see if the stack of commands are empty.
+     * Can you undo? Checks to see if the stack of commands is empty.
      *
      * @return if you are able to undo
      */
     boolean canUndo();
     /**
-     * Can you redo? Checks to see if the stack of undos are empty.
+     * Can you redo? Checks to see if the stack of undos is empty.
      *
      * @return if you are able to redo
      */
@@ -114,6 +109,7 @@ public interface Recorder {
     /**
      * Supplies a Recorder (GameRecorder)
      *
+     * @param app The app to supply to this recorder
      * @return GameRecorder, which in turn creates a playback
      */
     static Recorder create(AppInterface app){return new GameRecorder(app);}
