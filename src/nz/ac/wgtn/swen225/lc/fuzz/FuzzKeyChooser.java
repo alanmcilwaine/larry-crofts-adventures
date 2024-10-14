@@ -68,7 +68,7 @@ public class FuzzKeyChooser {
         if(notValid(x,y)) return 1;
 
         //Spend less time attempting to move onto walls
-        boolean canStepOn = x < 0 || y < 0 || app.domain.getBoard().get(y).get(x).canStepOn(app.domain.getGameState().player());
+        boolean canStepOn = x < 0 || y < 0 || app.domain().getBoard().get(y).get(x).canStepOn(app.domain().getGameState().player());
 
         return value(x,y) + (canStepOn ? 0 : 1);
     }
@@ -99,7 +99,7 @@ public class FuzzKeyChooser {
      * Get the players location
      */
     Location playerLoc(){
-        return app.domain.getGameState().player().getLocation();
+        return app.domain().getGameState().player().getLocation();
     }
     boolean notValid(int x, int y){
         return y >= board.size() || x >= board.get(0).size() || x < 0 || y < 0;
@@ -110,7 +110,7 @@ public class FuzzKeyChooser {
      * @return the grid of floats everything set to 0.0f, or wall set to 10 since they should never be gone on
      */
     public static List<List<Float>> createZeroMatrix(App app) {
-        var boardRows = app.domain.getBoard();
+        var boardRows = app.domain().getBoard();
         int x = boardRows.size();
         int y = boardRows.get(0).size();
 
