@@ -22,8 +22,8 @@ import java.util.Set;
  * on the player's movements.
  */
 public class SoundEffectImplement {
-    private Map<Location, Runnable> SoundActionMap = new HashMap<>();
-    private Set<Location> soundPlayedLocations = new HashSet<>();
+    private final Map<Location, Runnable> SoundActionMap = new HashMap<>();
+    private final Set<Location> soundPlayedLocations = new HashSet<>();
     private Location previousLocation = null;
 
     /**

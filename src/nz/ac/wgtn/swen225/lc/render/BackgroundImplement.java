@@ -9,7 +9,7 @@ import java.util.Arrays;
  * Handles loading and rendering a GIF background image from the "BackgroundImage" folder.
  */
 public class BackgroundImplement {
-    private Image gifImage;
+    private final Image gifImage;
 
     /**
      * Safely loads the GIF image found in the "BackgroundImage" folder.
