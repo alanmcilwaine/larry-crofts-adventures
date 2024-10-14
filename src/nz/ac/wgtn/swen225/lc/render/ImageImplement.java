@@ -47,7 +47,6 @@ public class ImageImplement{
         backgroundImplement = new BackgroundImplement();
         info = new InfoImplement(panel);
         soundImplement = new SoundEffectImplement();
-        BackgroundSoundImplement.playMusic();
     }
 
     /**
