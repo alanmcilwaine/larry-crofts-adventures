@@ -14,14 +14,17 @@ import java.util.logging.Level;
 /**
  * Teleport player to a valid destination.
  *
- * @param destination, the location player will be teleported to.
  * @author Yee Li
  */
 public class OneWayTeleport implements TeleportItem {
 
-    Location destination;
-    Animation anim = new Animation("portal", 6, 3);
+    final Location destination;
+    final Animation anim = new Animation("portal", 6, 3);
 
+    /**
+     *
+     * @param destination, the location player will be teleported to.
+     **/
     public OneWayTeleport(Location destination) {
         this.destination = destination;
     }

@@ -11,23 +11,21 @@ import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * An item that produces a line of lasers.
  *
- * @author Carla Parinas
+ * @author Carla Parinas 300653631
  */
 public class LaserSource implements Togglabble {
-  private Location location; // needs to set the laser somewhere
-  private Direction direction; // has a direction but it should not move as well as blocks all actors
+  private final Location location; // needs to set the laser somewhere
+  private final Direction direction; // has a direction but it should not move as well as blocks all actors
   public String orientation;
 
-  private boolean laserToggle = true; // auto set to false
-  private Map<Location, String> lasers = new HashMap<>();
+  private boolean laserToggle; // auto set to false
+  private final Map<Location, String> lasers = new HashMap<>();
 
   public Location target;
   public Direction currentDirection;
@@ -38,6 +36,9 @@ public class LaserSource implements Togglabble {
     this.laserToggle = toggle;
   }
 
+  /**
+   * Set the orientation of the laser based on the direction of the laser
+   */
   private void setOrientation()  {
     switch (currentDirection) {
       case UP, DOWN -> orientation = "vertical";
@@ -45,7 +46,13 @@ public class LaserSource implements Togglabble {
     }
   }
 
+  /**
+   * Update the path of the laser -- loops until the laser finds a part it can't reach
+   * @param gameBoard current Gameboard
+   */
   public void updateLasers(GameBoard gameBoard) {
+
+    // clear the lasers and set initial values for direction and target
     lasers.clear();
     currentDirection = direction;
     target = direction.act(location);
@@ -59,6 +66,7 @@ public class LaserSource implements Togglabble {
 
       Item targetItem = gameBoard.itemOnTile(target).item;
 
+      // checks for a movable box in path of the laser
       MovableBox box = gameBoard.getGameState().boxes()
               .stream().filter(b -> b.getLocation().equals(target))
               .findFirst().orElse(null);
@@ -66,6 +74,7 @@ public class LaserSource implements Togglabble {
       if (box != null) {
         if (box instanceof Mirror m) {
           m.reflectLaser(this);
+          // reset the loop again and run same checks
           continue;
         }
         else if (box instanceof Crate c)  { c.explode(gameBoard.getGameState().boxes()); }
@@ -86,10 +95,21 @@ public class LaserSource implements Togglabble {
     }
   }
 
+  /**
+   * Gets the direction of the lasersource, NOT the laser
+   * @return laser source direction
+   */
   public Direction getDirection() { return direction; }
 
+  /**
+   * Gets the list of locations that the lasers are occupying, along with their orientation
+   * @return a map of location and strings representing the lasers
+   */
   public Map<Location, String> getLasers() { return lasers; }
 
+  /**
+   * Toggles the laser on and off
+   */
   public void setLaserToggle() {
     laserToggle = !laserToggle;
   }

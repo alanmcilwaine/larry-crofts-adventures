@@ -245,7 +245,7 @@ public class GameItemTest {
         gameboard.action(Direction.UP);
         //Assert
         assertEquals(player.getLocation(), destination);
-        assertEquals("OneWayTeleport", gameboard.getBoard().get(5).get(4).item.toString());
+        assertEquals("portal0", gameboard.getBoard().get(5).get(4).item.toString());
     }
 
     @Test
@@ -301,7 +301,6 @@ public class GameItemTest {
         var gameboard = Mock.getGameBoard();
         var destination1 = new Location(0, 5);
         var destination2 = new Location(4, 5);
-        var player = gameboard.getGameState().player();
 
         gameboard.getBoard().get(5).get(0).item = new OneWayTeleport(destination2);
         gameboard.getBoard().get(5).get(4).item = new OneWayTeleport(destination1);
@@ -328,7 +327,6 @@ public class GameItemTest {
     @Test
     public void buttonUnlock() {
         var gameboard = Mock.getGameBoard();
-        var player = gameboard.getGameState().player();
         Button track = new Button();
         Tile<Item> tileTrack = gameboard.getGameState().board().get(2).get(3);
         tileTrack.item = track;

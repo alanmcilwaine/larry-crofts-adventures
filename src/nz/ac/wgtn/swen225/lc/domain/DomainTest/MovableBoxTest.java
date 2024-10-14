@@ -9,8 +9,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Tests for the MovableBox and as well as it's interactions
+ *
+ * @author Carla Parinas 300653631
+ */
 public class MovableBoxTest {
-
 
     @Test
     public void boxPushOpen() {
