@@ -59,7 +59,7 @@ public class PersistencyPrint {
         //player.addTreasure(new Key(ItemColor.BLUE));
         List<Robot> robots = new ArrayList<>();
         KillerRobot r = new KillerRobot(2, 3);
-        r.setActorPath(ActorPath.UPDOWN);
+        r.setActorPath(new ActorPath(1));
         robots.add(r);
 
         List<MovableBox> boxes = new ArrayList<>();
