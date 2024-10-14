@@ -104,7 +104,6 @@ public class App extends AppFrame implements AppInterface{
         render = ImageImplement.getImageImplement(game);
         domain = b;
         initialDomain = domain.copyOf();
-        recorder.setCommands(List.of());
         time = domain.getGameState().timeLeft();
         game.requestFocusInWindow();
         tick.start();
@@ -185,6 +184,7 @@ public class App extends AppFrame implements AppInterface{
      * @param level The level we go to.
      */
     public void loadLevel(int level) {
+        recorder.setCommands(List.of());
         startTick(Persistency.loadGameBoard(level));
     }
 
@@ -193,6 +193,15 @@ public class App extends AppFrame implements AppInterface{
      * @param b The level board.
      */
     public void loadLevel(GameBoard b) {
+        recorder.setCommands(List.of());
+        startTick(b);
+    }
+
+    /**
+     * Loads a recording. Doesn't clear the list of commands that Persistency sets up.
+     * @param b The level board.
+     */
+    public void loadRecording(GameBoard b) {
         startTick(b);
     }
 

@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app.UI.Containers;
 
 import nz.ac.wgtn.swen225.lc.app.App;
+import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 import nz.ac.wgtn.swen225.lc.render.ImageImplement;
 
@@ -57,7 +58,8 @@ public class Menu extends JMenuBar {
         loadInputs.addActionListener((unused) -> {
             String filename = a.openFile();
             if (!filename.isEmpty()){
-                a.loadLevel(Persistency.loadwithFilePath(filename));
+                a.loadRecording(Persistency.loadRecording(a.recorder, filename));
+                a.pauseTimer(true);
             }
         });
         List.of(saveInputs, loadInputs).forEach(input::add);
