@@ -1,0 +1,25 @@
+{
+  "board": [
+    ["W","W","W","W","W","W","W","W","W"],
+    ["W","F","F","F","W","F-P","F","TP(4@7)","W"],
+    ["W","F-R","F","F-MB","W","F","F","F","W"],
+    ["W","F","F-MB","F","LD#R","F","F","BB","W"],
+    ["W","T","W","W","LX","W","W","LD#B","W"],
+    ["W","W","F","F","F","F","F","F","W"],
+    ["F","F","LD#B","F-MB","W","W","W","F","W"],
+    ["T","W","BB","K#R","F","TP(6@1)","W","F","W"],
+    ["W","W","W","W","W","W","W","W","W"]
+  ],
+  "level": {
+    "number": 2,
+    "Time Limit": 300,
+    "Total Treasure": 2
+},
+  "info": {
+    "info": "Teleports beam you always to the same space.",
+    "x": 6,
+    "y": 1
+}
+  "inventory": [
+  ],
+}
