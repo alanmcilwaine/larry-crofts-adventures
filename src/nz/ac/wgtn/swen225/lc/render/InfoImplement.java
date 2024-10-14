@@ -15,12 +15,15 @@ import java.util.Map;
 /**
  * responsible for managing and displaying information messages
  * on the game's JPanel when the player reaches certain locations.
+ *
+ * @author libaix 300641237
+ * @version 2.5
  */
 public class InfoImplement {
-    static JTextArea textArea = new JTextArea();
-    JPanel jPanel;
+    final static JTextArea textArea = new JTextArea();
+    private final JPanel jPanel;
 
-    private Map<Location, Runnable> locationActionMap = new HashMap<>();
+    private final Map<Location, Runnable> locationActionMap = new HashMap<>();
 
     /**
      * sets up the JTextArea for displaying information
@@ -97,7 +100,10 @@ public class InfoImplement {
         }
         locationActionMap.clear();
     }
-    
+
+    /**
+     * make the textArea unseen
+     */
     public static void unvisiableTextArea(){
         textArea.setVisible(false);
     }
