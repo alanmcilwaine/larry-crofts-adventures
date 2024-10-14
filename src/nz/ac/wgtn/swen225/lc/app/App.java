@@ -184,6 +184,11 @@ public class App extends AppFrame implements AppInterface{
      * @param level The level we go to.
      */
     public void loadLevel(int level) {
+        File checkExists = new File(Persistency.path + "level" + level + ".json");
+        if (!checkExists.exists()) {
+            startTick(Persistency.loadGameBoard(1));
+            return;
+        }
         recorder.setCommands(List.of());
         startTick(Persistency.loadGameBoard(level));
     }
