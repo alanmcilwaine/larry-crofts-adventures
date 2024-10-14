@@ -28,8 +28,11 @@ public class OneWayTeleport implements TeleportItem {
         this.destination = destination;
     }
 
-    public Location destination() {
-        return destination;
+    public Location destination() { return destination; }
+
+    @Override
+    public boolean blockActor(Actor actor) {
+        return !(actor instanceof Player);
     }
 
     @Override
