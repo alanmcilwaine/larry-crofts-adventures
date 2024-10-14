@@ -28,6 +28,10 @@ public class RecorderPanel extends JPanel{
     // State of music playing
     private boolean isMuted = true;
 
+    /**
+     * Constructor for creating the Recorder panel. Will set to display.
+     * @param app Application to obtain vars for information.
+     */
     public RecorderPanel(App app) {
         this.app = app;
         setPreferredSize(new Dimension(App.WIDTH/3, App.HEIGHT / 4));
@@ -41,7 +45,10 @@ public class RecorderPanel extends JPanel{
      * Builds the relevant UI for the recorder panel.
      */
     public void build() {
-        pause.addActionListener((unused) -> app.pauseTimer(app.tick.isRunning()));
+        pause.addActionListener((unused) -> {
+            app.recorder.pause();
+            app.pauseTimer(app.tick.isRunning());
+        });
         undo.addActionListener(app.recorder.undo());
         redo.addActionListener(app.recorder.redo());
         play.addActionListener(app.recorder.play());
@@ -52,7 +59,7 @@ public class RecorderPanel extends JPanel{
         mute.setBounds(mute.getX(), mute.getY(), mute.getWidth() + 20, mute.getHeight());
         mute.addActionListener((unused) -> {
             isMuted = !isMuted;
-            BackgroundSoundImplement.muteMusic(isMuted);
+            app.muteGame(isMuted);
             mute.setText(isMuted ? "Unmute" : "Mute");
         });
         buildSlider();
@@ -62,6 +69,10 @@ public class RecorderPanel extends JPanel{
         repaint();
     }
 
+    /**
+     * Constructs the slider and all its settings. Could be moved to a class if used in
+     * multiple locations.
+     */
     private void buildSlider() {
         playbackSpeed.addChangeListener((e) -> {
             JSlider slider = (JSlider)e.getSource();
@@ -77,6 +88,10 @@ public class RecorderPanel extends JPanel{
         playbackSpeed.setBackground(new Color(105, 88, 92));
     }
 
+    /**
+     * Updates the visibility of the buttons in the UI. Will show if able to press.
+     * @param isRunning True if the game timer is running. Otherwise, false.
+     */
     public void updateButtons(boolean isRunning) {
         undo.setVisible(!isRunning && app.recorder.canUndo());
         redo.setVisible(!isRunning && app.recorder.canRedo());

@@ -17,10 +17,15 @@ public class Menu extends JMenuBar {
     private final JMenu file = new JMenu("File");
     private final JMenu input = new JMenu("Input");
     private final JMenu help = new JMenu("Help");
-    public Menu(App a){
-        file(a);
-        input(a);
-        help(a);
+
+    /**
+     * Constructor to build the Menu elements for the screen.
+     * @param app App to pull the relevant methods to call in the menu.
+     */
+    public Menu(App app){
+        file(app);
+        input(app);
+        help(app);
         add(file);
         add(input);
         add(help);
@@ -28,20 +33,20 @@ public class Menu extends JMenuBar {
 
     /**
      * Inputs the Menu Items under the File field in Menu
-     * @param a App
+     * @param app App to pull the relevant methods to call in the menu.
      */
-    private void file(App a){
+    private void file(App app){
         JMenuItem load = new JMenuItem("Load");
         JMenuItem save = new JMenuItem("Save");
         JMenuItem exit = new JMenuItem("Exit");
         load.addActionListener((unused) -> {
-            String path = a.openFile();
+            String path = app.openFile();
             if (!path.isEmpty()){
-                a.loadLevel(Persistency.loadwithFilePath(path));
+                app.loadLevel(Persistency.loadwithFilePath(path));
             }
         });
         save.addActionListener((unused) -> {
-            Persistency.saveProgress(a.domain);
+            Persistency.saveProgress(app.domain);
         });
         exit.addActionListener((unused) -> System.exit(1));
         List.of(load, save, exit).forEach(file::add);
@@ -49,17 +54,17 @@ public class Menu extends JMenuBar {
 
     /**
      * Inputs the Menu Items under the Input field in Menu
-     * @param a App
+     * @param app App to pull the relevant methods to call in the menu.
      */
-    private void input(App a){
+    private void input(App app){
         JMenuItem saveInputs = new JMenuItem("Save Inputs");
         JMenuItem loadInputs = new JMenuItem("Load Inputs");
-        saveInputs.addActionListener((unused) -> Persistency.saveCommands(a.recorder.getCommands(), a.domain.getGameState().level()));
+        saveInputs.addActionListener((unused) -> Persistency.saveCommands(app.recorder.getCommands(), app.domain.getGameState().level()));
         loadInputs.addActionListener((unused) -> {
-            String filename = a.openFile();
+            String filename = app.openFile();
             if (!filename.isEmpty()){
-                a.loadRecording(Persistency.loadRecording(a.recorder, filename));
-                a.pauseTimer(true);
+                app.loadRecording(Persistency.loadRecording(app.recorder, filename));
+                app.pauseTimer(true);
             }
         });
         List.of(saveInputs, loadInputs).forEach(input::add);
@@ -67,19 +72,14 @@ public class Menu extends JMenuBar {
 
     /**
      * Inputs the Help Items to give the player help information
-     * @param a App
+     * @param app App to pull the relevant methods to call in the menu.
      */
-    private void help(App a) {
-        JMenuItem helpInput = new JMenuItem("Game Instructions");
+    private void help(App app) {
         JMenuItem controls = new JMenuItem("Controls");
-        help.addActionListener((unused) -> {
-            // Add a help screen from renderer here
-        });
         controls.addActionListener((unused) -> {
-            a.pauseTimer(true);
+            app.pauseTimer(true);
             new RemapFrame();
         });
-        help.add(helpInput);
         help.add(controls);
     }
 }
