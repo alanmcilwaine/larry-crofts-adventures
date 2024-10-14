@@ -34,9 +34,6 @@ public class App extends AppFrame implements AppInterface{
     private final UIPanel ui;
     private final Menu menu = new Menu(this);
 
-    // Tick rate
-    public static double stageCountdown;
-
     // Game Information
     private final Controller controller;
     private final Recorder recorder = Recorder.create(this); // Created earlier so UI can hook up buttons to recorder.
@@ -50,9 +47,15 @@ public class App extends AppFrame implements AppInterface{
     /**
      * App()
      * Loads the game with the default key controller.
+     * Note that we can't call this(Controller) because Controller depends on App.
      */
     public App(){
-        this(new Controller());
+        assert SwingUtilities.isEventDispatchThread();
+        controller = new Controller(this);  // Now controller is initialized
+        game = makePanel();
+        ui = new UIPanel(this);
+        initialise();
+        startTick(gameLoader.loadSave());
     }
 
     /**

@@ -29,12 +29,8 @@ public class Controller extends Keys{
         this();
         setAction(Action.Pause, () -> app.pauseTimer(true));
         setAction(Action.Resume, () -> app.pauseTimer(false));
-        setAction(Action.Level1, () -> {
-            app.gameLoader().loadLevel(1);
-        });
-        setAction(Action.Level2, () -> {
-            app.gameLoader().loadLevel(2);
-        });
+        setAction(Action.Level1, () -> app.gameLoader().loadLevel(1));
+        setAction(Action.Level2, () -> app.gameLoader().loadLevel(2));
         setAction(Action.LoadSave, () -> {
             String path = app.openFile();
             if (!path.isEmpty()){
