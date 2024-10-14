@@ -3,7 +3,7 @@ package nz.ac.wgtn.swen225.lc.app.UI.Containers;
 import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.app.UI.Widgets.Icons;
 import nz.ac.wgtn.swen225.lc.app.UI.Widgets.SquareButton;
-import nz.ac.wgtn.swen225.lc.render.BackgroundSoundImplement;
+import nz.ac.wgtn.swen225.lc.recorder.Recorder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,20 +46,20 @@ public class RecorderPanel extends JPanel{
      */
     public void build() {
         pause.addActionListener((unused) -> {
-            app.recorder.pause();
-            app.pauseTimer(app.tick.isRunning());
+            app.recorder().pause();
+            app.pauseTimer(app.timer().isRunning());
         });
-        undo.addActionListener(app.recorder.undo());
-        redo.addActionListener(app.recorder.redo());
-        play.addActionListener(app.recorder.play());
+        undo.addActionListener(app.recorder().undo());
+        redo.addActionListener(app.recorder().redo());
+        play.addActionListener(app.recorder().play());
         restart.addActionListener((unused) -> {
-            app.tick.stop();
-            app.loadLevel(app.domain.getGameState().level());
+            app.timer().stop();
+            app.gameLoader().loadLevel(app.domain().getGameState().level());
         });
         mute.setBounds(mute.getX(), mute.getY(), mute.getWidth() + 20, mute.getHeight());
         mute.addActionListener((unused) -> {
             isMuted = !isMuted;
-            app.muteGame(isMuted);
+            App.muteGame(isMuted);
             mute.setText(isMuted ? "Unmute" : "Mute");
         });
         buildSlider();
@@ -77,7 +77,7 @@ public class RecorderPanel extends JPanel{
         playbackSpeed.addChangeListener((e) -> {
             JSlider slider = (JSlider)e.getSource();
             if (!slider.getValueIsAdjusting()) {
-                app.recorder.setPlaybackSpeed(App.TICK_RATE + (-1 * slider.getValue()));
+                app.recorder().setPlaybackSpeed(App.TICK_RATE + (-1 * slider.getValue()));
             }
         });
         playbackSpeed.setBounds(play.getX() + 50, play.getY(), App.WIDTH/3 - play.getWidth(), play.getHeight());
@@ -93,16 +93,17 @@ public class RecorderPanel extends JPanel{
      * @param isRunning True if the game timer is running. Otherwise, false.
      */
     public void updateButtons(boolean isRunning) {
-        undo.setVisible(!isRunning && app.recorder.canUndo());
-        redo.setVisible(!isRunning && app.recorder.canRedo());
-        play.setVisible(!isRunning && app.recorder.canRedo());
-        playbackSpeed.setVisible(!isRunning && app.recorder.canRedo());
-        pause.setIcon(app.tick.isRunning() ? Icons.Pause.icon() : Icons.Resume.icon());
+        Recorder recorder = app.recorder();
+        undo.setVisible(!isRunning && recorder.canUndo());
+        redo.setVisible(!isRunning && recorder.canRedo());
+        play.setVisible(!isRunning && recorder.canRedo());
+        playbackSpeed.setVisible(!isRunning && recorder.canRedo());
+        pause.setIcon(app.timer().isRunning() ? Icons.Pause.icon() : Icons.Resume.icon());
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        updateButtons(app.tick.isRunning());
+        updateButtons(app.timer().isRunning());
         super.paintComponent(g);
     }
 }

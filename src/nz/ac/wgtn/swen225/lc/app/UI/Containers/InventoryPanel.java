@@ -33,7 +33,7 @@ public class InventoryPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        List<Item> treasure = app.domain.getGameState().player().getTreasure();
+        List<Item> treasure = app.domain().getGameState().player().getTreasure();
         IntStream.range(0, treasure.size())
                 .boxed()
                 .forEach(i -> {
