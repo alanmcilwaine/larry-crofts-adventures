@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.app.UI.Containers;
 
 import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.app.UI.Widgets.UILabel;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.Key;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.Treasure;
 import nz.ac.wgtn.swen225.lc.domain.GameState;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
@@ -46,6 +47,7 @@ public class InformationPanel extends JPanel{
         level.setText(String.valueOf(game.level()));
         time.setText(String.valueOf((int)App.time));
         chips.setText(String.valueOf(game.totalTreasure() - treasure.stream().filter(t -> t instanceof Treasure).count()));
+        keys.setText(String.valueOf(app.domain.keysLeft()));
         super.paintComponent(g);
     }
 
