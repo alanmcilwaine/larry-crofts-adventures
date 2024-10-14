@@ -87,6 +87,7 @@ public class Fuzz {
              * Set up and load the correct level for this test.
              */
             {
+                muteGame(true);
                 if(level != 1) {
                     domain = Persistency.loadGameBoard(level);
                     initialDomain = domain.copyOf();
