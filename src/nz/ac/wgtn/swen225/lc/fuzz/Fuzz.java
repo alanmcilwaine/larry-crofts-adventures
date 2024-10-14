@@ -90,8 +90,8 @@ public class Fuzz {
             {
                 muteGame(mute);
                 if(level != 1) {
-                    domain = Persistency.loadGameBoard(level);
-                    initialDomain = domain.copyOf();
+                    domain(Persistency.loadGameBoard(level));
+                    initialDomain(domain().copyOf());
                 }
             }
 
@@ -101,19 +101,19 @@ public class Fuzz {
             @Override
             public void tick(){
                 //Reload level on finish
-                if (domain.getGameState().player().isNextLevel() || domain.getGameState().player().isDead()) {
-                    domain = initialDomain.copyOf();
+                if (domain().getGameState().player().isNextLevel() || domain().getGameState().player().isDead()) {
+                    domain(initialDomain().copyOf());
                 }
                 try {
                     fuzzController.randomizeInputs(keyStrategy);
 
-                    var command = controller.currentCommand();
+                    var command = controller().currentCommand();
                     commands.add(command);
-                    recorder.tick(command);
+                    recorder().tick(command);
                     giveInput(command);
                 }catch (Throwable t){
-                    saveInputs(commands, domain.getGameState().level());
-                    System.out.println("ERROR CAUGHT BY FUZZ: Was saved as level" + domain.getGameState().level() +"-recording");
+                    saveInputs(commands, domain().getGameState().level());
+                    System.out.println("ERROR CAUGHT BY FUZZ: Was saved as level" + domain().getGameState().level() +"-recording");
                     t.printStackTrace();
                     throw new Error(t);
                 }
