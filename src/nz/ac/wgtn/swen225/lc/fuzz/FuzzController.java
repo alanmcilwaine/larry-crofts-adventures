@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Replaces the human controller with one that automatically generates smart inputs for testing
  *
- * @author John Rais raisjohn@ecs.vuw.ac.nz
+ * @author John Rais 300654627
  * @version 2.0
  */
 class FuzzController extends Controller {

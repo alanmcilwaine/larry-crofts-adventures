@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 /**
  * Stores info so that it can generate the best inputs for testing
  *
- * @author John Rais raisjohn@ecs.vuw.ac.nz
+ * @author John Rais 300654627
  * @version 2.0
  */
 public class FuzzKeyChooser {

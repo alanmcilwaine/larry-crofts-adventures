@@ -26,7 +26,7 @@ import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
  * </pre>
  *
  *
- * @author John Rais raisjohn@ecs.vuw.ac.nz
+ * @author John Rais 300654627
  * @version 1.2
  */
 public interface Recorder {
