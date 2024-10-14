@@ -20,6 +20,9 @@ import java.util.Set;
  * when certain actions occur in the game.
  * It stores sound effects actions mapped to specific game locations and triggers them based
  * on the player's movements.
+ *
+ * @author libaix 300641237
+ * @version 2.5
  */
 public class SoundEffectImplement {
     private final Map<Location, Runnable> SoundActionMap = new HashMap<>();

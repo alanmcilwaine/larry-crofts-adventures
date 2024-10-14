@@ -9,6 +9,9 @@ import java.util.*;
 /**
  * a singleton used to store and manage all the images used in the game.
  * It loads images from a folder, resizes them, and stores them in a map for easy access.
+ *
+ * @author libaix 300641237
+ * @version 2.5
  */
 public enum Img{
     /**

@@ -15,6 +15,9 @@ import java.util.Map;
 /**
  * responsible for managing and displaying information messages
  * on the game's JPanel when the player reaches certain locations.
+ *
+ * @author libaix 300641237
+ * @version 2.5
  */
 public class InfoImplement {
     final static JTextArea textArea = new JTextArea();

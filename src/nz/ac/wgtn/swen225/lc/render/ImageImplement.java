@@ -16,6 +16,9 @@ import java.awt.*;
  * responsible for rendering various game elements
  * (tiles, items, actors, and boxes) onto a JPanel, as well as managing background
  * sound and additional effects during the game.
+ *
+ * @author libaix 300641237
+ * @version 2.5
  */
 public class ImageImplement{
     // App's panel

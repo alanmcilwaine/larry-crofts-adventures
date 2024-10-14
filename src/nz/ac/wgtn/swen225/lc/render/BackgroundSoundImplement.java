@@ -7,6 +7,9 @@ import java.util.function.Supplier;
 
 /**
  * handles playing background sound effects using .wav files.
+ *
+ * @author libaix 300641237
+ * @version 2.5
  */
 public class BackgroundSoundImplement {
     private static Clip clip;
