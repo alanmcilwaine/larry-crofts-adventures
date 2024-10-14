@@ -126,7 +126,9 @@ public class GameBoardBuilder {
         return boxes;
     }
 
-    public List<LaserSource> getLaserSources() { return laserSources; }
+    public List<LaserSource> getLaserSources() {
+        return laserSources;
+    }
 
     public int getTimeLeft() {
         return timeLeft;

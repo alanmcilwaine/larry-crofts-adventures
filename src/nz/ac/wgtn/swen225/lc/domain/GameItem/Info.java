@@ -37,5 +37,7 @@ public record Info(String info) implements Item {
     }
 
     @Override
-    public Item makeNew() { return new Info(info); }
+    public Item makeNew() {
+        return new Info(info);
+    }
 }

@@ -22,7 +22,6 @@ public class OneWayTeleport implements TeleportItem {
     final Animation anim = new Animation("portal", 6, 3);
 
     /**
-     *
      * @param destination, the location player will be teleported to.
      **/
     public OneWayTeleport(Location destination) {
@@ -38,20 +37,22 @@ public class OneWayTeleport implements TeleportItem {
         if (actor instanceof Player p) {
             var destTile = p.findTileInSpecificLocation(p.getGameBoard(), destination);
             checkLoopTeleport(tile, destTile);
-            if (destTile.canStepOn(actor)) {
+            if (destTile.canStepOn(actor) && !p.checkIfDeadOnLocation(destination)) {
                 tile.onExit(actor);
                 p.updateActorLocation(destination);
                 destTile.onEntry(actor);
             } else {
                 p.updateActorLocation(tile.location);
-                DomainLogger.LOGGER.getLogger().log(Level.INFO, "Can't not teleport to: " + destination);
+                DomainLogger.LOGGER.getLogger().log(Level.INFO,
+                        "Can't not teleport to: " + destination);
             }
         }
     }
 
     private <T extends Item> void checkLoopTeleport(Tile<T> tile, Tile<Item> destTile) {
         if (destTile.item instanceof TeleportItem t && t.destination().equals(tile.location)) {
-            DomainLogger.LOGGER.getLogger().log(Level.WARNING, "Teleport destination creates loop.");
+            DomainLogger.LOGGER.getLogger().log(Level.WARNING, "Teleport destination creates loop" +
+                    ".");
             throw new IllegalArgumentException("Infinite teleport.");
         }
     }
@@ -62,8 +63,12 @@ public class OneWayTeleport implements TeleportItem {
     }
 
     @Override
-    public String toString() { return anim.toString(); }
+    public String toString() {
+        return anim.toString();
+    }
 
     @Override
-    public Item makeNew() { return new OneWayTeleport(destination); }
+    public Item makeNew() {
+        return new OneWayTeleport(destination);
+    }
 }

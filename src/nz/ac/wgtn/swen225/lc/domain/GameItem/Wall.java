@@ -20,5 +20,7 @@ public record Wall() implements Item {
     }
 
     @Override
-    public Item makeNew() { return new Wall(); }
+    public Item makeNew() {
+        return new Wall();
+    }
 }

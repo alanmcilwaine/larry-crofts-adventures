@@ -9,9 +9,10 @@ import nz.ac.wgtn.swen225.lc.domain.Tile;
  */
 public interface Togglabble extends Item {
 
-  /**
-   * Switches the state of the item
-   * @param tile the tile the item is in
-   */
-  void toggle(Tile<Item> tile);
+    /**
+     * Switches the state of the item
+     *
+     * @param tile the tile the item is in
+     */
+    void toggle(Tile<Item> tile);
 }

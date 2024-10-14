@@ -38,15 +38,18 @@ public interface Item {
      * @param tile  Tile to update
      * @param <T>   extends Item
      */
-    default <T extends Item> void onExit(Actor actor, Tile<T> tile) {}
+    default <T extends Item> void onExit(Actor actor, Tile<T> tile) {
+    }
 
     /**
      * For animations, update the sprite through each tick of the game
      */
-    default void tick() {}
+    default void tick() {
+    }
 
     /**
      * Make a deep copy of the item
+     *
      * @return entirely new copy
      */
     Item makeNew();

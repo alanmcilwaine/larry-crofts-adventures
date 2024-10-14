@@ -10,30 +10,34 @@ import nz.ac.wgtn.swen225.lc.domain.Utilities.Orientation;
  * @author Carla Parinas 300653631
  */
 public class Mirror extends MovableBox {
-  private final Orientation orientation;
+    private final Orientation orientation;
 
-  public Mirror(Orientation orientation, int x, int y) {
-    super(x, y);
-    this.orientation = orientation;
-  }
+    public Mirror(Orientation orientation, int x, int y) {
+        super(x, y);
+        this.orientation = orientation;
+    }
 
-  /**
-   * Returns the orientation of the mirror
-   * @return Orientation object
-   */
-  public Orientation getOrientation() { return orientation; }
+    /**
+     * Returns the orientation of the mirror
+     *
+     * @return Orientation object
+     */
+    public Orientation getOrientation() {
+        return orientation;
+    }
 
-  /**
-   * Reflects the oncoming laser
-   * @param source Laser Source object
-   */
-  public void reflectLaser(LaserSource source) {
-    orientation.reflectLaser(source);
-  }
+    /**
+     * Reflects the oncoming laser
+     *
+     * @param source Laser Source object
+     */
+    public void reflectLaser(LaserSource source) {
+        orientation.reflectLaser(source);
+    }
 
-  @Override
-  public String toString() {
-    return orientation.equals(Orientation.ONE) ? "MirrorReversed" : "Mirror";
-  }
+    @Override
+    public String toString() {
+        return orientation.equals(Orientation.ONE) ? "MirrorReversed" : "Mirror";
+    }
 
 }

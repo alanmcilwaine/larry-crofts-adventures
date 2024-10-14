@@ -67,16 +67,19 @@ public class Player implements Actor {
 
     public void addTreasure(Item item) {
         treasure.add(item);
-        GameBoard.domainLogger.log(Level.INFO, String.format("Player has %s treasure", treasure.size()));
+        GameBoard.domainLogger.log(Level.INFO, String.format("Player has %s treasure",
+                treasure.size()));
     }
 
     public void removeTreasure(Item item) {
         treasure.remove(item);
-        GameBoard.domainLogger.log(Level.INFO, String.format("Player has %s treasure", treasure.size()));
+        GameBoard.domainLogger.log(Level.INFO, String.format("Player has %s treasure",
+                treasure.size()));
     }
 
     @Override
-    public void doMove(Direction direction, GameBoard gameBoard, Tile<Item> current, Tile<Item> next) {
+    public void doMove(Direction direction, GameBoard gameBoard, Tile<Item> current,
+                       Tile<Item> next) {
         if (Objects.isNull(this.gameBoard)) {
             this.gameBoard = gameBoard; // not ideal, but to support extended features.
         }
@@ -86,17 +89,16 @@ public class Player implements Actor {
 
         this.playerFacing = direction;
 
-        GameBoard.domainLogger.log(Level.INFO, "Player is facing:" + playerFacing + " should try to move " + playerFacing);
+        GameBoard.domainLogger.log(Level.INFO, "Player is facing:" + playerFacing + " should try " +
+                "to move " + playerFacing);
 
         actOnTile(direction, gameBoard, current, next);
 
-        GameBoard.domainLogger.log(Level.INFO, "Player is at:" + location + " after moving " + direction);
+        GameBoard.domainLogger.log(Level.INFO,
+                "Player is at:" + location + " after moving " + direction);
 
         // check for game over
-        if (gameBoard.getGameState().robots().stream().anyMatch((x) -> x.getLocation().equals(this.location)) ||
-                gameBoard.getGameState().laserSources().stream().map(LaserSource::getLasers).anyMatch(m -> m.containsKey(getLocation()))) {
-            die();
-        }
+        if (checkIfDeadOnLocation(this.location)) { die(); }
     }
 
     @Override
@@ -120,12 +122,18 @@ public class Player implements Actor {
         this.nextLevel = nextLevel;
     }
 
+    public boolean checkIfDeadOnLocation(Location loc){
+        boolean robots = gameBoard.getGameState().robots().stream().anyMatch((x) -> x.getLocation().equals(loc));
+        boolean lasers = gameBoard.getGameState().laserSources().stream().map(LaserSource::getLasers).anyMatch(m -> m.containsKey(loc));
+        boolean boxes = gameBoard.getGameState().boxes().stream().anyMatch(x -> x.getLocation().equals(loc));
+
+        return robots || lasers || boxes;
+    }
+
     /**
      * Kills the player
      */
-    public void die() {
-        isDead = true;
-    }
+    public void die() {isDead = true; }
 
     @Override
     public String toString() {

@@ -30,6 +30,7 @@ public interface Actor {
 
     /**
      * Checks if the actor can attempt a move on the next tile.
+     *
      * @param direction the direction the actor is heading in
      * @param gameBoard current gameboard
      * @return true if the actor is able to move, false if not
@@ -47,9 +48,7 @@ public interface Actor {
         var currentTile = findTileInSpecificLocation(gameBoard, this.getLocation());
 
         // checks for a box and if it can move
-        MovableBox box = gameBoard.getGameState().boxes()
-                .stream().filter(b -> b.getLocation().equals(nextTile.location))
-                .findFirst().orElse(null);
+        MovableBox box = gameBoard.findBoxAtLocation(nextTile.location);
 
         if (box != null && !box.attemptMove(direction, gameBoard)) {
             return false;
@@ -73,8 +72,11 @@ public interface Actor {
      */
     void doMove(Direction direction, GameBoard gameBoard, Tile<Item> current, Tile<Item> next);
 
-    default void actOnTile(Direction dir, GameBoard gameBoard, Tile<Item> current, Tile<Item> next) {
-        if (dir.equals(Direction.NONE)) { return; }
+    default void actOnTile(Direction dir, GameBoard gameBoard, Tile<Item> current,
+                           Tile<Item> next) {
+        if (dir.equals(Direction.NONE)) {
+            return;
+        }
         current.onExit(this);
         next.onEntry(this);
         if (!(next.item instanceof TeleportItem)) {
@@ -113,7 +115,7 @@ public interface Actor {
      */
     default boolean locationIsValid(Location location, GameBoard gameBoard) {
         return location.x() >= 0 && location.x() < gameBoard.getGameState().width() &&
-               location.y() >= 0 && location.y() < gameBoard.getGameState().height();
+                location.y() >= 0 && location.y() < gameBoard.getGameState().height();
     }
 
 }

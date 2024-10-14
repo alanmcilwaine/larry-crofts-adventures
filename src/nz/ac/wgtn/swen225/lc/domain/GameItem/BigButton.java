@@ -9,10 +9,12 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
  * @author Carla Parinas 300653631
  */
 public class BigButton extends Button {
-  { isBig = true; }
+    {
+        isBig = true;
+    }
 
-  @Override
-  public Item makeNew() {
-    return new BigButton();
-  }
+    @Override
+    public Item makeNew() {
+        return new BigButton();
+    }
 }

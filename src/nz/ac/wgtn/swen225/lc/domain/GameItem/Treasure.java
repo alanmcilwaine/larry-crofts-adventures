@@ -25,5 +25,7 @@ public record Treasure() implements Item {
     }
 
     @Override
-    public Item makeNew() { return new Treasure(); }
+    public Item makeNew() {
+        return new Treasure();
+    }
 }

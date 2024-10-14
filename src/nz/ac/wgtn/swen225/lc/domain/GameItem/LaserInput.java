@@ -13,16 +13,22 @@ import nz.ac.wgtn.swen225.lc.domain.Tile;
 public class LaserInput extends Button {
 
     @Override
-    public boolean blockActor(Actor actor) { return true; }
-
-    @Override
-    public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {
-      throw new IllegalStateException("Can't step on: " + tile.getItemOnTile());
+    public boolean blockActor(Actor actor) {
+        return true;
     }
 
     @Override
-    public String toString() { return "LaserInput"; }
+    public <T extends Item> void onTouch(Actor actor, Tile<T> tile) {
+        throw new IllegalStateException("Can't step on: " + tile.getItemOnTile());
+    }
 
     @Override
-    public Item makeNew() { return new LaserInput(); }
+    public String toString() {
+        return "LaserInput";
+    }
+
+    @Override
+    public Item makeNew() {
+        return new LaserInput();
+    }
 }

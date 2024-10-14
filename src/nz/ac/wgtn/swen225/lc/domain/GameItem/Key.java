@@ -26,8 +26,12 @@ public record Key(ItemColor itemColor) implements Item {
     }
 
     @Override
-    public String toString() { return "Key" + itemColor.toString(); }
+    public String toString() {
+        return "Key" + itemColor.toString();
+    }
 
     @Override
-    public Item makeNew() { return new Key(itemColor); }
+    public Item makeNew() {
+        return new Key(itemColor);
+    }
 }

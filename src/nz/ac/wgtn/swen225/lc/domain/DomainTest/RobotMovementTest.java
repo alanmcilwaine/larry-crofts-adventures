@@ -33,76 +33,77 @@ public class RobotMovementTest {
         List<Robot> robots = gameBoard.getGameState().robots();
         Robot track = robots.getFirst();
 
-    // Robot should not go out of bounds
-    track.setActorFacing(Direction.DOWN);
-    assertEquals(new Location(3, 5), track.getLocation());
+        // Robot should not go out of bounds
+        track.setActorFacing(Direction.DOWN);
+        assertEquals(new Location(3, 5), track.getLocation());
 
-    track.setActorFacing(Direction.LEFT);
-    assertEquals(new Location(3, 5), track.getLocation());
+        track.setActorFacing(Direction.LEFT);
+        assertEquals(new Location(3, 5), track.getLocation());
 
-    // simple robot movement
+        // simple robot movement
 
-    // set as LEFT TO RIGHT FIRST
-    track.getActorPath().resetStepCount();
-    advanceOneDelay(gameBoard, new Location(2, 5), track);
-    advanceOneDelay(gameBoard, new Location(1, 5), track);
-    advanceOneDelay(gameBoard, new Location(0, 5), track);
+        // set as LEFT TO RIGHT FIRST
+        track.getActorPath().resetStepCount();
+        advanceOneDelay(gameBoard, new Location(2, 5), track);
+        advanceOneDelay(gameBoard, new Location(1, 5), track);
+        advanceOneDelay(gameBoard, new Location(0, 5), track);
 
-    // hit road block from here, at this point the robot should have switched it's direction after one delay
+        // hit road block from here, at this point the robot should have switched it's direction
+        // after one delay
 
-    // now going RIGHT to LEFT
-    advanceOneDelay(gameBoard, new Location(1,5), track);
-    advanceOneDelay(gameBoard, new Location(2,5), track);
-    advanceOneDelay(gameBoard, new Location(3,5), track);
+        // now going RIGHT to LEFT
+        advanceOneDelay(gameBoard, new Location(1, 5), track);
+        advanceOneDelay(gameBoard, new Location(2, 5), track);
+        advanceOneDelay(gameBoard, new Location(3, 5), track);
 
-  }
-
-  @Test
-  public void robotCantPickItems() {
-    GameBoard gameBoard = Mock.getGameBoard();
-
-    gameBoard.getGameState().robots().add(new KillerRobot(4,2));
-    List<Robot> robots = gameBoard.getGameState().robots();
-    Robot track = robots.getFirst();
-
-    // can't pick up the treasure
-    advanceOneDelay(gameBoard, new Location(2,2), track);
-
-    assert gameBoard.getGameState().totalTreasure() == 1; // item was not picked up
-  }
-
-  @Test
-  public void robotKillPlayer() {
-    GameBoard gameBoard = Mock.getGameBoard();
-    Player player = gameBoard.getGameState().player();
-    gameBoard.getGameState().robots().add(new KillerRobot(0, 5));
-
-    // robot killing player
-    gameBoard.action(Direction.UP);
-    gameBoard.action(Direction.UP);
-
-    for(int i=0; i <=100; i++) {
-      gameBoard.action(Direction.NONE);
     }
 
-    assert player.isDead();
-  }
+    @Test
+    public void robotCantPickItems() {
+        GameBoard gameBoard = Mock.getGameBoard();
 
-  @Test
-  public void robotKillPlayer2() {
-    GameBoard gameBoard = Mock.getGameBoard();
-    Player player = gameBoard.getGameState().player();
-    gameBoard.getGameState().robots().add(new KillerRobot(0, 5));
+        gameBoard.getGameState().robots().add(new KillerRobot(4, 2));
+        List<Robot> robots = gameBoard.getGameState().robots();
+        Robot track = robots.getFirst();
 
-    // robot killing player
-    gameBoard.action(Direction.UP);
-    gameBoard.action(Direction.UP);
-    gameBoard.action(Direction.LEFT);
-    gameBoard.action(Direction.LEFT);
-    gameBoard.action(Direction.LEFT);
-    gameBoard.action(Direction.LEFT);
+        // can't pick up the treasure
+        advanceOneDelay(gameBoard, new Location(3, 2), track);
 
-    assert player.isDead();
-  }
+        assert gameBoard.getGameState().totalTreasure() == 1; // item was not picked up
+    }
+
+    @Test
+    public void robotKillPlayer() {
+        GameBoard gameBoard = Mock.getGameBoard();
+        Player player = gameBoard.getGameState().player();
+        gameBoard.getGameState().robots().add(new KillerRobot(0, 5));
+
+        // robot killing player
+        gameBoard.action(Direction.UP);
+        gameBoard.action(Direction.UP);
+
+        for (int i = 0; i <= 100; i++) {
+            gameBoard.action(Direction.NONE);
+        }
+
+        assert player.isDead();
+    }
+
+    @Test
+    public void robotKillPlayer2() {
+        GameBoard gameBoard = Mock.getGameBoard();
+        Player player = gameBoard.getGameState().player();
+        gameBoard.getGameState().robots().add(new KillerRobot(0, 5));
+
+        // robot killing player
+        gameBoard.action(Direction.UP);
+        gameBoard.action(Direction.UP);
+        gameBoard.action(Direction.LEFT);
+        gameBoard.action(Direction.LEFT);
+        gameBoard.action(Direction.LEFT);
+        gameBoard.action(Direction.LEFT);
+
+        assert player.isDead();
+    }
 
 }

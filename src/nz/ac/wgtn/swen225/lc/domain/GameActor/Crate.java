@@ -1,7 +1,5 @@
 package nz.ac.wgtn.swen225.lc.domain.GameActor;
 
-import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
-
 import java.util.List;
 
 /**
@@ -11,7 +9,9 @@ import java.util.List;
  */
 public class Crate extends MovableBox {
 
-    public Crate(int x, int y) { super(x, y); }
+    public Crate(int x, int y) {
+        super(x, y);
+    }
 
     /**
      * Removes the current box from the existence. Does this by taking in

@@ -43,13 +43,15 @@ public record LockedDoor(ItemColor itemColor) implements Togglabble {
     public void toggle(Tile<Item> tile) {
         // unlock the door automatically
         tile.item = new UnLockedDoor(this.itemColor);
-        System.out.println(tile.item);
-        System.out.println("break");
     }
 
     @Override
-    public String toString() { return "LockedDoor" + itemColor.toString(); }
+    public String toString() {
+        return "LockedDoor" + itemColor.toString();
+    }
 
     @Override
-    public Item makeNew() { return new LockedDoor(itemColor); }
+    public Item makeNew() {
+        return new LockedDoor(itemColor);
+    }
 }
