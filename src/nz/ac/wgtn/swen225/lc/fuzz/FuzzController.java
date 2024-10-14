@@ -18,7 +18,7 @@ class FuzzController extends Controller {
      * Presses and releases random keys in every possible way. This will test corner cases that would be almost impossible to recreate.
      * For example releasing a key twice before ever pressing it.
      */
-    List<Action> keyLogger = new ArrayList<>();
+    final List<Action> keyLogger = new ArrayList<>();
 
     /**
      * Creates pseudo random inputs, based on keyChoosers desired keys.

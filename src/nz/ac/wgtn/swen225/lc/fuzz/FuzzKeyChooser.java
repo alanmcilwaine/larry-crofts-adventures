@@ -18,8 +18,8 @@ import java.util.stream.Stream;
  */
 public class FuzzKeyChooser {
 
-    List<List<Float>> board;
-    App app;
+    final List<List<Float>> board;
+    final App app;
 
     FuzzKeyChooser(App app){
         this.app = app;
@@ -35,8 +35,7 @@ public class FuzzKeyChooser {
      */
     Action nextKey() {
         //Assign the value to each action respectively
-        var actions = List.of(Action.Up, Action.Down, Action.Left, Action.Right)
-                .stream()
+        var actions = Stream.of(Action.Up, Action.Down, Action.Left, Action.Right)
                 .collect(Collectors.toMap(
                         a -> a,                // Key extractor (the Action itself)
                         a -> 10/valueOfMove(a)  // inversely proportional to value of space
@@ -106,9 +105,9 @@ public class FuzzKeyChooser {
         return y >= board.size() || x >= board.get(0).size() || x < 0 || y < 0;
     }
     /**
-     * Create a list of list of floats to store how well tested each space on our board is.
+     * Create a list of floats to store how well tested each space on our board is.
      * @param app the application, which we can get the board from
-     * @return the list<list<float>> everything set to 0.0f, or wall set to 10 since they should never be gone on
+     * @return the grid of floats everything set to 0.0f, or wall set to 10 since they should never be gone on
      */
     public static List<List<Float>> createZeroMatrix(App app) {
         var boardRows = app.domain.getBoard();
