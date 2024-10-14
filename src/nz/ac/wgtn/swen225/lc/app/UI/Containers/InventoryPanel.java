@@ -16,6 +16,11 @@ import java.util.List;
  */
 public class InventoryPanel extends JPanel {
     private App app;
+
+    /**
+     * Constructor for creating the Inventory panel. Will set to display.
+     * @param app Application to obtain vars for information.
+     */
     public InventoryPanel(App app) {
         this.app = app;
         setPreferredSize(new Dimension(App.WIDTH/3, App.HEIGHT/3)); // 300x200

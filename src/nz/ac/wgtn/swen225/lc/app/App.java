@@ -15,6 +15,7 @@ import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 import nz.ac.wgtn.swen225.lc.recorder.Recorder;
+import nz.ac.wgtn.swen225.lc.render.BackgroundSoundImplement;
 import nz.ac.wgtn.swen225.lc.render.ImageImplement;
 import nz.ac.wgtn.swen225.lc.render.InfoImplement;
 
@@ -104,7 +105,6 @@ public class App extends AppFrame implements AppInterface{
         render = ImageImplement.getImageImplement(game);
         domain = b;
         initialDomain = domain.copyOf();
-        recorder.setCommands(List.of());
         time = domain.getGameState().timeLeft();
         game.requestFocusInWindow();
         tick.start();
@@ -132,6 +132,17 @@ public class App extends AppFrame implements AppInterface{
     }
 
     /**
+     * If the player has started making moves, we want to remove the list of redo's.
+     * @param input If not Command.None, then the player has started making moves.
+     */
+    private void checkRemoveRedo(Command input) {
+        if (input == Command.None) {
+            return;
+        }
+        recorder.takeControl();
+    }
+
+    /**
      * Checks if a save exists and loads that. Otherwise, loads level 1.
      * @return A GameBoard of the save or level.
      */
@@ -146,6 +157,13 @@ public class App extends AppFrame implements AppInterface{
         }
     }
 
+    /**
+     * Mutes the game given the state.
+     * @param state True to mute, false to unmute.
+     */
+    public void muteGame(boolean state) {
+        BackgroundSoundImplement.muteMusic(state);
+    }
 
     /**
      * Chooses the input to send to the game. We do this because an input is chosen
@@ -166,7 +184,7 @@ public class App extends AppFrame implements AppInterface{
 
     /**
      * tick()
-     * Code inside tick() is called every 50ms. This is what ticks the rest of the game.
+     * Code inside tick() is called every TICK_RATE. This is what ticks the rest of the game.
      */
     public void tick(){
         time -= ((double) TICK_RATE / 1000);
@@ -176,6 +194,7 @@ public class App extends AppFrame implements AppInterface{
         giveInput(input);
         updateGraphics();
 
+        checkRemoveRedo(input);
         checkNextLevel();
         checkDeath();
     }
@@ -185,6 +204,12 @@ public class App extends AppFrame implements AppInterface{
      * @param level The level we go to.
      */
     public void loadLevel(int level) {
+        File checkExists = new File(Persistency.path + "level" + level + ".json");
+        if (!checkExists.exists()) {
+            startTick(Persistency.loadGameBoard(1));
+            return;
+        }
+        recorder.setCommands(List.of());
         startTick(Persistency.loadGameBoard(level));
     }
 
@@ -193,6 +218,15 @@ public class App extends AppFrame implements AppInterface{
      * @param b The level board.
      */
     public void loadLevel(GameBoard b) {
+        recorder.setCommands(List.of());
+        startTick(b);
+    }
+
+    /**
+     * Loads a recording. Doesn't clear the list of commands that Persistency sets up.
+     * @param b The level board.
+     */
+    public void loadRecording(GameBoard b) {
         startTick(b);
     }
 

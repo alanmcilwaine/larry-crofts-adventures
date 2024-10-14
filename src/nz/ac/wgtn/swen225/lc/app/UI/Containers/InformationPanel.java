@@ -25,6 +25,11 @@ public class InformationPanel extends JPanel{
     private final List<JLabel> items = List.of(level, time, chips, keys);
 
     private final App app;
+
+    /**
+     * Constructor for creating the information panel. Will set to display.
+     * @param app Application to obtain vars for information.
+     */
     public InformationPanel(App app) {
         this.app = app;
         setPreferredSize(new Dimension(App.WIDTH/3, App.HEIGHT/3)); // 300x200
