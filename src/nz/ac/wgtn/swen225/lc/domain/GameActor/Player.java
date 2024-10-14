@@ -122,6 +122,11 @@ public class Player implements Actor {
         this.nextLevel = nextLevel;
     }
 
+    /**
+     * Checks if the player is dead
+     * @param loc the location to check with
+     * @return true if player is dead, false if not
+     */
     public boolean checkIfDeadOnLocation(Location loc){
         boolean robots = gameBoard.getGameState().robots().stream().anyMatch((x) -> x.getLocation().equals(loc));
         boolean lasers = gameBoard.getGameState().laserSources().stream().map(LaserSource::getLasers).anyMatch(m -> m.containsKey(loc));
