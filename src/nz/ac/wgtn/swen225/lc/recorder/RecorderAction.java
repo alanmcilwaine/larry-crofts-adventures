@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
  * </pre>
  *
  *
- * @author John Rais 30065627
+ * @author John Rais raisjohn@ecs.vuw.ac.nz
  * @version 2.0
  */
 public interface RecorderAction{

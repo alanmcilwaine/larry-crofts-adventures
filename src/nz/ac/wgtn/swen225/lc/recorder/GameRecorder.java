@@ -28,7 +28,7 @@ import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
  * </pre>
  *
  *
- * @author John Rais 300654627
+ * @author John Rais raisjohn@ecs.vuw.ac.nz
  * @version 3.0
  */
 class GameRecorder implements Recorder{
