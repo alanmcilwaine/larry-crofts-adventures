@@ -10,19 +10,18 @@ import java.util.logging.Level;
 /**
  * To implement paths for the NPC actors, kinda like state pattern
  */
-public enum ActorPath {
-    UPDOWN(Direction.UP, Direction.DOWN),
-    LEFTRIGHT(Direction.LEFT, Direction.RIGHT);
-
+public class ActorPath {
+//  UPDOWN(Direction.UP, Direction.DOWN),
+//  LEFTRIGHT(Direction.LEFT, Direction.RIGHT);
   static final int DELAY = 5;
   int stepCount;
   final Direction dir1;
   final Direction dir2;
   Direction d;
 
-  ActorPath(Direction dir1, Direction dir2) {
-    this.dir1 = dir1;
-    this.dir2 = dir2;
+  public ActorPath(int i) {
+    dir1 = i == 1 ? Direction.UP : Direction.LEFT;
+    dir2 = i == 1 ? Direction.DOWN : Direction.RIGHT;
     d = dir1;
   }
 
@@ -35,7 +34,6 @@ public enum ActorPath {
     a.setActorFacing(d);
   }
 
-  // For testing lol
   public void resetStepCount() { stepCount = 0; }
 
   public void doMove(Actor a, GameBoard b, Tile<Item> current, Tile<Item> next) {
@@ -49,5 +47,4 @@ public enum ActorPath {
     }
     stepCount++;
   }
-
 }

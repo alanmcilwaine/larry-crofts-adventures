@@ -47,6 +47,8 @@ public class GameBoardBuilder {
                 "totalTreasure", totalTreasure));
         Util.checkNull(List.of(board, player));
 
+//        ActorPath.LEFTRIGHT.resetStepCount();
+//        ActorPath.UPDOWN.resetStepCount();
         return new GameBoard(this);
     }
 
