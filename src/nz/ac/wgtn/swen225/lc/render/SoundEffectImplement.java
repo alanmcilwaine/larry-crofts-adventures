@@ -53,7 +53,7 @@ public class SoundEffectImplement {
      * @param mute to decide should mute the music or not
      */
     public static void mute(boolean mute){
-        if(mute){
+        if(mute && clip!= null){
             clip.stop();
         }
 

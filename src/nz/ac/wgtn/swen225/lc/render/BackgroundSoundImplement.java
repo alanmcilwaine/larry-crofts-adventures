@@ -59,7 +59,7 @@ public class BackgroundSoundImplement {
      */
     public static void mute(boolean mute){
         isMuted = mute;
-        if(mute){
+        if(mute && clip!= null){
             clip.stop();
         }
         else{
