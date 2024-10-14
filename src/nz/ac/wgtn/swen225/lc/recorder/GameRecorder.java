@@ -165,7 +165,6 @@ class GameRecorder implements Recorder{
     @Override
     public void setPlaybackSpeed(int tickTime) {
         GameRecorder.tickTime = tickTime;
-        if(timer != null) timer.stop();
         timer = new PlaybackTimer(this::redoFrame);
     }
 
@@ -179,7 +178,7 @@ class GameRecorder implements Recorder{
     @Override
     public Action redo() { return RecorderAction.of(this::_redo);}
     @Override
-    public Action play() {return RecorderAction.of(timer::start);}
+    public Action play() {return RecorderAction.of(() -> this.timer.start());}
     @Override
     public Action pause() {return RecorderAction.of(this::_pause);}
     @Override
