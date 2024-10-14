@@ -6,6 +6,7 @@ import nz.ac.wgtn.swen225.lc.app.Inputs.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Replaces the human controller with one that automatically generates smart inputs for testing
@@ -19,6 +20,9 @@ class FuzzController extends Controller {
      * For example releasing a key twice before ever pressing it.
      */
     final List<Action> keyLogger = new ArrayList<>();
+    //Use to generate random actions
+    final static Random random = new Random();
+
 
     /**
      * Creates pseudo random inputs, based on keyChoosers desired keys.
@@ -47,7 +51,7 @@ class FuzzController extends Controller {
      * @return The random key
      */
     Action randomKey(){
-        return List.of(Action.Up, Action.Down, Action.Left, Action.Right).get((int)(Math.random()*4));
+        return List.of(Action.Up, Action.Down, Action.Left, Action.Right).get(random.nextInt(0,4));
     }
 
 }
