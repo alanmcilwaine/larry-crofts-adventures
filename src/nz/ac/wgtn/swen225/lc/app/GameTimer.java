@@ -32,7 +32,7 @@ public class GameTimer extends Timer {
      */
     public void onDeath(Runnable death) {
         this.stop();
-        Timer delay = new Timer(1000, e -> {
+        Timer delay = new Timer(5000, e -> {
             death.run();
         });
         delay.setRepeats(false);
