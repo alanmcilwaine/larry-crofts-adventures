@@ -126,9 +126,14 @@ public class App extends AppFrame implements AppInterface{
      */
     private void checkDeath() {
         Player player = domain.getGameState().player();
-        if (player.isDead() || time <= 0) {
-            tick.onDeath(() -> loadLevel(domain.getGameState().level()));
+        if (!player.isDead() && time > 0) {
+            return;
         }
+        tick.onDeath(() -> {
+            if (domain.getGameState().player().isDead()) { // We re-check if the player is dead because they can undo.
+                loadLevel(domain.getGameState().level());
+            }
+        });
     }
 
     /**
