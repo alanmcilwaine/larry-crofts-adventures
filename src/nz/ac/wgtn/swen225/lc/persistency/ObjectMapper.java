@@ -12,6 +12,10 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.*;
 
+/**
+ * Does all the serialization and deserialization of the game objects.
+ * @author zhoudavi1 300652444
+ */
 public class ObjectMapper {
     static final Map<String, String> gameItems = new HashMap<>();
     private static final Map<String, Function<ItemColor, Item>> itemConstructors = new HashMap<>(); 
@@ -52,7 +56,7 @@ public class ObjectMapper {
 
     /**
      * Saves the given GameBoard object as a JSON format to a file.
-     * @author zhoudavi1 300652444
+     * 
      * @param level The GameBoard object to be saved.
      * @return String The JSON string to be saved.
      * @throws IOException
@@ -133,7 +137,7 @@ public class ObjectMapper {
 
     /**
      * Saves the given list of actions as a JSON format to a file.
-     * @author zhoudavi1 300652444
+     * 
      * @param actions The list of actions to be saved.
      * @return String The JSON string to be saved.
      * @throws IOException
@@ -166,7 +170,6 @@ public class ObjectMapper {
     /**
      * Read the given JSON string and return a GameBoard object.
      *
-     * @author zhoudavi1 300652444
      * @param json The string to be converted to a GameState object.
      * @return GameBoard The GameBoard made from the JSON string.
      */
@@ -317,7 +320,6 @@ public class ObjectMapper {
     /**
      * Read the given list of actions as a JSON format from a file.
      *
-     * @author zhoudavi1 300652444
      * @param json The string to be converted to a list of actions.
      * @return List<Action> The list of actions to be loaded.
      */
@@ -338,7 +340,7 @@ public class ObjectMapper {
     
     /**
      * Convert an item to a string code for saving to JSON.
-     * @author zhoudavi1 300652444
+     *
      * @param item The item to be converted.
      * @return String The string code for the item.
      */
@@ -375,7 +377,7 @@ public class ObjectMapper {
     
     /**
      * Get the color code for an item color.
-     * @author zhoudavi1 300652444
+     * 
      * @param color The color to get the code for.
      * @return String The color code.
      */
@@ -390,7 +392,7 @@ public class ObjectMapper {
     
     /**
      * Create an item from a string code for loading from JSON.
-     * @author zhoudavi1 300652444
+     * 
      * @param code The string code to be converted.
      * @return Item The item created from the code.
      */
@@ -438,7 +440,7 @@ public class ObjectMapper {
 
     /**
      * Create a default Info item for the board.
-     * @author zhoudavi1 300652444
+     * 
      * @return Item The Info item.
      */
     private Item createInfo() {
@@ -447,7 +449,7 @@ public class ObjectMapper {
 
     /**
      * Create a location from a string code for loading from JSON.
-     * @author zhoudavi1 300652444
+     * 
      * @param location The string code to be converted.
      * @return Location The location created from the code.
      */
@@ -460,7 +462,7 @@ public class ObjectMapper {
 
     /**
      * Create a direction from a string code for loading from JSON.
-     * @author zhoudavi1 300652444
+     * 
      * @param direction The string code to be converted.
      * @return Direction The direction created from the code.
      */
@@ -478,7 +480,7 @@ public class ObjectMapper {
     /**
      * 2D representation of the game board.
      * Convert the board of Tile<Item> to List<List<String>>.
-     * @author zhoudavi1 300652444
+     * 
      * @param level The level to be converted.
      * @return List<List<String>> The converted level.
      */

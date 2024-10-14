@@ -20,6 +20,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Test class for Persistency class
+ * @author zhoudavi1 300652444
+ */
 public class PersistencyTest {
     private GameBoard originalState;
 
@@ -30,7 +34,6 @@ public class PersistencyTest {
 
     /**
      * Create a sample game state for testing
-     * @autor zhoudavi1 300652444
      * @return GameBoard
      */
     private static GameBoard createSampleGameState() {
@@ -69,7 +72,6 @@ public class PersistencyTest {
 
     /**
      * Test reading JSON from a file
-     * @autor zhoudavi1 300652444
      * @throws IOException
      */
     @Test
@@ -116,7 +118,6 @@ public class PersistencyTest {
 
     /**
      * Test saving and loading a GameState
-     * @autor zhoudavi1 300652444
      * @throws IOException
      */
     @Test
@@ -155,7 +156,6 @@ public class PersistencyTest {
 
     /**
      * Test making a filename unique
-     * @autor zhoudavi1 300652444
      */
     @Test
     public void testUniqueFilename() {
@@ -175,7 +175,6 @@ public class PersistencyTest {
 
     /**
      * Test saving and loading commands
-     * @autor zhoudavi1 300652444
      */
     @Test
     public void testSaveCommands(){
@@ -202,7 +201,6 @@ public class PersistencyTest {
     }
     /**
      * Test saving commands in Persistency
-     * @autor zhoudavi1 300652444
      */
     @Test
     public void testSaveCommandsInPersistency(){
@@ -217,7 +215,6 @@ public class PersistencyTest {
 
     /**
      * Test loading commands
-     * @autor zhoudavi1 300652444
      */
     @Test
     public void loadRecording(){
@@ -235,7 +232,6 @@ public class PersistencyTest {
 
     /**
      * Test saving progress
-     * @autor zhoudavi1 300652444
      */
     @Test
     public void testSaveProgress(){
@@ -246,7 +242,6 @@ public class PersistencyTest {
 
     /**
      * Test load from file path
-     * @autor zhoudavi1 300652444
      */
     @Test
     public void testLoadFromFile(){

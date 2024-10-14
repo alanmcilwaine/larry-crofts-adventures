@@ -44,14 +44,10 @@ public class MockRecorder implements Recorder {
     }
 
     @Override
-    public Action pause() {
-        return null;
-    }
+    public void pause() {}
 
     @Override
-    public Action takeControl() {
-        return null;
-    }
+    public void takeControl() {}
 
     @Override
     public boolean canUndo() {
