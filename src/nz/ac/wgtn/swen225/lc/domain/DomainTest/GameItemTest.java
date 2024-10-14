@@ -341,7 +341,8 @@ public class GameItemTest {
         gameboard.action(Direction.UP);
 
         // check if doors beside it are open
-        assert gameboard.getBoard().get(3).get(3).item instanceof UnLockedDoor : gameboard.getBoard().get(3).get(3).item.toString();
+        assert gameboard.getBoard().get(3).get(3).item instanceof UnLockedDoor :
+                gameboard.getBoard().get(3).get(3).item.toString();
     }
 
     @Test
@@ -350,6 +351,6 @@ public class GameItemTest {
         var tile = new Tile<>(wall, testLocation);
         var player = Mock.getPlayer();
 
-        assertThrows(IllegalStateException.class, ()->wall.onTouch(player,tile));
+        assertThrows(IllegalStateException.class, () -> wall.onTouch(player, tile));
     }
 }

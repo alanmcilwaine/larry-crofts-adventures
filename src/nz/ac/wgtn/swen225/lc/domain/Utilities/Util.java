@@ -24,7 +24,8 @@ public class Util {
 
     public static void checkNegative(String property, int number) {
         if (number < 0) {
-            throw new IllegalArgumentException(String.format("%s can't be negative, currently is %s", property, number));
+            throw new IllegalArgumentException(String.format("%s can't be negative, currently is " +
+                    "%s", property, number));
         }
     }
 

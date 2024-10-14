@@ -10,14 +10,18 @@ import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
  */
 public class Tube implements Item {
 
-  @Override
-  public boolean blockActor(Actor actor) { return true; }
+    @Override
+    public boolean blockActor(Actor actor) {
+        return true;
+    }
 
-  @Override
-  public String toString() { return "Tube"; }
+    @Override
+    public String toString() {
+        return "Tube";
+    }
 
-  @Override
-  public Item makeNew() {
-    return new Tube();
-  }
+    @Override
+    public Item makeNew() {
+        return new Tube();
+    }
 }

@@ -1,11 +1,10 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
-import nz.ac.wgtn.swen225.lc.domain.GameActor.KillerRobot;
-import nz.ac.wgtn.swen225.lc.domain.GameActor.MovableBox;
-import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
-import nz.ac.wgtn.swen225.lc.domain.GameActor.Robot;
-import nz.ac.wgtn.swen225.lc.domain.GameActor.Crate;
-import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
+import nz.ac.wgtn.swen225.lc.domain.GameActor.*;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.Button;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.Key;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserSource;
+import nz.ac.wgtn.swen225.lc.domain.GameItem.LockedExit;
 import nz.ac.wgtn.swen225.lc.domain.Interface.GameStateObserver;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
@@ -22,6 +21,7 @@ import java.util.logging.Logger;
 
 /**
  * The main game board
+ *
  * @author Yee Li, Maria Louisa Carla Parinas
  */
 public class GameBoard {
@@ -90,6 +90,7 @@ public class GameBoard {
 
     /**
      * Makes the move on the player
+     *
      * @param direction direction player will take
      * @param gameBoard current gameboard
      */
@@ -107,6 +108,7 @@ public class GameBoard {
 
     /**
      * Adds a laser source in the map
+     *
      * @param ls laser source to be added
      */
     public void addLaserSource(LaserSource ls) {
@@ -139,7 +141,7 @@ public class GameBoard {
     public Tile<Item> itemOnTile(Location target) {
         return board.stream()
                 .flatMap(Collection::stream)
-                .filter(x->x.location.equals(target))
+                .filter(x -> x.location.equals(target))
                 .toList()
                 .getFirst();
     }
@@ -155,9 +157,11 @@ public class GameBoard {
     private List<Tile<Item>> surroundingTilesAt(Location l) {
         List<Tile<Item>> ls = new ArrayList<>();
 
-        for(int x = l.x() - 1; x <= l.x() + 1; x++) {
-            for(int y = l.y() - 1; y <= l.y() + 1; y++) {
-                if (locationisValid(new Location(x, y))) { ls.add(board.get(y).get(x)); }
+        for (int x = l.x() - 1; x <= l.x() + 1; x++) {
+            for (int y = l.y() - 1; y <= l.y() + 1; y++) {
+                if (locationisValid(new Location(x, y))) {
+                    ls.add(board.get(y).get(x));
+                }
             }
         }
         return ls;
@@ -168,6 +172,11 @@ public class GameBoard {
                 location.y() >= 0 && location.y() < getHeight();
     }
 
+    public MovableBox findBoxAtLocation(Location loc) {
+        return boxes.stream().filter(b -> b.getLocation().equals(loc))
+                .findFirst().orElse(null);
+    }
+
     /**
      * Gives a deep copy of a given gameState
      *
@@ -175,32 +184,32 @@ public class GameBoard {
      */
     public GameBoard copyOf() {
         List<List<Tile<Item>>> newBoard = board.stream().map(x -> x.stream()
-                                                            .map(y -> new Tile<>(y.item.makeNew(), y.location))
-                                                            .toList())
-                                                            .toList();
+                        .map(y -> new Tile<>(y.item.makeNew(), y.location))
+                        .toList())
+                .toList();
 
 
         // might have more types of robots in the future, could change this
         List<Robot> newRobots = robots.stream()
-                                        .map(r -> (Robot) new KillerRobot(r.getLocation().x(), r.getLocation().y()))
-                                        .toList();
+                .map(r -> (Robot) new KillerRobot(r.getLocation().x(), r.getLocation().y()))
+                .toList();
 
         List<MovableBox> newBoxes = boxes.stream()
-                                            .map(b -> b instanceof Crate ?
-                                                    new Crate(b.getLocation().x(), b.getLocation().y()) :
-                                                    new MovableBox(b.getLocation().x(), b.getLocation().y()))
-                                            .toList();
+                .map(b -> b instanceof Crate ?
+                        new Crate(b.getLocation().x(), b.getLocation().y()) :
+                        new MovableBox(b.getLocation().x(), b.getLocation().y()))
+                .toList();
 
         List<LaserSource> newLasers = laserSources.stream()
                 .map(ls -> (LaserSource) ls.makeNew()).toList();
 
         // make new board
         return new GameBoardBuilder().addBoard(newBoard).addBoardSize(width, height)
-                                    .addLevel(level).addPlayer(new Player(player.getLocation()))
-                                    .addRobots(newRobots).addBoxes(newBoxes).addLaserSources(newLasers)
-                                    .addTimeLeft(timeLeft)
-                                    .addTreasure(totalTreasure)
-                                    .build();
+                .addLevel(level).addPlayer(new Player(player.getLocation()))
+                .addRobots(newRobots).addBoxes(newBoxes).addLaserSources(newLasers)
+                .addTimeLeft(timeLeft)
+                .addTreasure(totalTreasure)
+                .build();
     }
 
     public int keysLeft() {
@@ -213,7 +222,8 @@ public class GameBoard {
      * @return GameState
      */
     public GameState getGameState() {
-        return new GameState(board, player, robots, boxes, laserSources, timeLeft, level, width, height, totalTreasure);
+        return new GameState(board, player, robots, boxes, laserSources, timeLeft, level, width,
+                height, totalTreasure);
     }
 
     private static void attach(GameStateObserver ob) {
