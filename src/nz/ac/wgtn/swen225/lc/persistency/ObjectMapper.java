@@ -532,7 +532,7 @@ public class ObjectMapper {
      * @return String The string representation of the path
      */
     public String pathDefinining (ActorPath path){
-        if(path == ActorPath.UPDOWN){
+        if(path.getDir1() == Direction.UP){
             return "1";
         } else {
             return "0";
@@ -545,9 +545,9 @@ public class ObjectMapper {
      */
     public ActorPath pathDefinining (String path){
         if(path.equals("1")){
-            return ActorPath.UPDOWN;
+            return new ActorPath(1);
         } else {
-            return ActorPath.LEFTRIGHT;
+            return new ActorPath(0);
         }
     }
 
