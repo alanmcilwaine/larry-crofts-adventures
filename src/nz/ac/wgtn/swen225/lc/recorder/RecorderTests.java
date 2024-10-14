@@ -1,10 +1,4 @@
-/**
- * Holds manual tests that make sure individual methods are working as well as random tests,
- * that randomize operations and make sure nothing breaks.
- *
- * @author John Rais raisjohn@ecs.vuw.ac.nz
- * @version 2.5
- */
+
 package nz.ac.wgtn.swen225.lc.recorder;
 
 import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
@@ -19,6 +13,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Holds manual tests that make sure individual methods are working as well as random tests,
+ * that randomize operations and make sure nothing breaks.
+ *
+ * @author John Rais 300654627
+ * @version 2.5
+ */
 public class RecorderTests {
 
 
@@ -146,7 +147,6 @@ public class RecorderTests {
         System.out.println("_______________SIMPLE__________");
         MockApp app = mockApp();
         GameRecorder recorder = mockRecorder(app);
-        int com = 1;
         recorder.setCommands(List.of(Command.Up));
 
         String[][] s1 = deepclone(app.state);
@@ -293,7 +293,7 @@ public class RecorderTests {
                 .toList();
     }
     static MockApp mockApp(){
-        return new MockApp(1, 2, new String[][]{{"_","_","_"},
+        return new MockApp(new String[][]{{"_","_","_"},
                                           {"_","_","_"},
                                           {"_","P","_"}});
     }
@@ -302,22 +302,18 @@ public class RecorderTests {
      * A totally fake App, that gives us all the functionality we need for testing.
      */
     static class MockApp implements AppInterface{
-        MockApp(int x, int y, String[][] in){
+        MockApp(String[][] in){
             init = in;
             state = deepclone(in);
-            graphics = deepclone(in);
-            xp = x; yp = y;
-            xpo = x; ypo = y;
+            xp = 1; yp = 2;
+            xpo = 1; ypo = 2;
         }
         String[][] state;
-        String[][] init;
-        int xpo, ypo, xp, yp;
-        String[][] graphics;
-        String log = "";
+        final String[][] init;
+        final int xpo, ypo;
+        int xp, yp;
         @Override
         public void updateGraphics() {
-            graphics = state;
-            log += "updatedGraphics.\n";
         }
 
 
@@ -373,7 +369,6 @@ public class RecorderTests {
             public Action undo(){System.out.println("UNDO");_undo(); return null;}
             public Action redo(){System.out.println("REDO");_redo(); return null;}
             public void tick(Command commandToSave){super.tick(commandToSave); app1.giveInput(commandToSave);}
-            public Action takeControl(){System.out.println("TAKE CONTROL");_takeControl(); return null;}
         };
     }
     /**
@@ -400,9 +395,7 @@ public class RecorderTests {
         String[][] nw = new String[array.length][array[0].length];
 
         for(int y = 0; y < array.length; y++){
-            for(int x = 0; x < array[0].length; x++){
-                nw[y][x] = array[y][x];
-            }
+            System.arraycopy(array[y], 0, nw[y], 0, array[0].length);
         }
         return nw;
     }
