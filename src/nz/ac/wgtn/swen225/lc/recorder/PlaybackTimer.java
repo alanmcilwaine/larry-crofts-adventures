@@ -13,7 +13,7 @@ import javax.swing.*;
  * </pre>
  *
  *
- * @author John Rais 300654627
+ * @author John Rais raisjohn@ecs.vuw.ac.nz
  * @version 1.0
  */
 public class PlaybackTimer extends Timer {
