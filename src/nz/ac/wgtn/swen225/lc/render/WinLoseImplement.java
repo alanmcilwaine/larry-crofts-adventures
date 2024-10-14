@@ -56,6 +56,7 @@ public class WinLoseImplement {
      * @throws RuntimeException if the music file cannot be found or played.
      */
     public static void playMusic(String name) {
+        if(BackgroundSoundImplement.isMuted) return;
         try {
             File wavFile = new File("SoundEffect/" + name + ".wav");
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(wavFile);
@@ -101,11 +102,9 @@ public class WinLoseImplement {
      * @param mute to decide whether mute the win/lose music
      */
     public static void mute(boolean mute){
-        if(mute){
+        if(clip != null && mute){
             clip.stop();
         }
-        else{
-            clip.start();
-        }
+
     }
 }
