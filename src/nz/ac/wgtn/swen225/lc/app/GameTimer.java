@@ -9,8 +9,15 @@ import javax.swing.*;
  * @author Alan McIlwaine 300653905
  */
 public class GameTimer extends Timer {
+    public static int TICK_RATE = 50; // Call the tick every 50ms.
+    public static final int INPUT_WAIT = GameTimer.TICK_RATE * 3; // Do a movement every 3 ticks.
+    public static double stageCountdown = 0;
+
     public GameTimer(Runnable tick) {
-        super(App.TICK_RATE, (unused) -> tick.run());
+        super(App.TICK_RATE, (unused) -> {
+            GameTimer.stageCountdown -= ((double) TICK_RATE / 1000);
+            tick.run();
+        });
     }
 
     /**
@@ -38,4 +45,6 @@ public class GameTimer extends Timer {
         delay.setRepeats(false);
         delay.start();
     }
+
+
 }

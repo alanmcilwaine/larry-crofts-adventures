@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app.UI.Containers;
 
 import nz.ac.wgtn.swen225.lc.app.App;
+import nz.ac.wgtn.swen225.lc.app.Inputs.Controller;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,23 +17,24 @@ public class GamePanel extends JPanel{
     /**
      *  Create a new JPanel with 600x600 size with the default layout manager.
      */
-    public GamePanel(App a) {
+    public GamePanel(App app) {
+        assert app.controller() != null;
         setPreferredSize(new Dimension(App.WIDTH/3*2, App.HEIGHT)); // 600x600
         setBackground(Color.BLACK);
         setFocusable(true);                // Without this keyListener won't work
-        addKeyListener(App.controller);
-        this.app = a;
+        addKeyListener(app.controller());
+        this.app = app;
     }
 
     /**
      * Calls to Renderer. Overriding to stop flickering when rendering.
-     * https://stackoverflow.com/questions/54814269/strange-jpanel-background-glitching
+     * <a href="https://stackoverflow.com/questions/54814269/strange-jpanel-background-glitching">...</a>
      * @param g the <code>Graphics</code> object to protect
      */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        app.ui.repaint();
-        app.render.drawImages(app.domain.getGameState(), g);
+        app.ui().repaint();
+        app.render().drawImages(app.domain().getGameState(), g);
     }
 }

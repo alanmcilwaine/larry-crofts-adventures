@@ -23,27 +23,27 @@ public class Controller extends Keys{
 
     /**
      * Maps the default key presses to their relevant action in the game. This version is used in a GUI app.
-     * @param a App to call methods specific to the GUI.
+     * @param app App to call methods specific to the GUI.
      */
-    public Controller(App a) {
+    public Controller(App app) {
         this();
-        setAction(Action.Pause, () -> a.pauseTimer(true));
-        setAction(Action.Resume, () -> a.pauseTimer(false));
+        setAction(Action.Pause, () -> app.pauseTimer(true));
+        setAction(Action.Resume, () -> app.pauseTimer(false));
         setAction(Action.Level1, () -> {
-            a.loadLevel(1);
+            app.gameLoader().loadLevel(1);
         });
         setAction(Action.Level2, () -> {
-            a.loadLevel(2);
+            app.gameLoader().loadLevel(2);
         });
         setAction(Action.LoadSave, () -> {
-            String path = a.openFile();
+            String path = app.openFile();
             if (!path.isEmpty()){
-                a.domain = Persistency.loadwithFilePath(path);
-                a.initialDomain = a.domain.copyOf();
+                app.domain(Persistency.loadwithFilePath(path));
+                app.initialDomain(app.domain().copyOf());
             }
         });
         setAction(Action.ExitSave, () -> {
-           Persistency.saveProgress(a.domain);
+           Persistency.saveProgress(app.domain());
            System.exit(0);
         });
         setAction(Action.ExitNoSave, () -> System.exit(0));

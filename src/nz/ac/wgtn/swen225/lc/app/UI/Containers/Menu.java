@@ -42,11 +42,11 @@ public class Menu extends JMenuBar {
         load.addActionListener((unused) -> {
             String path = app.openFile();
             if (!path.isEmpty()){
-                app.loadLevel(Persistency.loadwithFilePath(path));
+                app.gameLoader().loadLevel(Persistency.loadwithFilePath(path));
             }
         });
         save.addActionListener((unused) -> {
-            Persistency.saveProgress(app.domain);
+            Persistency.saveProgress(app.domain());
         });
         exit.addActionListener((unused) -> System.exit(1));
         List.of(load, save, exit).forEach(file::add);
@@ -59,11 +59,11 @@ public class Menu extends JMenuBar {
     private void input(App app){
         JMenuItem saveInputs = new JMenuItem("Save Inputs");
         JMenuItem loadInputs = new JMenuItem("Load Inputs");
-        saveInputs.addActionListener((unused) -> Persistency.saveCommands(app.recorder.getCommands(), app.domain.getGameState().level()));
+        saveInputs.addActionListener((unused) -> Persistency.saveCommands(app.recorder().getCommands(), app.domain().getGameState().level()));
         loadInputs.addActionListener((unused) -> {
             String filename = app.openFile();
             if (!filename.isEmpty()){
-                app.loadRecording(Persistency.loadRecording(app.recorder, filename));
+                app.gameLoader().loadRecording(Persistency.loadRecording(app.recorder(), filename));
                 app.pauseTimer(true);
             }
         });

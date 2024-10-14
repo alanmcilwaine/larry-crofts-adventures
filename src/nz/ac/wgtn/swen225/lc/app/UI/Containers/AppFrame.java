@@ -10,6 +10,10 @@ import nz.ac.wgtn.swen225.lc.app.App;
  * @author Alan McIlwaine 300653905
  */
 public class AppFrame extends JFrame{
+    // Window Dimensions
+    public static final int WIDTH = 900;
+    public static final int HEIGHT = 600;
+
     public AppFrame(){
         super("Larry Crofts Adventures");
         setSize(App.WIDTH, App.HEIGHT);

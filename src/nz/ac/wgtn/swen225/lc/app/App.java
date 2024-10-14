@@ -3,8 +3,12 @@ package nz.ac.wgtn.swen225.lc.app;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
+import nz.ac.wgtn.swen225.lc.app.Events.Death;
+import nz.ac.wgtn.swen225.lc.app.Events.GameEvent;
+import nz.ac.wgtn.swen225.lc.app.Events.NextLevel;
 import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
 import nz.ac.wgtn.swen225.lc.app.Inputs.Controller;
 import nz.ac.wgtn.swen225.lc.app.UI.Containers.AppFrame;
@@ -25,68 +29,50 @@ import nz.ac.wgtn.swen225.lc.render.InfoImplement;
  * @author Alan McIlwaine 300653905
  */
 public class App extends AppFrame implements AppInterface{
-    // Window is made up of two main panels
-    public GamePanel game; //Don't generate here as controller could be generated in constructor.
-    public UIPanel ui;
-    private Menu menu = new Menu(this);
-
-    // Window Dimensions
-    public static final int WIDTH = 900;
-    public static final int HEIGHT = 600;
+    // Window is made up of two main panels and a menu.
+    private final GamePanel game;
+    private final UIPanel ui;
+    private final Menu menu = new Menu(this);
 
     // Tick rate
-    public static final int TICK_RATE = 50;
-    public static final int INPUT_WAIT = App.TICK_RATE * 3; // move every 3 ticks.
-    public static double time;
+    public static double stageCountdown;
 
     // Game Information
-    public static Controller controller;
-    public Recorder recorder = Recorder.create(this); // Created earlier so UI can hook up buttons to recorder.
-    public GameBoard domain;
-    public GameBoard initialDomain;
-    public ImageImplement render;
-    public GameTimer tick = new GameTimer(this::tick);
+    private final Controller controller;
+    private final Recorder recorder = Recorder.create(this); // Created earlier so UI can hook up buttons to recorder.
+    private final GameTimer timer = new GameTimer(this::tick);
+    private final List<GameEvent> eventsOnTick = List.of(new NextLevel(), new Death());
+    private final GameLoader gameLoader = new GameLoader(this);
+    private GameBoard domain;
+    private GameBoard initialDomain;
+    private ImageImplement render;
 
     /**
      * App()
-     * Loads the default UI and starts the game loop.
+     * Loads the game with the default key controller.
      */
     public App(){
-        assert SwingUtilities.isEventDispatchThread();
-        controller = new Controller(this);
-        game = makePanel();
-        ui = new UIPanel(this);
-        setupUI();
-        startTick(loadSave());
+        this(new Controller());
     }
 
     /**
-     * Lets the FUZZ make their own controller.
+     * Controls the start of the game. Creates the UI and starts the game.
      * @param c Controller for user inputs
      */
     public App(Controller c) {
         assert SwingUtilities.isEventDispatchThread();
-        controller = c;
+        controller = c; // Must be before game as game depends on the controller.
         game = makePanel();
         ui = new UIPanel(this);
-        setupUI();
-        startTick(loadSave());
+        initialise();
+        startTick(gameLoader.loadSave());
     }
 
     /**
-     * makeGame()
-     * Builds the game panel, this is here so users can override the paintComponent
-     */
-    public GamePanel makePanel() {
-        return new GamePanel(this);
-    }
-
-    /**
-     * setupUI()
      * Sets up the base UI for the game inside a frame and displays.
      * Includes configs for UI and Game panel.
      */
-    private void setupUI(){
+    private void initialise(){
         add(game, BorderLayout.CENTER);
         add(ui, BorderLayout.EAST);
         setJMenuBar(menu);
@@ -95,79 +81,11 @@ public class App extends AppFrame implements AppInterface{
     }
 
     /**
-     * startTick()
-     * Starts the main update loop for the program. Packages Domain, Renderer and Recorder should be used here.
+     * Builds the game panel, this is here so users can override the paintComponent
+     * to not draw the game.
      */
-    private void startTick(GameBoard b){
-        if (render != null) {
-            InfoImplement.unvisiableTextArea(); // Set info areas to invisible. Or else still visible in memory.
-        }
-        render = ImageImplement.getImageImplement(game);
-        domain = b;
-        initialDomain = domain.copyOf();
-        time = domain.getGameState().timeLeft();
-        game.requestFocusInWindow();
-        tick.start();
-    }
-
-    /**
-     * Checks if the player is on the next level tile. If it is, we will pause the game
-     * and update domain to the next level.
-     */
-    private void checkNextLevel() {
-        Player player = domain.getGameState().player();
-        if (player.isNextLevel()) {
-            tick.onExitTile(() -> loadLevel(domain.getGameState().level() + 1));
-        }
-    }
-
-    /**
-     * Checks if the player has died. If it has, we respawn at the new level.
-     */
-    private void checkDeath() {
-        Player player = domain.getGameState().player();
-        if (!player.isDead() && time > 0) {
-            return;
-        }
-        tick.onDeath(() -> {
-            if (domain.getGameState().player().isDead()) { // We re-check if the player is dead because they can undo.
-                loadLevel(domain.getGameState().level());
-            }
-        });
-    }
-
-    /**
-     * If the player has started making moves, we want to remove the list of redo's.
-     * @param input If not Command.None, then the player has started making moves.
-     */
-    private void checkRemoveRedo(Command input) {
-        if (input == Command.None) {
-            return;
-        }
-        recorder.takeControl();
-    }
-
-    /**
-     * Checks if a save exists and loads that. Otherwise, loads level 1.
-     * @return A GameBoard of the save or level.
-     */
-    private GameBoard loadSave() {
-        // Already a saved game.
-        String path = Persistency.path + "save.json";
-        File save = new File(path);
-        if (save.exists() && !save.isDirectory()){
-            return Persistency.loadwithFilePath(path);
-        } else {
-            return Persistency.loadGameBoard(1);
-        }
-    }
-
-    /**
-     * Mutes the game given the state.
-     * @param state True to mute, false to unmute.
-     */
-    public void muteGame(boolean state) {
-        BackgroundSoundImplement.muteMusic(state);
+    public GamePanel makePanel() {
+        return new GamePanel(this);
     }
 
     /**
@@ -181,10 +99,26 @@ public class App extends AppFrame implements AppInterface{
         Command input = Command.None;
         if (controller.movementWaitTime <= 0 && controller.currentCommand() != Command.None) {
             input = controller.currentCommand();
-            controller.movementWaitTime = INPUT_WAIT;
+            controller.movementWaitTime = GameTimer.INPUT_WAIT;
         }
-        controller.movementWaitTime -= TICK_RATE;
+        controller.movementWaitTime -= GameTimer.TICK_RATE;
         return input;
+    }
+
+    /**
+     * Starts the main update loop for the program.
+     * Packages Domain, Renderer and Recorder should be used here.
+     */
+    public void startTick(GameBoard b){
+        if (render != null) {
+            InfoImplement.unvisiableTextArea(); // Set info areas to invisible. Or else still visible in memory.
+        }
+        render = ImageImplement.getImageImplement(game);
+        domain = b;
+        initialDomain = domain.copyOf();
+        GameTimer.stageCountdown = domain.getGameState().timeLeft();
+        game.requestFocusInWindow();
+        timer.start();
     }
 
     /**
@@ -192,47 +126,14 @@ public class App extends AppFrame implements AppInterface{
      * Code inside tick() is called every TICK_RATE. This is what ticks the rest of the game.
      */
     public void tick(){
-        time -= ((double) TICK_RATE / 1000);
-
         Command input = chooseInput();
+        if (!input.equals(Command.None)) {
+            recorder.takeControl(); // Remove the redo if we are moving.
+        }
         recorder.tick(input);
         giveInput(input);
         updateGraphics();
-
-        checkRemoveRedo(input);
-        checkNextLevel();
-        checkDeath();
-    }
-
-    /**
-     * Goes to the next level in the game.
-     * @param level The level we go to.
-     */
-    public void loadLevel(int level) {
-        File checkExists = new File(Persistency.path + "level" + level + ".json");
-        if (!checkExists.exists()) {
-            startTick(Persistency.loadGameBoard(1));
-            return;
-        }
-        recorder.setCommands(List.of());
-        startTick(Persistency.loadGameBoard(level));
-    }
-
-    /**
-     * Loads the given level from a path.
-     * @param b The level board.
-     */
-    public void loadLevel(GameBoard b) {
-        recorder.setCommands(List.of());
-        startTick(b);
-    }
-
-    /**
-     * Loads a recording. Doesn't clear the list of commands that Persistency sets up.
-     * @param b The level board.
-     */
-    public void loadRecording(GameBoard b) {
-        startTick(b);
+        eventsOnTick.forEach(e -> e.check(this));
     }
 
     /**
@@ -244,8 +145,17 @@ public class App extends AppFrame implements AppInterface{
         Persistency.saveCommands(commands, level);
     }
 
-    // OVERRIDES-------------------------
+    /**
+     * Mutes the game given the state.
+     * @param state True to mute, false to unmute.
+     */
+    public static void muteGame(boolean state) {
+        BackgroundSoundImplement.muteMusic(state);
+    }
 
+    /*
+    OVERRIDES
+     */
     @Override
     public void updateGraphics(){
         ui.repaint();
@@ -265,9 +175,9 @@ public class App extends AppFrame implements AppInterface{
     @Override
     public void pauseTimer(boolean state) {
         if (state) {
-            tick.stop();
+            timer.stop();
         } else {
-            tick.start();
+            timer.start();
             game.requestFocusInWindow();
         }
     }
@@ -290,4 +200,46 @@ public class App extends AppFrame implements AppInterface{
         return "";
     }
 
+    /**
+     * GETTERS
+     */
+    public UIPanel ui() {
+        return ui;
+    }
+    public GamePanel game() {
+        return game;
+    }
+    public GameBoard domain(){
+        return domain;
+    }
+    public GameBoard initialDomain(){
+        return initialDomain;
+    }
+    public Controller controller() {
+        return controller;
+    }
+    public Recorder recorder() {
+        return recorder;
+    }
+    public GameTimer timer() {
+        return timer;
+    }
+    public ImageImplement render() {
+        return render;
+    }
+    public GameLoader gameLoader() {
+        return gameLoader;
+    }
+
+    /**
+     * SETTERS
+     */
+    public void domain(GameBoard domain) {
+        assert domain != null;
+        this.domain = domain;
+    }
+    public void initialDomain(GameBoard domain) {
+        assert domain != null;
+        this.initialDomain = domain;
+    }
 }
