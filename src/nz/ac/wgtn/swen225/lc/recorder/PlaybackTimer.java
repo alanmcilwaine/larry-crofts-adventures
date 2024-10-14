@@ -23,7 +23,7 @@ public class PlaybackTimer extends Timer {
      * @param r the runnable you want ot run every tick
      */
     PlaybackTimer(Runnable r){
-        super(AppInterface.TICK_RATE, (unused) -> r.run());
+        super(GameRecorder.tickTime, (unused) -> r.run());
     }
 
 }
