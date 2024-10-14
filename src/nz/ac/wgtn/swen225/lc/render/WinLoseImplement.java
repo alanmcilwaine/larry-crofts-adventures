@@ -96,4 +96,16 @@ public class WinLoseImplement {
             loseMusicPlayed = false;
         }
     }
+
+    /** mute and unmute the win/lose music
+     * @param mute to decide whether mute the win/lose music
+     */
+    public static void mute(boolean mute){
+        if(mute){
+            clip.stop();
+        }
+        else{
+            clip.start();
+        }
+    }
 }
