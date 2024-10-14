@@ -23,6 +23,7 @@ import java.util.List;
 public class Fuzz {
     //Should we draw the game every time it ticks (will significantly slow down the tests)
     private static final boolean draw = true;
+    private static final boolean mute = true;
     //Max time the tests will run for
     private static final int TEST_TIME = 60;
     /**
@@ -87,6 +88,7 @@ public class Fuzz {
              * Set up and load the correct level for this test.
              */
             {
+                muteGame(mute);
                 if(level != 1) {
                     domain = Persistency.loadGameBoard(level);
                     initialDomain = domain.copyOf();

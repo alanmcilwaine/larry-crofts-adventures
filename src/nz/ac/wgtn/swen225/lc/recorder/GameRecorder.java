@@ -172,7 +172,6 @@ class GameRecorder implements Recorder{
     @Override
     public void pause() {
         timer.stop();
-        app.pauseTimer(true);
     }
     @Override
     public boolean canUndo() {return !completed.isEmpty();}
