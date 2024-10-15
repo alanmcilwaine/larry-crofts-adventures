@@ -18,8 +18,8 @@ import java.io.IOException;
  */
 public class WinLoseImplement {
     static Clip clip;
-    private static boolean winMusicPlayed = false;
-    private static boolean loseMusicPlayed = false;
+    private boolean winMusicPlayed = false;
+    private boolean loseMusicPlayed = false;
 
     /**
      * Draws the win or lose message on the game screen
@@ -56,7 +56,7 @@ public class WinLoseImplement {
      * @throws RuntimeException if the music file cannot be found or played.
      */
     public static void playMusic(String name) {
-        if(BackgroundSoundImplement.isMuted) return;
+        if(BackgroundSoundImplement.getMuted()) return;
         try {
             File wavFile = new File("SoundEffect/" + name + ".wav");
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(wavFile);

@@ -22,7 +22,9 @@ public class BackgroundImplement {
     public BackgroundImplement() {
         File backgroundFolder = new File("BackgroundImage");
         File[] imageFiles = backgroundFolder.listFiles();
-        assert imageFiles != null;
+        if(imageFiles == null){
+            throw new NullPointerException("The background folder is null.");
+        }
         // filter the gif and convert it to ImageIcon
         gifImage = new ImageIcon(Arrays.stream(imageFiles)
                 .filter(f -> f.getName().endsWith(".gif"))
