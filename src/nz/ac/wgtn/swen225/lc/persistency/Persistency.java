@@ -187,9 +187,10 @@ public class Persistency{
             List<Command> actions = mapper.convertJSONtoActions(json);
             r.setCommands(actions);
             //Cut out path
-            filename = filename.substring(filename.lastIndexOf("/") + 1);
+            filename = filename.substring(filename.lastIndexOf("\\") + 1);
             //Split filname to get level number
             String[] parts = filename.split("_");
+            System.out.println(parts[0]);
             int level = Integer.parseInt(parts[0]);
             return loadGameBoard(level);
         } catch (IOException e) {
