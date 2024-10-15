@@ -16,7 +16,7 @@ public class BackgroundSoundImplement {
     /**
      * should mute the music or not
      */
-    public static boolean isMuted = true;
+    private static boolean isMuted = true;
     /**
      * the status decide what kine of music to be implemented
      */
@@ -65,5 +65,14 @@ public class BackgroundSoundImplement {
         else{
             playMusic();
         }
+    }
+
+    /**
+     * get the isMuted filed to check mute/unmute
+     *
+     * @return isMuted to check if the music needs to be muted
+     */
+    public static Boolean getMuted(){
+        return isMuted;
     }
 }
