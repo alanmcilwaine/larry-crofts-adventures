@@ -326,8 +326,7 @@ public class RecorderTests {
                 case Up -> movePlayer(0,-1);
                 case Down -> movePlayer(0,1);
                 case Left -> movePlayer(-1,0);
-                case Right -> movePlayer(1,0);
-                default -> throw new Error("Should never happen");
+                default -> movePlayer(1,0);//Right
             }
         }
         @Override
