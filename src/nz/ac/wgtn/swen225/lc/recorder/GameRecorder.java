@@ -168,6 +168,8 @@ class GameRecorder implements Recorder{
     @Override
     public Action redo() { return RecorderAction.of(this::_redo);}
     @Override
+    public void redoAll() { while(!undone.isEmpty()) redoFrame();}
+    @Override
     public Action play() {return RecorderAction.of(() -> this.timer.start());}
     @Override
     public void pause() {
