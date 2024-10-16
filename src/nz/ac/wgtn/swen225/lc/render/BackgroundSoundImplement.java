@@ -32,7 +32,7 @@ public class BackgroundSoundImplement {
     public static void playMusic() {
         if(isMuted) return;
         try {
-            File wavFile = new File("SoundEffect/" + statusSupplier.get() + ".wav");
+            File wavFile = new File("SoundEffect" + File.separator + statusSupplier.get() + ".wav");
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(wavFile);
             if (clip == null || !clip.isOpen()) {
                 clip = AudioSystem.getClip();
