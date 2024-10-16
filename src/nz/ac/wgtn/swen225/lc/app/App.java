@@ -118,7 +118,7 @@ public class App extends AppFrame implements AppInterface{
         }
         render = ImageImplement.getImageImplement(game);
         domain = b;
-        initialDomain = domain.copyOf();
+        initialDomain = Persistency.loadGameBoard(domain().getGameState().level());
         GameTimer.stageCountdown = domain.getGameState().timeLeft();
         game.requestFocusInWindow();
         timer.start();
