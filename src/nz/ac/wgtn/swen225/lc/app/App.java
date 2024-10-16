@@ -9,6 +9,7 @@ import java.util.List;
 import nz.ac.wgtn.swen225.lc.app.Events.Death;
 import nz.ac.wgtn.swen225.lc.app.Events.GameEvent;
 import nz.ac.wgtn.swen225.lc.app.Events.NextLevel;
+import nz.ac.wgtn.swen225.lc.app.Events.OutOfTime;
 import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
 import nz.ac.wgtn.swen225.lc.app.Inputs.Controller;
 import nz.ac.wgtn.swen225.lc.app.UI.Containers.AppFrame;
@@ -38,7 +39,7 @@ public class App extends AppFrame implements AppInterface{
     private final Controller controller;
     private final Recorder recorder = Recorder.create(this); // Created earlier so UI can hook up buttons to recorder.
     private final GameTimer timer = new GameTimer(this::tick);
-    private final List<GameEvent> eventsOnTick = List.of(new NextLevel(), new Death());
+    private final List<GameEvent> eventsOnTick = List.of(new NextLevel(), new Death(), new OutOfTime());
     private final GameLoader gameLoader = new GameLoader(this);
     private GameBoard domain;
     private GameBoard initialDomain;

@@ -15,10 +15,10 @@ public class Death implements GameEvent {
         if (!player.isDead() && GameTimer.stageCountdown > 0) {
             return;
         }
-        app.timer().onDeath(() -> {
+        app.timer().runEvent(() -> {
             if (app.domain().getGameState().player().isDead()) { // We re-check if the player is dead because they can undo.
                 app.gameLoader().loadLevel(app.domain().getGameState().level());
             }
-        });
+        }, 5000);
     }
 }

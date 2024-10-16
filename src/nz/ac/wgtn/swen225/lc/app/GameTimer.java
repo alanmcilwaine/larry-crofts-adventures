@@ -13,6 +13,10 @@ public class GameTimer extends Timer {
     public static final int INPUT_WAIT = GameTimer.TICK_RATE * 3; // Do a movement every 3 ticks.
     public static double stageCountdown = 0;
 
+    /**
+     * Constructor to build the default timer for the game that calls tick every TICK_RATE ms.
+     * @param tick A pointer to the tick() method in App.
+     */
     public GameTimer(Runnable tick) {
         super(App.TICK_RATE, (unused) -> {
             GameTimer.stageCountdown -= ((double) TICK_RATE / 1000);
@@ -21,29 +25,18 @@ public class GameTimer extends Timer {
     }
 
     /**
-     * Code to run when the player goes on an exit tile.
-     * @param nextLevel Runnable to go to the next level.
+     *
+     * Code to run when the player meets an event.
+     * @param event A runnable that will trigger the effects of the event.
+     * @param delay Delay before the event is triggered in ms.
      */
-    public void onExitTile(Runnable nextLevel){
+    public void runEvent(Runnable event, int delay) {
         this.stop();
-        Timer delay = new Timer(1000, e -> {
-            nextLevel.run();
+        Timer wait = new Timer(delay, e -> {
+            event.run();
         });
-        delay.setRepeats(false);
-        delay.start();
-    }
-
-    /**
-     * Code to run when the player dies
-     * @param death Runnable to restart the level.
-     */
-    public void onDeath(Runnable death) {
-        this.stop();
-        Timer delay = new Timer(5000, e -> {
-            death.run();
-        });
-        delay.setRepeats(false);
-        delay.start();
+        wait.setRepeats(false);
+        wait.start();
     }
 
 
