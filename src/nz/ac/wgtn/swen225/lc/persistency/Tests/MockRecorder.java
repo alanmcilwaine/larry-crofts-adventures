@@ -39,6 +39,9 @@ public class MockRecorder implements Recorder {
     }
 
     @Override
+    public void redoAll() {/*DO NOTHING*/ }
+
+    @Override
     public Action play() {
         return null;
     }

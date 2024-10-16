@@ -39,7 +39,7 @@ public class LaserTest {
         var gameboard = Mock.getGameBoard();
         LaserSource track = new LaserSource(Direction.RIGHT, true, 0, 5);
         gameboard.getBoard().get(0).get(5).item = track;
-        gameboard.addLaserSource(track);
+        gameboard.getGameState().laserSources().add(track);
 
         gameboard.action(Direction.NONE);
 
@@ -58,7 +58,7 @@ public class LaserTest {
         var gameboard = Mock.getGameBoard();
         LaserSource track = new LaserSource(Direction.DOWN, true, 0, 5);
         gameboard.getBoard().get(0).get(5).item = track;
-        gameboard.addLaserSource(track);
+        gameboard.getGameState().laserSources().add(track);
 
         gameboard.action(Direction.NONE);
 
@@ -76,7 +76,7 @@ public class LaserTest {
         var gameboard = Mock.getGameBoard();
         LaserSource track = new LaserSource(Direction.RIGHT, true, 0, 5);
         gameboard.getBoard().get(5).get(0).item = track;
-        gameboard.addLaserSource(track);
+        gameboard.getGameState().laserSources().add(track);
 
         // add mirror
         Mirror mTrack = new Mirror(Orientation.TWO, 5, 5);
@@ -130,7 +130,7 @@ public class LaserTest {
         var player = gameboard.getGameState().player();
         LaserSource track = new LaserSource(Direction.DOWN, true, 5, 5);
         gameboard.getBoard().get(0).get(5).item = track;
-        gameboard.addLaserSource(track);
+        gameboard.getGameState().laserSources().add(track);
 
         gameboard.action(Direction.NONE);
 
@@ -150,7 +150,7 @@ public class LaserTest {
 
         LaserSource ltrack = new LaserSource(Direction.DOWN, true, 5, 5);
         gameboard.getBoard().get(0).get(5).item = ltrack;
-        gameboard.addLaserSource(ltrack);
+        gameboard.getGameState().laserSources().add(ltrack);
 
         assert !track.isPressed;
 

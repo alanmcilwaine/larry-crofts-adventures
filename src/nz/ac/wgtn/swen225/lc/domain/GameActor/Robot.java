@@ -65,7 +65,5 @@ public abstract class Robot implements Actor {
         return "Robot";
     }
 
-    Robot(int x, int y) {
-        this.location = new Location(x, y);
-    }
+    Robot(int x, int y) { this.location = new Location(x, y); }
 }

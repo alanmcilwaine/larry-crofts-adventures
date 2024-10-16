@@ -77,6 +77,11 @@ public interface Recorder {
     Action redo();
 
     /**
+     * Redo all commands that were recorded to go to the final game state
+     */
+    void redoAll();
+
+    /**
      * Supplies an action that can be given to a Button.
      * The internal play logic will be executed when this action is called.
      *

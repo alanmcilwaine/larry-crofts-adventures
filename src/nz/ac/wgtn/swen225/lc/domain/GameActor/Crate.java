@@ -1,5 +1,7 @@
 package nz.ac.wgtn.swen225.lc.domain.GameActor;
 
+import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
+
 import java.util.List;
 
 /**
@@ -26,5 +28,10 @@ public class Crate extends MovableBox {
     @Override
     public String toString() {
         return "Crate";
+    }
+
+    @Override
+    public Actor makeNew() {
+        return new Crate(getLocation().x(), getLocation().y());
     }
 }
