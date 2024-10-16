@@ -16,7 +16,7 @@ import java.util.List;
 public class Menu extends JMenuBar {
     private final JMenu file = new JMenu("File");
     private final JMenu input = new JMenu("Input");
-    private final JMenu help = new JMenu("Help");
+    private final JMenu help = new JMenu("Settings");
 
     /**
      * Constructor to build the Menu elements for the screen.
@@ -36,17 +36,19 @@ public class Menu extends JMenuBar {
      * @param app App to pull the relevant methods to call in the menu.
      */
     private void file(App app){
-        JMenuItem load = new JMenuItem("Load");
-        JMenuItem save = new JMenuItem("Save");
+        JMenuItem load = new JMenuItem("Load Game");
+        JMenuItem save = new JMenuItem("Save Game");
         JMenuItem exit = new JMenuItem("Exit");
         load.addActionListener((unused) -> {
             String path = app.openFile();
             if (!path.isEmpty()){
                 app.gameLoader().loadLevel(Persistency.loadwithFilePath(path));
+                RecorderPanel.label.setText("Loaded Game");
             }
         });
         save.addActionListener((unused) -> {
             Persistency.saveProgress(app.domain());
+            RecorderPanel.label.setText("Saved Game");
         });
         exit.addActionListener((unused) -> System.exit(1));
         List.of(load, save, exit).forEach(file::add);
@@ -59,15 +61,19 @@ public class Menu extends JMenuBar {
     private void input(App app){
         JMenuItem saveInputs = new JMenuItem("Save Inputs");
         JMenuItem loadInputs = new JMenuItem("Load Inputs");
-        saveInputs.addActionListener((unused) -> Persistency.saveCommands(app.recorder().getCommands(), app.domain().getGameState().level()));
+        saveInputs.addActionListener((unused) -> {
+            Persistency.saveCommands(app.recorder().getCommands(), app.domain().getGameState().level());
+            RecorderPanel.label.setText("Saved Inputs");
+        });
         loadInputs.addActionListener((unused) -> {
             String filename = app.openFile();
             if (!filename.isEmpty()){
                 app.gameLoader().loadRecording(Persistency.loadRecording(app.recorder(), filename));
                 app.pauseTimer(true);
+                RecorderPanel.label.setText("Press 'Play'");
             }
         });
-        List.of(saveInputs, loadInputs).forEach(input::add);
+        List.of(loadInputs, saveInputs).forEach(input::add);
     }
 
     /**

@@ -56,5 +56,4 @@ public class InformationPanel extends JPanel{
         keys.setText(String.valueOf(app.domain().keysLeft()));
         super.paintComponent(g);
     }
-
 }
