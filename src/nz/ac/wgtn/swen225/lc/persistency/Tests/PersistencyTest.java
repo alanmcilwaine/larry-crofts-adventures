@@ -235,9 +235,14 @@ public class PersistencyTest {
      */
     @Test
     public void testSaveProgress(){
+        List<Command> actions = new ArrayList<>();
+        actions.add(Command.generate("Right"));
+        actions.add(Command.generate("Left"));
+        actions.add(Command.generate("Down"));
+        actions.add(Command.generate("Down"));
+        actions.add(Command.generate("Up"));
         GameBoard gameBoard = createSampleGameState();
-        Persistency.saveProgress(gameBoard);
-
+        Persistency.saveProgress(actions, 1);
     }
 
     /**

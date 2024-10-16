@@ -43,19 +43,21 @@ public class Persistency{
 
     /**
      * Saves the progress if they exit mid-level.
-     * 
-     * @param level The GameBoard object to be saved.
+     *
+     * @param actions The list of actions to be saved.
+     * @param level The level number to be saved.
      */
-    public static void saveProgress(GameBoard level){
+    public static void saveProgress(List<Command> actions, int level){
+        // save the list of actions to a file
         // convert level to JSON format
         ObjectMapper mapper = new ObjectMapper();
         try {
-            json = mapper.saveLeveltoFile(level);
+            json = mapper.saveCommandstoFile(actions, level);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //Write JSON string to file
-        String filename = path + "save.json";
+        //Call it save + level
+        String filename = path + "save_ " + level + " .json";
         File file = new File(filename);
         try {
             FileWriter fileWriter = new FileWriter(file);
