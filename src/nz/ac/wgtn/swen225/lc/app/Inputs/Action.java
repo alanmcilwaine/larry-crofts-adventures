@@ -19,6 +19,7 @@ public enum Action{
     // Hotkeys.
     Pause(KeyEvent.VK_SPACE, false, "Pause Game"),
     Resume(KeyEvent.VK_ESCAPE, false, "Resume Game"),
+    Level0(KeyEvent.VK_0, true, "Load Level 0"),
     Level1(KeyEvent.VK_1, true, "Load Level 1"),
     Level2(KeyEvent.VK_2, true, "Load Level 2"),
     ExitNoSave(KeyEvent.VK_X, true, "Force Exit"),
