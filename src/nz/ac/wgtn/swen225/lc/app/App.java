@@ -55,7 +55,7 @@ public class App extends AppFrame implements AppInterface{
         game = makePanel();
         ui = new UIPanel(this);
         initialise();
-        startTick(gameLoader.loadSave());
+        gameLoader.loadSave();
     }
 
     /**
@@ -67,7 +67,7 @@ public class App extends AppFrame implements AppInterface{
         game = makePanel();
         ui = new UIPanel(this);
         initialise();
-        startTick(gameLoader.loadSave());
+        gameLoader.loadSave();
     }
 
     /**
@@ -119,7 +119,7 @@ public class App extends AppFrame implements AppInterface{
         render = ImageImplement.getImageImplement(game);
         domain = b;
         initialDomain = Persistency.loadGameBoard(domain().getGameState().level());
-        GameTimer.stageCountdown = domain.getGameState().timeLeft();
+        GameTimer.stageCountdown = b.getGameState().timeLeft(); // Set this in GameLoader once timeLeft is in the save.
         game.requestFocusInWindow();
         timer.start();
     }

@@ -3,6 +3,7 @@ package nz.ac.wgtn.swen225.lc.app.Inputs;
 import java.util.EmptyStackException;
 
 import nz.ac.wgtn.swen225.lc.app.App;
+import nz.ac.wgtn.swen225.lc.app.UI.Containers.RecorderPanel;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 
 /**
@@ -34,14 +35,19 @@ public class Controller extends Keys{
         setAction(Action.Level2, () -> app.gameLoader().loadLevel(2));
         setAction(Action.LoadSave, () -> {
             String path = app.openFile();
-            if (!path.isEmpty()){
-                app.domain(Persistency.loadwithFilePath(path));
-                app.initialDomain(app.domain().copyOf());
+            if (path.isEmpty()) {
+                return;
             }
+            if (path.contains("save_")) {
+                app.gameLoader().loadRecording(Persistency.loadRecording(app.recorder(), path));
+            } else {
+                app.gameLoader().loadLevel(Persistency.loadwithFilePath(path));
+            }
+            RecorderPanel.label.setText("Loaded Game");
         });
         setAction(Action.ExitSave, () -> {
-           Persistency.saveProgress(app.domain());
-           System.exit(0);
+            Persistency.saveProgress(app.recorder().getCommands(), app.domain().getGameState().level());
+            System.exit(0);
         });
         setAction(Action.ExitNoSave, () -> System.exit(0));
     }

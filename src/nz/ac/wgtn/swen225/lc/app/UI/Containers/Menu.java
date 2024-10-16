@@ -41,13 +41,19 @@ public class Menu extends JMenuBar {
         JMenuItem exit = new JMenuItem("Exit");
         load.addActionListener((unused) -> {
             String path = app.openFile();
-            if (!path.isEmpty()){
-                app.gameLoader().loadLevel(Persistency.loadwithFilePath(path));
-                RecorderPanel.label.setText("Loaded Game");
+            if (path.isEmpty()) {
+                return;
             }
+            if (path.contains("save_")) { // Check if it's a save or a recording. Treat it differently.
+                app.gameLoader().loadRecording(Persistency.loadRecording(app.recorder(), path));
+                app.recorder().redoAll();
+            } else {
+                app.gameLoader().loadLevel(Persistency.loadwithFilePath(path));
+            }
+            RecorderPanel.label.setText("Loaded Game");
         });
         save.addActionListener((unused) -> {
-            Persistency.saveProgress(app.domain());
+            Persistency.saveProgress(app.recorder().getCommands(), app.domain().getGameState().level());
             RecorderPanel.label.setText("Saved Game");
         });
         exit.addActionListener((unused) -> System.exit(1));
@@ -67,11 +73,16 @@ public class Menu extends JMenuBar {
         });
         loadInputs.addActionListener((unused) -> {
             String filename = app.openFile();
-            if (!filename.isEmpty()){
-                app.gameLoader().loadRecording(Persistency.loadRecording(app.recorder(), filename));
-                app.pauseTimer(true);
-                RecorderPanel.label.setText("Press 'Play'");
+            if (filename.isEmpty()) {
+                return;
             }
+            if (filename.contains("save_")) {
+                RecorderPanel.label.setText("Invalid Recording");
+                return;
+            }
+            app.gameLoader().loadRecording(Persistency.loadRecording(app.recorder(), filename));
+            app.pauseTimer(true);
+            RecorderPanel.label.setText("Press 'Play'");
         });
         List.of(loadInputs, saveInputs).forEach(input::add);
     }
