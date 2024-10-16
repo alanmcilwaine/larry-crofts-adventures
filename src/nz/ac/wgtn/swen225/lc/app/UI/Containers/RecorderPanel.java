@@ -50,7 +50,7 @@ public class RecorderPanel extends JPanel{
         pause.addActionListener((unused) -> {
             app.recorder().pause();
             app.pauseTimer(app.timer().isRunning());
-            RecorderPanel.label.setText("Pausing Game");
+            RecorderPanel.label.setText(app.timer().isRunning() ? "Resuming Game" : "Pausing Game");
         });
         undo.addActionListener(app.recorder().undo());
         redo.addActionListener(app.recorder().redo());
