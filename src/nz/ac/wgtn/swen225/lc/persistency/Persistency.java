@@ -82,7 +82,7 @@ public class Persistency{
             e.printStackTrace();
         }
         //Write JSON string to file
-        String filename = path + level + "_commands.json";
+        String filename = path + "commands_" + level + ".json";
         //Unique Filename (to avoid overriding when having multiple recordings)
         filename = uniqueFilename(filename);
         File file = new File(filename);
@@ -187,11 +187,11 @@ public class Persistency{
             List<Command> actions = mapper.convertJSONtoActions(json);
             r.setCommands(actions);
             //Cut out path
-            filename = filename.substring(filename.lastIndexOf("\\") + 1);
-            //Split filname to get level number
-            String[] parts = filename.split("_");
-            System.out.println(parts[0]);
-            int level = Integer.parseInt(parts[0]);
+            filename = filename.substring(filename.lastIndexOf("_") + 1);
+            //Cut out .json
+            filename = filename.substring(0, filename.indexOf("."));
+            System.out.println(filename);
+            int level = Integer.parseInt(filename);
             return loadGameBoard(level);
         } catch (IOException e) {
             e.printStackTrace();
