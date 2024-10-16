@@ -28,8 +28,14 @@ public class Controller extends Keys{
      */
     public Controller(App app) {
         this();
-        setAction(Action.Pause, () -> app.pauseTimer(true));
-        setAction(Action.Resume, () -> app.pauseTimer(false));
+        setAction(Action.Pause, () -> {
+            app.pauseTimer(true);
+            RecorderPanel.label.setText("Pausing Game");
+        });
+        setAction(Action.Resume, () -> {
+            app.pauseTimer(false);
+            RecorderPanel.label.setText("Resuming Game");
+        });
         setAction(Action.Level0, () -> app.gameLoader().loadLevel(0));
         setAction(Action.Level1, () -> app.gameLoader().loadLevel(1));
         setAction(Action.Level2, () -> app.gameLoader().loadLevel(2));
