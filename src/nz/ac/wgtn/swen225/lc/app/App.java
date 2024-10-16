@@ -51,7 +51,6 @@ public class App extends AppFrame implements AppInterface{
      * Note that we can't call this(Controller) because Controller depends on App.
      */
     public App(){
-        assert SwingUtilities.isEventDispatchThread();
         controller = new Controller(this);  // Now controller is initialized
         game = makePanel();
         ui = new UIPanel(this);
@@ -64,7 +63,6 @@ public class App extends AppFrame implements AppInterface{
      * @param c Controller for user inputs
      */
     public App(Controller c) {
-        assert SwingUtilities.isEventDispatchThread();
         controller = c; // Must be before game as game depends on the controller.
         game = makePanel();
         ui = new UIPanel(this);
@@ -77,6 +75,7 @@ public class App extends AppFrame implements AppInterface{
      * Includes configs for UI and Game panel.
      */
     private void initialise(){
+        assert SwingUtilities.isEventDispatchThread();
         add(game, BorderLayout.CENTER);
         add(ui, BorderLayout.EAST);
         setJMenuBar(menu);
