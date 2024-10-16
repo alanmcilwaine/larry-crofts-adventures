@@ -18,8 +18,8 @@ import java.io.IOException;
  */
 public class WinLoseImplement {
     static Clip clip;
-    private boolean winMusicPlayed = false;
-    private boolean loseMusicPlayed = false;
+    private static boolean winMusicPlayed = false;
+    private static boolean loseMusicPlayed = false;
 
     /**
      * Draws the win or lose message on the game screen
@@ -76,7 +76,7 @@ public class WinLoseImplement {
      *
      * @param gameState the current state of the game.
      */
-    public void allMusicPlayed(GameState gameState) {
+    public static void allMusicPlayed(GameState gameState) {
         // Play win music only once when the player wins
         if (gameState.player().isNextLevel() && !winMusicPlayed) {
             WinLoseImplement.playMusic("win");

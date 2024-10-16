@@ -12,24 +12,24 @@ import java.util.Arrays;
  * @version 2.5
  */
 public class BackgroundImplement {
-    private final Image gifImage;
+    private Image gifImage = null;
 
     /**
      * Safely loads the GIF image found in the "BackgroundImage" folder.
      *
      * @throws Error if loading the image fails.
      */
-    public BackgroundImplement() {
+    public void backgroundImplement() {
         File backgroundFolder = new File("BackgroundImage");
         File[] imageFiles = backgroundFolder.listFiles();
-        if(imageFiles == null){
-            throw new NullPointerException("The background folder is null.");
-        }
+        if(imageFiles == null) {throw new NullPointerException("The background image folder does not exist");}
+
         // filter the gif and convert it to ImageIcon
         gifImage = new ImageIcon(Arrays.stream(imageFiles)
                 .filter(f -> f.getName().endsWith(".gif"))
                 .findFirst().orElseThrow(() -> new Error("Failed to load the background image"))
                 .getAbsolutePath()).getImage();
+
     }
 
     /**
