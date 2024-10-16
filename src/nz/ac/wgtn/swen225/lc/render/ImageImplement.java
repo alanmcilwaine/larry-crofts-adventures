@@ -45,6 +45,7 @@ public class ImageImplement{
         this.jpanel = panel;
         this.jpanel.setDoubleBuffered(true);
         backgroundImplement = new BackgroundImplement();
+        backgroundImplement.backgroundImplement();
         info = new InfoImplement(panel);
         soundImplement = new SoundEffectImplement();
     }
@@ -89,7 +90,7 @@ public class ImageImplement{
 
         // win lose implementation
         new WinLoseImplement().drawWinLose(gameState, g, jpanel);
-        new WinLoseImplement().allMusicPlayed(gameState);
+        WinLoseImplement.allMusicPlayed(gameState);
     }
 
     /**
