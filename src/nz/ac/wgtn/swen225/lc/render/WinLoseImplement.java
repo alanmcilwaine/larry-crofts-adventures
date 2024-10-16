@@ -58,7 +58,7 @@ public class WinLoseImplement {
     public static void playMusic(String name) {
         if(BackgroundSoundImplement.getMuted()) return;
         try {
-            File wavFile = new File("SoundEffect/" + name + ".wav");
+            File wavFile = new File("SoundEffect" + File.separator + name + ".wav");
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(wavFile);
             clip = AudioSystem.getClip();
             clip.open(audioStream);
