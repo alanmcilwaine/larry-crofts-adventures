@@ -40,7 +40,7 @@ public class SoundEffectImplement {
      */
     public static void sound(String type) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         if(BackgroundSoundImplement.getMuted()) return;
-        File wavFile = new File("SoundEffect/get" + type + ".wav");
+        File wavFile = new File("SoundEffect" + File.separator + "get" + type + ".wav");
         AudioInputStream audioStream = AudioSystem.getAudioInputStream(wavFile);
         clip = AudioSystem.getClip();
         clip.open(audioStream);
