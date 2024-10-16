@@ -57,7 +57,7 @@ public class Persistency{
             e.printStackTrace();
         }
         //Call it save + level
-        String filename = path + "save_ " + level + " .json";
+        String filename = path + "save_" + level + ".json";
         File file = new File(filename);
         try {
             FileWriter fileWriter = new FileWriter(file);
