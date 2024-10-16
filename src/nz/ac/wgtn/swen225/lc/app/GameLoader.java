@@ -23,7 +23,7 @@ public record GameLoader(App app) {
         if (save.exists() && !save.isDirectory()){
             return Persistency.loadwithFilePath(Persistency.path + "save.json");
         } else {
-            return Persistency.loadGameBoard(1);
+            return Persistency.loadGameBoard(0);
         }
     }
 
