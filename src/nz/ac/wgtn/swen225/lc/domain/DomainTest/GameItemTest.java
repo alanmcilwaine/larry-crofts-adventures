@@ -1,13 +1,11 @@
 package nz.ac.wgtn.swen225.lc.domain.DomainTest;
 
-import nz.ac.wgtn.swen225.lc.domain.GameActor.Player;
+import nz.ac.wgtn.swen225.lc.domain.GameActor.*;
 import nz.ac.wgtn.swen225.lc.domain.GameBoard;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.*;
 import nz.ac.wgtn.swen225.lc.domain.Interface.Item;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
-import nz.ac.wgtn.swen225.lc.domain.Utilities.Direction;
-import nz.ac.wgtn.swen225.lc.domain.Utilities.ItemColor;
-import nz.ac.wgtn.swen225.lc.domain.Utilities.Location;
+import nz.ac.wgtn.swen225.lc.domain.Utilities.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -353,4 +351,30 @@ public class GameItemTest {
 
         assertThrows(IllegalStateException.class, () -> wall.onTouch(player, tile));
     }
+
+    @Test
+    public void copyOfTest() {
+        var gameboard = Mock.getGameBoard();
+        var boxes = gameboard.getGameState().boxes();
+        boxes.add(new MovableBox(0,5));
+        boxes.add(new Crate(0,4));
+        boxes.add(new Mirror(Orientation.ONE, 0,4));
+
+        var robots = gameboard.getGameState().robots();
+        var robotToAdd = new KillerRobot(5,5);
+        robotToAdd.setActorPath(new ActorPath(1));
+        robots.add(robotToAdd);
+
+        var newGameboard = gameboard.copyOf();
+        var newBoxes = newGameboard.getGameState().boxes();
+        var newRobots = newGameboard.getGameState().robots();
+
+        assert newBoxes.size() == boxes.size();
+        assert newRobots.size() == robots.size();
+
+        assert newBoxes.get(0).toString().equals(boxes.get(0).toString());
+        assert newBoxes.get(1).toString().equals(boxes.get(1).toString());
+        assert newBoxes.get(2).toString().equals(boxes.get(2).toString());
+    }
+
 }

@@ -1,5 +1,7 @@
 package nz.ac.wgtn.swen225.lc.domain.GameActor;
 
+import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
+
 /**
  * An NPC robot that can kill the player
  *
@@ -13,5 +15,10 @@ public class KillerRobot extends Robot {
     @Override
     public String toString() {
         return "KillerRobot";
+    }
+
+    @Override
+    public Actor makeNew() {
+        return new KillerRobot(getLocation().x(), getLocation().y());
     }
 }

@@ -22,7 +22,6 @@ import java.util.Map;
 public class LaserSource implements Togglabble {
     private final Location location; // needs to set the laser somewhere
     private final Direction direction; // has a direction but it should not move as well as
-    // blocks all actors
     public String orientation;
 
     private boolean laserToggle; // auto set to false
@@ -137,6 +136,8 @@ public class LaserSource implements Togglabble {
 
     @Override
     public Item makeNew() {
-        return new LaserSource(direction, laserToggle, location.x(), location.y());
+        lasers.clear();
+        LaserSource laser = new LaserSource(direction, true, location.x(), location.y());
+        return laser;
     }
 }

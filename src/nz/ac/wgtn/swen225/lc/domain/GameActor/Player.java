@@ -144,4 +144,9 @@ public class Player implements Actor {
     public String toString() {
         return "Player";
     }
+
+    @Override
+    public Actor makeNew() {
+        return new Player(location);
+    }
 }

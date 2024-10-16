@@ -61,7 +61,10 @@ public class MovableBox implements Actor {
     }
 
     @Override
-    public String toString() {
-        return "MovableBox";
+    public String toString() { return "MovableBox"; }
+
+    @Override
+    public Actor makeNew() {
+        return new MovableBox(location.x(), location.y());
     }
 }

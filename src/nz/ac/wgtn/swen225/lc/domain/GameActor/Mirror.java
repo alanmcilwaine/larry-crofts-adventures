@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen225.lc.domain.GameActor;
 
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserSource;
+import nz.ac.wgtn.swen225.lc.domain.Interface.Actor;
 import nz.ac.wgtn.swen225.lc.domain.Utilities.Orientation;
 
 /**
@@ -40,4 +41,8 @@ public class Mirror extends MovableBox {
         return orientation.equals(Orientation.ONE) ? "MirrorReversed" : "Mirror";
     }
 
+    @Override
+    public Actor makeNew() {
+        return new Mirror(orientation, getLocation().x(), getLocation().y());
+    }
 }
