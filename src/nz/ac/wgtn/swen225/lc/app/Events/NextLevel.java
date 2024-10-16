@@ -14,7 +14,7 @@ public class NextLevel implements GameEvent {
     public void check(App app) {
         Player player = app.domain().getGameState().player();
         if (player.isNextLevel()) {
-            app.timer().onExitTile(() -> app.gameLoader().loadLevel(app.domain().getGameState().level() + 1));
+            app.timer().runEvent(() -> app.gameLoader().loadLevel(app.domain().getGameState().level() + 1), 1000);
         }
     }
 }
