@@ -57,6 +57,7 @@ public record GameLoader(App app) {
      */
     public void loadRecording(GameBoard b) {
         app.startTick(b);
+        GameTimer.stageCountdown -= app.recorder().getCommands().size() * ((double) GameTimer.TICK_RATE / 1000);
     }
 
     /**
