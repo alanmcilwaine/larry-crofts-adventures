@@ -107,15 +107,6 @@ public class GameBoard {
     }
 
     /**
-     * Adds a laser source in the map
-     *
-     * @param ls laser source to be added
-     */
-    public void addLaserSource(LaserSource ls) {
-        laserSources.add(ls);
-    }
-
-    /**
      * Moves all the robots in the level
      */
     private void robotsMove() {
@@ -164,6 +155,7 @@ public class GameBoard {
                 }
             }
         }
+
         return ls;
     }
 
@@ -183,25 +175,15 @@ public class GameBoard {
      * @return new deep copy of gameState
      */
     public GameBoard copyOf() {
+        // new board
         List<List<Tile<Item>>> newBoard = board.stream().map(x -> x.stream()
                         .map(y -> new Tile<>(y.item.makeNew(), y.location))
-                        .toList())
-                .toList();
+                        .toList()).toList();
 
-
-        // might have more types of robots in the future, could change this
-        List<Robot> newRobots = robots.stream()
-                .map(r -> (Robot) new KillerRobot(r.getLocation().x(), r.getLocation().y()))
-                .toList();
-
-        List<MovableBox> newBoxes = boxes.stream()
-                .map(b -> b instanceof Crate ?
-                        new Crate(b.getLocation().x(), b.getLocation().y()) :
-                        new MovableBox(b.getLocation().x(), b.getLocation().y()))
-                .toList();
-
-        List<LaserSource> newLasers = laserSources.stream()
-                .map(ls -> (LaserSource) ls.makeNew()).toList();
+        // make new instances of all the lists
+        List<Robot> newRobots = robots.stream().map(r -> (Robot) r.makeNew()).toList();
+        List<MovableBox> newBoxes = boxes.stream().map(b -> (MovableBox) b.makeNew()).toList();
+        List<LaserSource> newLasers = laserSources.stream().map(ls -> (LaserSource) ls.makeNew()).toList();
 
         // make new board
         return new GameBoardBuilder().addBoard(newBoard).addBoardSize(width, height)

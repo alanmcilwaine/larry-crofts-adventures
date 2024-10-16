@@ -69,11 +69,6 @@ public class MovableBoxTest {
 
     // TODO : Add more tests for items
     @Test
-    public void shouldNotPushIntoItems() {
-
-    }
-
-    @Test
     public void shouldNotPushIntoBox() {
     }
 

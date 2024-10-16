@@ -118,4 +118,6 @@ public interface Actor {
                 location.y() >= 0 && location.y() < gameBoard.getGameState().height();
     }
 
+    Actor makeNew();
+
 }

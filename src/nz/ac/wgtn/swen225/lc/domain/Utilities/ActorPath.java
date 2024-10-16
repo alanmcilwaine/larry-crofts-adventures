@@ -9,8 +9,6 @@ import nz.ac.wgtn.swen225.lc.domain.Tile;
  * To implement paths for the NPC actors, kinda like state pattern
  */
 public class ActorPath {
-    //  UPDOWN(Direction.UP, Direction.DOWN),
-//  LEFTRIGHT(Direction.LEFT, Direction.RIGHT);
     static final int DELAY = 5;
     int stepCount;
     final Direction dir1;
