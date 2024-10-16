@@ -28,7 +28,7 @@ public class Button implements Item {
      * @param surroundingTiles the list of tiles around the button
      */
     public void attachTiles(List<Tile<Item>> surroundingTiles) {
-        this.surroundingTiles = surroundingTiles;
+        this.surroundingTiles.addAll(surroundingTiles);
     }
 
     @Override

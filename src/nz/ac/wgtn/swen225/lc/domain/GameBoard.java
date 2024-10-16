@@ -80,7 +80,7 @@ public class GameBoard {
     public void action(Direction direction) {
         Util.checkNull(direction, "Direction is null");
 
-        //activateLasers();
+//        activateLasers();
         robotsMove();
         playerMove(direction, this);
         notifyObservers();
@@ -183,7 +183,18 @@ public class GameBoard {
         // make new instances of all the lists
         List<Robot> newRobots = robots.stream().map(r -> (Robot) r.makeNew()).toList();
         List<MovableBox> newBoxes = boxes.stream().map(b -> (MovableBox) b.makeNew()).toList();
-        List<LaserSource> newLasers = laserSources.stream().map(ls -> (LaserSource) ls.makeNew()).toList();
+
+        // Remove the immutability
+        newRobots = new ArrayList<>(newRobots);
+        newBoxes = new ArrayList<>(newBoxes);
+
+        // Get each laser from the board
+        List<LaserSource> newLasers = new ArrayList<>();
+        newBoard.forEach(x -> x.forEach(y -> {
+            if (y.item instanceof LaserSource ls) {
+                newLasers.add(ls);
+            }
+        }));
 
         // make new board
         return new GameBoardBuilder().addBoard(newBoard).addBoardSize(width, height)
@@ -229,7 +240,6 @@ public class GameBoard {
             observer.update(getGameState());
         }
     }
-
 
     /**
      * Get the tile hosting the exit item.
