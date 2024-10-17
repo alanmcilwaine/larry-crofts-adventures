@@ -25,7 +25,7 @@ public class RecorderPanel extends JPanel{
     private final JButton restart = new SquareButton("Restart", 0, 8);
     private final JButton mute = new SquareButton("Unmute", 230, 8);
     private final List<JButton> buttons = List.of(undo, redo, pause, play, restart,mute);
-    public static JLabel label = new UILabel("Saved Game", 100, 105);
+    public static final JLabel label = new UILabel("Saved Game", 100, 105);
 
     // State of music playing
     private boolean isMuted = true;
