@@ -59,9 +59,8 @@ public class ObjectMapper {
      * 
      * @param level The GameBoard object to be saved.
      * @return String The JSON string to be saved.
-     * @throws IOException
      */
-    public String saveLeveltoFile(GameBoard level) throws IOException {
+    public String saveLeveltoFile(GameBoard level) {
         StringBuilder json = new StringBuilder();
         json.append("{\n");
         
@@ -140,10 +139,9 @@ public class ObjectMapper {
      * 
      * @param actions The list of actions to be saved.
      * @return String The JSON string to be saved.
-     * @throws IOException
      */
     //Write Action List as String throws an exception if fails
-    public String saveCommandstoFile(List<Command> actions, int level) throws IOException {
+    public String saveCommandstoFile(List<Command> actions, int level){
         StringBuilder json = new StringBuilder();
         json.append("{\n");
         String levelFile = "levels/level" + level + ".json";

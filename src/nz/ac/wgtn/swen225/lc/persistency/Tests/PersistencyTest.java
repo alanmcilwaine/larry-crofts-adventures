@@ -72,7 +72,7 @@ public class PersistencyTest {
 
     /**
      * Test reading JSON from a file
-     * @throws IOException
+     * @throws IOException For file errors
      */
     @Test
     public void testReadJSON() throws IOException {
@@ -118,10 +118,9 @@ public class PersistencyTest {
 
     /**
      * Test saving and loading a GameState
-     * @throws IOException
      */
     @Test
-    public void testLoadGameState() throws IOException {
+    public void testLoadGameState(){
         Persistency.saveGameBoard(originalState);
         GameBoard loadedState = Persistency.loadGameBoard(1);
 
@@ -186,12 +185,8 @@ public class PersistencyTest {
         actions.add(Command.generate("Up"));
 
         ObjectMapper mapper = new ObjectMapper();
-        String json = null;
-        try {
-            json = mapper.saveCommandstoFile(actions, 1);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        String json;
+        json = mapper.saveCommandstoFile(actions, 1);
         List<Command> loadedCommands = mapper.convertJSONtoActions(json);
 
         assertEquals(actions.size(), loadedCommands.size(), "Number of commands should match");
