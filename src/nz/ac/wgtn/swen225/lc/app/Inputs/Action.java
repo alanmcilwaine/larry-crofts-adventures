@@ -40,6 +40,9 @@ public enum Action{
      * @param key KeyEvent to set this action to.
      */
     public void key(int key) {
+        if (key < 0) {
+            return;
+        }
         this.key = key;
     }
 

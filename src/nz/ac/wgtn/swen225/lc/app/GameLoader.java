@@ -35,7 +35,7 @@ public record GameLoader(App app) {
     public void loadLevel(int level) {
         File checkExists = new File(Persistency.path + "level" + level + ".json");
         if (!checkExists.exists()) {
-            app.startTick(Persistency.loadGameBoard(1));
+            loadLevel(Persistency.loadGameBoard(1));
             return;
         }
         loadLevel(Persistency.loadGameBoard(level));
