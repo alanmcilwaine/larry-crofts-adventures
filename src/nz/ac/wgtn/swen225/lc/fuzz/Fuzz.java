@@ -4,7 +4,6 @@ package nz.ac.wgtn.swen225.lc.fuzz;
 import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.app.Inputs.Command;
 import nz.ac.wgtn.swen225.lc.app.UI.Containers.GamePanel;
-import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
@@ -89,10 +88,9 @@ public class Fuzz {
              */
             {
                 muteGame(mute);
-                if(level != 1) {
-                    domain(Persistency.loadGameBoard(level));
-                    initialDomain(domain().copyOf());
-                }
+                gameLoader().loadLevel(level);
+                initialDomain(domain().copyOf());
+
             }
 
             /**
