@@ -52,6 +52,7 @@ public class Controller extends Keys{
             RecorderPanel.label.setText("Loaded Game");
         });
         setAction(Action.ExitSave, () -> {
+            app.recorder().takeControl();
             Persistency.saveProgress(app.recorder().getCommands(), app.domain().getGameState().level());
             System.exit(0);
         });
