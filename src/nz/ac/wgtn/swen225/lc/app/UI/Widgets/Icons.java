@@ -14,9 +14,19 @@ public enum Icons {
     Pause(new ImageIcon("AllItemsImages/pause.png")),;
 
     private final ImageIcon icon;
+
+    /**
+     * Constructor to link an icon to an enum object.
+     * @param icon Icon to be used in the Recorder Panel.
+     */
     Icons(ImageIcon icon) {
         this.icon = icon;
     }
+
+    /**
+     * Getter for icon
+     * @return Icon
+     */
     public ImageIcon icon() {
         return icon;
     }
