@@ -86,6 +86,7 @@ public class RecorderPanel extends JPanel{
             JSlider slider = (JSlider)e.getSource();
             if (!slider.getValueIsAdjusting()) {
                 app.recorder().setPlaybackSpeed(App.TICK_RATE + (-1 * slider.getValue()));
+                play.doClick();
             }
         });
         playbackSpeed.setBounds(play.getX() + 50, play.getY(), App.WIDTH/3 - play.getWidth(), play.getHeight());
