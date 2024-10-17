@@ -14,10 +14,6 @@ public class UIPanel extends JPanel {
     private final App app;
     private final Image backgroundImage;
 
-    public InformationPanel infoPanel;
-    public RecorderPanel recorderPanel;
-    public InventoryPanel inventoryPanel;
-
     /**
      *  Create a new JPanel with 300x600 size with the default layout manager.
      */
@@ -32,9 +28,9 @@ public class UIPanel extends JPanel {
      * Builds the relevant UI for the UI Panel.
      */
     private void build(){
-        infoPanel = new InformationPanel(app);
-        recorderPanel = new RecorderPanel(app);
-        inventoryPanel = new InventoryPanel(app);
+        InformationPanel infoPanel = new InformationPanel(app);
+        RecorderPanel recorderPanel = new RecorderPanel(app);
+        InventoryPanel inventoryPanel = new InventoryPanel(app);
         add(recorderPanel);
         add(infoPanel);
         add(inventoryPanel);

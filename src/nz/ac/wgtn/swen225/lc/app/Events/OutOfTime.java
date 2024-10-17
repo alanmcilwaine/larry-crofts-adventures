@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.app.Events;
 
 import nz.ac.wgtn.swen225.lc.app.App;
 import nz.ac.wgtn.swen225.lc.app.GameTimer;
+import nz.ac.wgtn.swen225.lc.app.UI.Containers.RecorderPanel;
 
 /**
  * OutOfTime --- When the player has run out of time this event is called.
@@ -15,6 +16,9 @@ public class OutOfTime implements GameEvent{
         if (GameTimer.stageCountdown > 0) {
             return;
         }
-        app.timer().runEvent(() -> app.gameLoader().loadLevel(app.domain().getGameState().level()), 2500);
+        RecorderPanel.label.setText("Out of time!");
+        app.timer().runEvent(() -> {
+            app.gameLoader().loadLevel(app.domain().getGameState().level());
+        }, 2500);
     }
 }

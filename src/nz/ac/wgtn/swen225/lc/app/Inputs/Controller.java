@@ -3,6 +3,7 @@ package nz.ac.wgtn.swen225.lc.app.Inputs;
 import java.util.EmptyStackException;
 
 import nz.ac.wgtn.swen225.lc.app.App;
+import nz.ac.wgtn.swen225.lc.app.UI.Containers.RecorderPanel;
 import nz.ac.wgtn.swen225.lc.persistency.Persistency;
 
 /**
@@ -27,21 +28,32 @@ public class Controller extends Keys{
      */
     public Controller(App app) {
         this();
-        setAction(Action.Pause, () -> app.pauseTimer(true));
-        setAction(Action.Resume, () -> app.pauseTimer(false));
+        setAction(Action.Pause, () -> {
+            app.pauseTimer(true);
+            RecorderPanel.label.setText("Pausing Game");
+        });
+        setAction(Action.Resume, () -> {
+            app.pauseTimer(false);
+            RecorderPanel.label.setText("Resuming Game");
+        });
         setAction(Action.Level0, () -> app.gameLoader().loadLevel(0));
         setAction(Action.Level1, () -> app.gameLoader().loadLevel(1));
         setAction(Action.Level2, () -> app.gameLoader().loadLevel(2));
         setAction(Action.LoadSave, () -> {
             String path = app.openFile();
-            if (!path.isEmpty()){
-                app.domain(Persistency.loadwithFilePath(path));
-                app.initialDomain(app.domain().copyOf());
+            if (path.isEmpty()) {
+                return;
             }
+            if (path.contains("save_")) {
+                app.gameLoader().loadRecording(Persistency.loadRecording(app.recorder(), path));
+            } else {
+                app.gameLoader().loadLevel(Persistency.loadwithFilePath(path));
+            }
+            RecorderPanel.label.setText("Loaded Game");
         });
         setAction(Action.ExitSave, () -> {
-           Persistency.saveProgress(app.domain());
-           System.exit(0);
+            Persistency.saveProgress(app.recorder().getCommands(), app.domain().getGameState().level());
+            System.exit(0);
         });
         setAction(Action.ExitNoSave, () -> System.exit(0));
     }

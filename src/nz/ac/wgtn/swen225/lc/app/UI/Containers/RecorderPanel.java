@@ -50,13 +50,16 @@ public class RecorderPanel extends JPanel{
         pause.addActionListener((unused) -> {
             app.recorder().pause();
             app.pauseTimer(app.timer().isRunning());
+            RecorderPanel.label.setText(app.timer().isRunning() ? "Resuming Game" : "Pausing Game");
         });
         undo.addActionListener(app.recorder().undo());
         redo.addActionListener(app.recorder().redo());
         play.addActionListener(app.recorder().play());
+        play.addActionListener((unused) -> RecorderPanel.label.setText("Playing..."));
         restart.addActionListener((unused) -> {
             app.timer().stop();
             app.gameLoader().loadLevel(app.domain().getGameState().level());
+            RecorderPanel.label.setText("Restarting Game");
         });
         mute.setBounds(mute.getX(), mute.getY(), mute.getWidth() + 20, mute.getHeight());
         mute.addActionListener((unused) -> {

@@ -26,7 +26,7 @@ public enum Action{
     ExitSave(KeyEvent.VK_S, true, "Exit with Save"),
     LoadSave(KeyEvent.VK_R, true, "Load Game");
 
-    public int key;
+    private int key;
     public final boolean control;
     public final String description;
     Action(int key, boolean control, String description){
@@ -34,7 +34,21 @@ public enum Action{
         this.control = control;
         this.description = description;
     }
-    public void key(int key) { this.key = key; }
+
+    /**
+     * Setter for key
+     * @param key KeyEvent to set this action to.
+     */
+    public void key(int key) {
+        this.key = key;
+    }
+
+    /**
+     * Getter for key
+     */
+    public int key() {
+        return key;
+    }
 
     /**
      * Returns the action associated with the given keyCode. Will produce a different action depending on if
@@ -48,4 +62,5 @@ public enum Action{
                 .filter(a -> a.key == keyCode && a.control == controlPressed)
                 .findFirst();
     }
+
 }
