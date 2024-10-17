@@ -155,6 +155,7 @@ class GameRecorder implements Recorder{
     @Override
     public void setPlaybackSpeed(int tickTime) {
         GameRecorder.tickTime = tickTime;
+        if(timer != null) timer.stop();
         timer = new PlaybackTimer(this::redoFrame);
     }
 
