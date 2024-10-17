@@ -76,8 +76,12 @@ public class SoundEffectImplement {
                                 try {
                                     // Play sound for item
                                     sound(type.getSimpleName());
-                                } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-                                    throw new RuntimeException("No such sound effect for item: " + i.getItemOnTile());
+                                } catch (UnsupportedAudioFileException e) {
+                                    throw new RuntimeException("Unsupported audio format for the sound effect of item: " + i.getItemOnTile());
+                                } catch (IOException e) {
+                                    throw new RuntimeException("I/O error occurred while loading the sound effect for item: " + i.getItemOnTile());
+                                } catch (LineUnavailableException e) {
+                                    throw new RuntimeException("Audio line unavailable for the sound effect of item: " + i.getItemOnTile());
                                 }
                             });
                         })
@@ -94,7 +98,6 @@ public class SoundEffectImplement {
         eachFillAction(gameState, LockedDoor.class);
         eachFillAction(gameState, Treasure.class);
         eachFillAction(gameState, Button.class);
-
     }
 
     /**
@@ -115,11 +118,10 @@ public class SoundEffectImplement {
         if (action != null && !soundPlayedLocations.contains(playerLocation)) {
             action.run();
             SoundActionMap.remove(playerLocation);
-            soundPlayedLocations.add(playerLocation); // Mark location as sound played
+            soundPlayedLocations.add(playerLocation);
         }
 
-        previousLocation = playerLocation; // Update previous location
+        // Update previous location
+        previousLocation = playerLocation;
     }
-
-
 }

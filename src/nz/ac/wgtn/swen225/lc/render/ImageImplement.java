@@ -25,7 +25,7 @@ public class ImageImplement{
     private final JPanel jpanel;
     /**
      * the parameters help to draw the maze on the right place
-     * also the background, information and sound effect
+     * on the screen
      */
     public static final int IMAGE_SIZE = 70;
     private static final int BUFFER_SIZE = 5;
@@ -189,6 +189,4 @@ public class ImageImplement{
             drawOneImage("laser" + orientation, relativeX, relativeY, g);
         }));
     }
-
-
 }

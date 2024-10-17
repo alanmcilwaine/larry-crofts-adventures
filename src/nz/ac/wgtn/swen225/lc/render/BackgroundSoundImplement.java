@@ -18,7 +18,7 @@ public class BackgroundSoundImplement {
      */
     private static boolean isMuted = true;
     /**
-     * the status decide what kine of music to be implemented
+     * the status decide which music to be implemented
      */
     public static final String status = "soundEffect";
     // load the different sounds based on different status
@@ -40,12 +40,17 @@ public class BackgroundSoundImplement {
             }
             clip.loop(Clip.LOOP_CONTINUOUSLY);
             clip.start();
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            throw new RuntimeException("No such music for the status: " + statusSupplier.get());
+        } catch (UnsupportedAudioFileException e) {
+            throw new RuntimeException("Unsupported audio format for the status: " + statusSupplier.get());
+        } catch (IOException e) {
+            throw new RuntimeException("I/O error occurred while loading the audio file for the status: " + statusSupplier.get());
+        } catch (LineUnavailableException e) {
+            throw new RuntimeException("Audio line unavailable for the status: " + statusSupplier.get());
         }
     }
 
-    /** mute and unmute all the music
+    /** mute and unmute all the musics
+     *
      * @param mute to decide whether mute the background music
      */
     public static void muteMusic(boolean mute){
@@ -55,6 +60,7 @@ public class BackgroundSoundImplement {
     }
 
     /** mute and unmute the background music
+     *
      * @param mute to decide whether mute the background music
      */
     public static void mute(boolean mute){

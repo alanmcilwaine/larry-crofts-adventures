@@ -29,7 +29,6 @@ public class BackgroundImplement {
                 .filter(f -> f.getName().endsWith(".gif"))
                 .findFirst().orElseThrow(() -> new Error("Failed to load the background image"))
                 .getAbsolutePath()).getImage();
-
     }
 
     /**

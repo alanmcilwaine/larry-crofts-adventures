@@ -33,7 +33,7 @@ public class InfoImplement {
      */
     public InfoImplement(JPanel jPanel) {
         this.jPanel = jPanel;
-        textArea.setFont(new Font("Monospaced", Font.BOLD, 35));
+        textArea.setFont(new Font("Monospaced", Font.BOLD, 30));
         textArea.setForeground(Color.RED);
         textArea.setBackground(Color.BLACK);
         textArea.setBounds(0, 400, 580, 130);
@@ -107,5 +107,4 @@ public class InfoImplement {
     public static void unvisiableTextArea(){
         textArea.setVisible(false);
     }
-
 }
