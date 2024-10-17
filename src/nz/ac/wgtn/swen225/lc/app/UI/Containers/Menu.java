@@ -16,7 +16,7 @@ import java.util.List;
 public class Menu extends JMenuBar {
     private final JMenu file = new JMenu("File");
     private final JMenu input = new JMenu("Input");
-    private final JMenu help = new JMenu("Settings");
+    private final JMenu help = new JMenu("Help");
 
     /**
      * Constructor to build the Menu elements for the screen.
@@ -53,6 +53,7 @@ public class Menu extends JMenuBar {
             RecorderPanel.label.setText("Loaded Game");
         });
         save.addActionListener((unused) -> {
+            app.recorder().takeControl();
             Persistency.saveProgress(app.recorder().getCommands(), app.domain().getGameState().level());
             RecorderPanel.label.setText("Saved Game");
         });
@@ -68,6 +69,7 @@ public class Menu extends JMenuBar {
         JMenuItem saveInputs = new JMenuItem("Save Inputs");
         JMenuItem loadInputs = new JMenuItem("Load Inputs");
         saveInputs.addActionListener((unused) -> {
+            app.recorder().takeControl();
             Persistency.saveCommands(app.recorder().getCommands(), app.domain().getGameState().level());
             RecorderPanel.label.setText("Saved Inputs");
         });
@@ -93,10 +95,16 @@ public class Menu extends JMenuBar {
      */
     private void help(App app) {
         JMenuItem controls = new JMenuItem("Controls");
+        JMenuItem helpFrame = new JMenuItem("Help");
         controls.addActionListener((unused) -> {
             app.pauseTimer(true);
             new RemapFrame();
         });
+        helpFrame.addActionListener((unused) -> {
+            app.pauseTimer(true);
+            new HelpFrame();
+        });
         help.add(controls);
+        help.add(helpFrame);
     }
 }

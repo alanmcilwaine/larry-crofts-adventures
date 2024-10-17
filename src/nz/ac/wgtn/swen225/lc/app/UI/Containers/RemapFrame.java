@@ -26,8 +26,16 @@ public class RemapFrame extends JFrame {
     private void displayMappings() {
         getContentPane().removeAll();
         for (Action action : Action.values()) {
-            add(new JLabel(action.description));
+            JLabel description = new JLabel(action.description);
+            description.setFont(new Font("Monospaced", Font.PLAIN, 14));
+            description.setOpaque(true);
+            description.setBackground(new Color(73, 65, 75));
+            description.setForeground(AppFrame.FOREGROUND);
+            add(description);
             JTextField mapping = new JTextField((action.control ? "CTRL-" : "") + KeyEvent.getKeyText(action.key()));
+            mapping.setBackground(AppFrame.BACKGROUND_2);
+            mapping.setForeground(AppFrame.FOREGROUND);
+            mapping.setBorder(BorderFactory.createLineBorder(AppFrame.BACKGROUND));
             // Handle duplicate keys
             if (Arrays.stream(Action.values())
                     .filter(v -> v.key() == action.key() && action.control == v.control && action.key() != 0)

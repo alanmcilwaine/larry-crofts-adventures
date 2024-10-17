@@ -2,9 +2,9 @@
 
 | Module      | Team Members | Team Member gitlab account |
 |-------------|--------------|----------------------------|
-| Domain      | Carla & Li   |                            |
-| App         | Alan         |                            |
-| Renderer    | Sarah        |                            |
-| Persistency | David        |                            |
-| Recorder    | John         |                            |
-| Fuzz        | Everyone     |                            |
+| Domain      | Carla & Li   | parinamari & liye1         |
+| App         | Alan         | mcilwaalan                 |
+| Renderer    | Sarah        | libaix                     |
+| Persistency | David        | zhoudavi1                  |
+| Recorder    | John         | raisjohn                   |
+| Fuzz        | John         | raisjohn                   |
