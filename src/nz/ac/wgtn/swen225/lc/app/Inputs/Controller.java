@@ -36,9 +36,18 @@ public class Controller extends Keys{
             app.pauseTimer(false);
             RecorderPanel.label.setText("Resuming Game");
         });
-        setAction(Action.Level0, () -> app.gameLoader().loadLevel(0));
-        setAction(Action.Level1, () -> app.gameLoader().loadLevel(1));
-        setAction(Action.Level2, () -> app.gameLoader().loadLevel(2));
+        setAction(Action.Level0, () -> {
+            app.gameLoader().loadLevel(0);
+            RecorderPanel.label.setText("Loaded level 0");
+        });
+        setAction(Action.Level1, () -> {
+            app.gameLoader().loadLevel(1);
+            RecorderPanel.label.setText("Loaded level 1");
+        });
+        setAction(Action.Level2, () -> {
+            app.gameLoader().loadLevel(2);
+            RecorderPanel.label.setText("Loaded level 2");
+        });
         setAction(Action.LoadSave, () -> {
             String path = app.openFile();
             if (path.isEmpty()) {
@@ -46,6 +55,7 @@ public class Controller extends Keys{
             }
             if (path.contains("save_")) {
                 app.gameLoader().loadRecording(Persistency.loadRecording(app.recorder(), path));
+                app.recorder().redoAll();
             } else {
                 app.gameLoader().loadLevel(Persistency.loadwithFilePath(path));
             }
