@@ -13,6 +13,10 @@ import java.awt.*;
  */
 public class HelpFrame extends JFrame{
     private final Image helpImage;
+
+    /**
+     * Constructor to build the Help screen.
+     */
     public HelpFrame() {
         helpImage = new ImageIcon("BackgroundImage/help.png").getImage();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -23,6 +27,9 @@ public class HelpFrame extends JFrame{
         setVisible(true);
     }
 
+    /**
+     * Creates the elements on the help screen, including the background and back button.
+     */
     private void create() {
         JPanel panel = new JPanel(){
             @Override

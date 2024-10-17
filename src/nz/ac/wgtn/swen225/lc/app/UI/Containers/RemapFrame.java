@@ -23,6 +23,10 @@ public class RemapFrame extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Holds all the logic to setup and display the button remapping screen.
+     * Will take the possible actions from the Action enum.
+     */
     private void displayMappings() {
         getContentPane().removeAll();
         for (Action action : Action.values()) {

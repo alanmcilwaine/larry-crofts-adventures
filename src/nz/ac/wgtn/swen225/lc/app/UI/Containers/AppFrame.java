@@ -20,6 +20,9 @@ public class AppFrame extends JFrame{
     public static final Color FOREGROUND = new Color(225, 211, 174);
     public static final Color BACKGROUND_2 = new Color(105, 88, 92);
 
+    /**
+     * Constructor to build the settings for the Container for the entire game.
+     */
     public AppFrame(){
         super("Larry Crofts Adventures");
         setSize(App.WIDTH, App.HEIGHT);
