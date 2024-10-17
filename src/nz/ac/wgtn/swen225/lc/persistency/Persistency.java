@@ -156,8 +156,7 @@ public class Persistency{
             json = stringBuilder.toString();
             //Convert JSON string to GameState object
             ObjectMapper mapper = new ObjectMapper();
-            GameBoard level = mapper.convertJSONtoGameBoard(json);
-            return level;
+            return mapper.convertJSONtoGameBoard(json);
         } catch (IOException e) {
             e.printStackTrace();
             throw new IllegalArgumentException("File not found");

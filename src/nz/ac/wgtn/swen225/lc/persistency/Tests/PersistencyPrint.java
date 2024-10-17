@@ -29,7 +29,6 @@ public class PersistencyPrint {
     /**
      * Create a sample GameBoard object
      * @return The GameBoard object.
-     * @throws IOException
      */
     private static GameBoard createSampleGameBoard() {
         List<List<Tile<Item>>> board = new ArrayList<>();
@@ -55,8 +54,6 @@ public class PersistencyPrint {
         board.get(3).get(4).item = new LockedExit();
 
         Player player = new Player(new Location(1, 1));
-        //player.addTreasure(new Key(ItemColor.RED));
-        //player.addTreasure(new Key(ItemColor.BLUE));
         List<Robot> robots = new ArrayList<>();
         KillerRobot r = new KillerRobot(2, 3);
         r.setActorPath(new ActorPath(1));
@@ -72,7 +69,7 @@ public class PersistencyPrint {
     /**
      * Create a sample GameBoard object and test the conversion to JSON and back.
      * @return The converted GameBoard object.
-     * @throws IOException
+     * @throws IOException For file errors
      */
     private static GameBoard testReadJSON() throws IOException{
         // Create a sample GameState
@@ -135,9 +132,8 @@ public class PersistencyPrint {
     /**
      * Test loading a GameBoard object from a file and compare it with the original GameBoard object.
      * @param original The original GameBoard object.
-     * @throws IOException
      */
-    private static void testLoadGameBoard(GameBoard original) throws IOException{
+    private static void testLoadGameBoard(GameBoard original){
         System.out.println("Loading GameState from file:--------------------------------------");
         GameBoard loadedState = Persistency.loadGameBoard(1);
         //Check if the loaded GameState is the same as the original GameState
