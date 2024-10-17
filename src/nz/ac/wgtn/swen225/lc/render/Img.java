@@ -76,5 +76,3 @@ public enum Img{
         return imageToName.get(name);
     }
 }
-
-

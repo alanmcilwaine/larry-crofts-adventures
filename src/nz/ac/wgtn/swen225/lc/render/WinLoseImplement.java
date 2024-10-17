@@ -29,22 +29,20 @@ public class WinLoseImplement {
      * @param jpanel the JPanel where the message will be drawn.
      */
     public void drawWinLose(GameState gameState, Graphics g, JPanel jpanel) {
-        g.setFont(new Font("Brush Script MT", Font.BOLD, 60));
+        g.setFont(new Font("Brush Script MT", Font.BOLD, 50));
+        // win drawing
         if (gameState.player().isNextLevel()) {
-
             g.setColor(Color.YELLOW);
             g.drawString("Victory!! You win!!!", 30, 72);
-
             g.setColor(Color.RED);
             g.drawString("Victory!! You win!!!", 28, 70);
         }
+        // lose drawing
         if (gameState.player().isDead()) {
-
             g.setColor(Color.BLACK);
             g.drawString("Ooooops, try again!!!", 16, 52);
             g.setColor(Color.RED);
             g.drawString("Ooooops, try again!!!", 8, 50);
-
         }
         jpanel.repaint();
     }
@@ -64,8 +62,12 @@ public class WinLoseImplement {
             clip.open(audioStream);
             clip.start();
 
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            throw new RuntimeException("No such music for status: " + name);
+        } catch (UnsupportedAudioFileException e) {
+            throw new RuntimeException("Unsupported audio format for the music of status: " + name);
+        } catch (IOException e) {
+            throw new RuntimeException("I/O error occurred while loading the music for status: " + name);
+        } catch (LineUnavailableException e) {
+            throw new RuntimeException("Audio line unavailable for the music of status: " + name);
         }
     }
 
@@ -105,6 +107,5 @@ public class WinLoseImplement {
         if(clip != null && mute){
             clip.stop();
         }
-
     }
 }
