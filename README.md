@@ -1,14 +1,15 @@
 # Larry Crofts Adventures
 
 ## Starting the Game
-Make sure Java 21 or higher is default. In Eclipse you can change this with Window -> Preferences -> Java -> Installed JREs and tick java-22-openjdk.
+Make sure Java 21 or higher is default. 
+In Eclipse on ecs you can change this with Window -> Preferences -> Java -> Installed JREs and tick java-22-openjdk. On MacOS it is `CMD  ,` to go to Preferences.
 
 1. In Eclipse, go File -> Import -> Existing Projects into Workspace and select the project as root directory.
 2. The project should now run from `nz.ac.wgtn.swen225.lc.app.Main`. 
 
 However, there might be issues, here are some troubleshooting fixes.
 3. After doing Step 1. right click on larry-crofts-adventures in the Project Explorer and go Properties -> Java Build Path -> Source, and ensure 'Source folders on build path' is set to `larry-crofts-adventures/src`.
-4. If 3. doesn't work, try going to Run -> Java Application -> Main, and ensure the Main class is `nz.ac.wgtn.swen225.lc.app.Main`.
+4. If 3. doesn't work, try going to Run -> Run Configurations... -> Java Application -> Main, and ensure the Main class is `nz.ac.wgtn.swen225.lc.app.Main`.
 
 ## How to Play
 
