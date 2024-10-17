@@ -3,6 +3,7 @@ package nz.ac.wgtn.swen225.lc.domain.Utilities;
 import nz.ac.wgtn.swen225.lc.domain.GameItem.LaserSource;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,23 +32,33 @@ public enum Orientation {
         }
     };
     Map<Direction, Direction> reflectionMap = new HashMap<>();
+
     String lastUsedDir;
 
     /**
      * Changes the direction of the source's laser
      */
     public void reflectLaser(LaserSource source) {
+        // get the reflection from the map
         Direction reflect = reflectionMap.get(source.currentDirection);
 
         if (reflect != null) {
-            Location o = source.target;
+            // set locations to old and new target, as well as get mirror location
+            Location o = source.lastTarget;
             Location n = reflect.act(source.target);
+            Location mirror = source.target;
 
-            lastUsedDir = "Reflect" + (n.x() < o.x() ? "left" : "right") + (n.y() < o.y() ? "up"
+            // decide which side is the laser coming from to decide the sprite
+            Location leftRight = mirror.y() == n.y() ? n : o;
+            Location upDown = mirror.x() == n.x() ? n : o;
+
+            lastUsedDir = "Reflect" + (leftRight.x() < mirror.x() ? "left" : "right") + (upDown.y() < mirror.y() ? "up"
                     : "down");
+
             source.getLasers().put(source.target, lastUsedDir);
 
             source.currentDirection = reflect;
+            source.lastTarget = source.target;
             source.target = n;
             source.orientation = lastUsedDir;
         }
