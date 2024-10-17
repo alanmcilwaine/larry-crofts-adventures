@@ -16,7 +16,7 @@ import java.util.List;
 public class Menu extends JMenuBar {
     private final JMenu file = new JMenu("File");
     private final JMenu input = new JMenu("Input");
-    private final JMenu help = new JMenu("Settings");
+    private final JMenu help = new JMenu("Help");
 
     /**
      * Constructor to build the Menu elements for the screen.
@@ -93,10 +93,16 @@ public class Menu extends JMenuBar {
      */
     private void help(App app) {
         JMenuItem controls = new JMenuItem("Controls");
+        JMenuItem helpFrame = new JMenuItem("Help");
         controls.addActionListener((unused) -> {
             app.pauseTimer(true);
             new RemapFrame();
         });
+        helpFrame.addActionListener((unused) -> {
+            app.pauseTimer(true);
+            new HelpFrame();
+        });
         help.add(controls);
+        help.add(helpFrame);
     }
 }

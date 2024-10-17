@@ -70,7 +70,7 @@ public class RecorderPanel extends JPanel{
         buildSlider();
         buttons.forEach(this::add);
         add(playbackSpeed);
-        label.setBounds(label.getX() - 50, label.getY(), label.getWidth() + 100, label.getHeight());
+        label.setBounds(label.getX() - 100, label.getY(), label.getWidth() + 200, label.getHeight());
         label.setVisible(false);
         add(label);
         revalidate();

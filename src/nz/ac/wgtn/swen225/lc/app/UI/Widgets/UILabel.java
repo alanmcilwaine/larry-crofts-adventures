@@ -1,5 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app.UI.Widgets;
 
+import nz.ac.wgtn.swen225.lc.app.UI.Containers.AppFrame;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -15,7 +17,7 @@ public class UILabel extends JLabel {
         super(text, SwingConstants.CENTER);
         setFont(new Font("Monospaced", Font.PLAIN, 18));
         setBounds(x, y, 100, 50);
-        setForeground(new Color(225, 211, 174));
+        setForeground(AppFrame.FOREGROUND);
     }
 
     @Override

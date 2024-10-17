@@ -16,9 +16,9 @@ public class OutOfTime implements GameEvent{
         if (GameTimer.stageCountdown > 0) {
             return;
         }
-        RecorderPanel.label.setText("Out of time!");
+        RecorderPanel.label.setText("Out of time! Reset in 3.");
         app.timer().runEvent(() -> {
             app.gameLoader().loadLevel(app.domain().getGameState().level());
-        }, 2500);
+        }, 3000);
     }
 }

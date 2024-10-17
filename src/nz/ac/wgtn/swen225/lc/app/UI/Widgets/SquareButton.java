@@ -1,6 +1,8 @@
 package nz.ac.wgtn.swen225.lc.app.UI.Widgets;
 
 
+import nz.ac.wgtn.swen225.lc.app.UI.Containers.AppFrame;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -44,9 +46,9 @@ public class SquareButton extends JButton {
      */
     private void build(){
         setBounds(x, y, 50, 50);
-        setBorder(BorderFactory.createLineBorder(new Color(225, 211, 174), 2));
-        setBackground(new Color(105, 88, 92));
-        setForeground(new Color(225, 211, 174));
+        setBorder(BorderFactory.createLineBorder(AppFrame.FOREGROUND, 2));
+        setBackground(AppFrame.BACKGROUND_2);
+        setForeground(AppFrame.FOREGROUND);
         setOpaque(true);
         setFocusable(false);
         setVisible(true);
