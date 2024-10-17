@@ -27,6 +27,7 @@ public class LaserSource implements Togglabble {
     private boolean laserToggle; // auto set to false
     private final Map<Location, String> lasers = new HashMap<>();
 
+    public Location lastTarget;
     public Location target;
     public Direction currentDirection;
 
@@ -57,6 +58,7 @@ public class LaserSource implements Togglabble {
         lasers.clear();
         currentDirection = direction;
         target = direction.act(location);
+        lastTarget = location;
 
         if (!laserToggle) return;
 
@@ -87,6 +89,7 @@ public class LaserSource implements Togglabble {
             if (targetItem instanceof NoItem || targetItem instanceof Tube || targetItem instanceof LaserInput) {
                 setOrientation();
                 lasers.put(target, orientation);
+                lastTarget = target;
                 target = currentDirection.act(target);
             } else {
                 break;
