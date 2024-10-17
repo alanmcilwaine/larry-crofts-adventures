@@ -24,11 +24,7 @@ public class Persistency{
     public static void saveGameBoard(GameBoard level){
         // convert level to JSON format
         ObjectMapper mapper = new ObjectMapper();
-        try {
-            json = mapper.saveLeveltoFile(level);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        json = mapper.saveLeveltoFile(level);
         //Write JSON string to file
         String filename = path + "level" + level.getGameState().level() + ".json";
         File file = new File(filename);
@@ -51,11 +47,7 @@ public class Persistency{
         // save the list of actions to a file
         // convert level to JSON format
         ObjectMapper mapper = new ObjectMapper();
-        try {
-            json = mapper.saveCommandstoFile(actions, level);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        json = mapper.saveCommandstoFile(actions, level);
         //Call it save + level
         String filename = path + "save_" + level + ".json";
         File file = new File(filename);
@@ -78,11 +70,7 @@ public class Persistency{
         // save the list of actions to a file
         // convert level to JSON format
         ObjectMapper mapper = new ObjectMapper();
-        try {
-            json = mapper.saveCommandstoFile(actions, level);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        json = mapper.saveCommandstoFile(actions, level);
         //Write JSON string to file
         String filename = path + "commands_" + level + ".json";
         //Unique Filename (to avoid overriding when having multiple recordings)
