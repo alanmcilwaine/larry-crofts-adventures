@@ -8,6 +8,7 @@ In Eclipse on ecs you can change this with Window -> Preferences -> Java -> Inst
 2. The project should now run from `nz.ac.wgtn.swen225.lc.app.Main`. 
 
 However, there might be issues, here are some troubleshooting fixes.
+
 3. After doing Step 1. right click on larry-crofts-adventures in the Project Explorer and go Properties -> Java Build Path -> Source, and ensure 'Source folders on build path' is set to `larry-crofts-adventures/src`.
 4. If 3. doesn't work, try going to Run -> Run Configurations... -> Java Application -> Main, and ensure the Main class is `nz.ac.wgtn.swen225.lc.app.Main`.
 
