@@ -1,5 +1,8 @@
 # Larry Crofts Adventures
-
+## Welcome to our game!
+In this game, you can control an astronaut and your objective is to find an exit out of your alien infected space-craft. To get a full demonstration of the game, make sure to check out [this youtube link](https://www.youtube.com/watch?v=rDeBQ2u6hiE)
+![Introduction Image](docs/GameImage.png)
+![GameRules](docs/GameRules.png)
 ## Starting the Game
 Make sure Java 21 or higher is default. 
 In Eclipse on ecs you can change this with Window -> Preferences -> Java -> Installed JREs and tick java-22-openjdk. On MacOS it is `CMD  ,` to go to Preferences.
